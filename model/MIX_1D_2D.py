@@ -6,18 +6,20 @@ from keras import layers, regularizers
 import keras.backend as K
 
 def TransformerLayer(q, v, k, num_heads=4, training=None):
-    x = k
     q = tf.keras.layers.Dense(1024,   kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(q)
+    q = Dropout(0.1)(q, training=training)
     k = tf.keras.layers.Dense(1024,   kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(k)
+    k = Dropout(0.1)(k, training=training)
     v = tf.keras.layers.Dense(1024,   kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(v)
+    v = Dropout(0.1)(v, training=training)
     # Transformer layer https://arxiv.org/abs/2010.11929 (LayerNorm layers removed for better performance)
-    ma  = MultiHeadAttention(head_size=num_heads, num_heads=num_heads)([q, k, v]) + x
+    ma  = MultiHeadAttention(head_size=num_heads, num_heads=num_heads)([q, k, v]) 
     ma = BatchNormalization()(ma, training=training)
     ma = Activation('relu')(ma)
     ma = Dropout(0.1)(ma, training=training)
@@ -36,8 +38,8 @@ def mix_model(opt, cnn_1d_model, resnet_50, lstm_extracted_model, input_1D, inpu
   hidden_out_2D = network_2D([input_2D])
   hidden_out_extracted = network_extracted([input_extracted])
   
-  merged_value_0 = TransformerLayer(hidden_out_1D, hidden_out_2D, hidden_out_extracted, 8, training)
-  merged_value_1 = concatenate([hidden_out_1D, merged_value_0, hidden_out_2D])
+  merged_value_0 = TransformerLayer(hidden_out_1D, hidden_out_2D, hidden_out_extracted, 12, training)
+  merged_value_1 = hidden_out_1D + hidden_out_extracted + hidden_out_2D
     
   Condition = Dense(3, 
                     activation='softmax', 
@@ -50,7 +52,7 @@ def mix_model(opt, cnn_1d_model, resnet_50, lstm_extracted_model, input_1D, inpu
               name='RUL', 
               kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
               bias_regularizer=regularizers.l2(1e-4),
-              activity_regularizer=regularizers.l2(1e-5))(merged_value_1)
+              activity_regularizer=regularizers.l2(1e-5))(merged_value_0)
   return Condition, RUL
   
   
