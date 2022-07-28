@@ -25,6 +25,13 @@ def TransformerLayer(q, v, k, num_heads=4, training=None):
     ma = Dropout(0.1)(ma, training=training)
     return ma
 
+def add(x1, x2, x3, training=None):
+    x = x1 + x2 + x3  
+    x = BatchNormalization()(x, training=training)
+    x = Activation('relu')(x)
+    x = Dropout(0.1)(x, training=training)
+    return x
+
 def mix_model(opt, cnn_1d_model, resnet_50, lstm_extracted_model, input_1D, input_2D, input_extracted, training=False):
   out_1D = Dropout(0.1)(cnn_1d_model(opt, training, input_1D), training=training)
   out_2D = Dropout(0.1)(resnet_50(opt)(input_2D, training=training), training=training)
@@ -39,7 +46,7 @@ def mix_model(opt, cnn_1d_model, resnet_50, lstm_extracted_model, input_1D, inpu
   hidden_out_extracted = network_extracted([input_extracted])
   
   merged_value_0 = TransformerLayer(hidden_out_1D, hidden_out_2D, hidden_out_extracted, 12, training)
-  merged_value_1 = hidden_out_1D + hidden_out_extracted + hidden_out_2D
+  merged_value_1 = add(idden_out_1D, hidden_out_2D, hidden_out_extracted, training)
     
   Condition = Dense(3, 
                     activation='softmax', 
