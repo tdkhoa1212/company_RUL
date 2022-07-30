@@ -65,12 +65,12 @@ def lstm_model(opt, training=None, inputs=None):
   x = MaxPooling1D(pool_size=4, strides=None)(x)
 
   for i in range(23):
-    x = identity_block(x, kernel_size=3, filters=182, stage=3, block=i, training=training)
+    x = identity_block(x, kernel_size=3, filters=192, stage=3, block=i, training=training)
 
   x = MaxPooling1D(pool_size=4, strides=None)(x)
 
   for i in range(3):
-    x = identity_block(x, kernel_size=3, filters=364, stage=4, block=i, training=training)
+    x = identity_block(x, kernel_size=3, filters=384, stage=4, block=i, training=training)
   x = tf.keras.layers.Bidirectional(LSTM(units=512, return_sequences=False))(x)
 
   if opt.mix_model:
