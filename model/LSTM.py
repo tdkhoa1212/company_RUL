@@ -81,7 +81,7 @@ def lstm_model(opt, training=None, inputs=None):
 
 def lstm_extracted_model(opt, training=None, inputs=None):
   x = LSTM(128, activation='relu',  
-                return_sequences=False, 
+                return_sequences=True, 
                 kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                 bias_regularizer=regularizers.l2(1e-4),
                 activity_regularizer=regularizers.l2(1e-5))(inputs)
