@@ -85,5 +85,5 @@ def lstm_extracted_model(opt, training=None, inputs=None):
                 kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                 bias_regularizer=regularizers.l2(1e-4),
                 activity_regularizer=regularizers.l2(1e-5)))(inputs)
-#   x = BatchNormalization()(x, training=training)
+  x = BatchNormalization()(x, training=training)
   return x
