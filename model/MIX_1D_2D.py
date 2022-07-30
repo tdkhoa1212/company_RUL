@@ -43,7 +43,7 @@ def mix_model(opt, cnn_1d_model, resnet_50, lstm_extracted_model, input_1D, inpu
   hidden_out_2D = network_2D([input_2D])
   hidden_out_extracted = network_extracted([input_extracted])
   
-  merged_value_0 = TransformerLayer(hidden_out_1D, hidden_out_2D, hidden_out_extracted, 8, training)
+  merged_value_0 = TransformerLayer(hidden_out_1D, hidden_out_2D, hidden_out_extracted, 12, training)
   merged_value_1 = concatenate([hidden_out_1D, merged_value_0, hidden_out_2D])
     
   Condition = Dense(3, 
