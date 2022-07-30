@@ -44,7 +44,7 @@ def identity_block(input_tensor, kernel_size, filters, stage, block, training):
 def lstm_model(opt, training=None, inputs=None):
   if opt.mix_model==False:
     inputs = Input(shape=[opt.input_shape, 2])
-  x = Conv1D(48,
+  x = Conv1D(64,
                kernel_size=80,
                strides=4,
                padding='same',
@@ -55,22 +55,22 @@ def lstm_model(opt, training=None, inputs=None):
   x = MaxPooling1D(pool_size=4, strides=None)(x)
 
   for i in range(3):
-    x = identity_block(x, kernel_size=3, filters=48, stage=1, block=i, training=training)
+    x = identity_block(x, kernel_size=3, filters=64, stage=1, block=i, training=training)
 
   x = MaxPooling1D(pool_size=4, strides=None)(x)
 
   for i in range(4):
-    x = identity_block(x, kernel_size=3, filters=96, stage=2, block=i, training=training)
+    x = identity_block(x, kernel_size=3, filters=128, stage=2, block=i, training=training)
 
   x = MaxPooling1D(pool_size=4, strides=None)(x)
 
   for i in range(23):
-    x = identity_block(x, kernel_size=3, filters=192, stage=3, block=i, training=training)
+    x = identity_block(x, kernel_size=3, filters=256, stage=3, block=i, training=training)
 
   x = MaxPooling1D(pool_size=4, strides=None)(x)
 
   for i in range(3):
-    x = identity_block(x, kernel_size=3, filters=384, stage=4, block=i, training=training)
+    x = identity_block(x, kernel_size=3, filters=512, stage=4, block=i, training=training)
   x = tf.keras.layers.Bidirectional(LSTM(units=512, return_sequences=False))(x)
 
   if opt.mix_model:
@@ -80,10 +80,15 @@ def lstm_model(opt, training=None, inputs=None):
   return m
 
 def lstm_extracted_model(opt, training=None, inputs=None):
-  x = tf.keras.layers.Bidirectional(LSTM(128, activation='relu',  
+  x = LSTM(128, activation='relu',  
                 return_sequences=False, 
                 kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                 bias_regularizer=regularizers.l2(1e-4),
-                activity_regularizer=regularizers.l2(1e-5)))(inputs)
+                activity_regularizer=regularizers.l2(1e-5))(inputs)
+  x = tf.keras.layers.Bidirectional(LSTM(512, activation='relu',  
+                return_sequences=False, 
+                kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+                bias_regularizer=regularizers.l2(1e-4),
+                activity_regularizer=regularizers.l2(1e-5)))(x)
   x = BatchNormalization()(x, training=training)
   return x
