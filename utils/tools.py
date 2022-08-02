@@ -130,6 +130,21 @@ def all_matric(y_true_rul, y_pred_rul, y_true_con, y_pred_con):
     return r2, mae_, rmse_, acc
     
 #----------------------save_data.py------------------------------------------------
+def load_file(path, save_path):
+  a = [i for i in os.listdir(path)]
+  all_file = []
+  for i in range(len(a)):
+    name = str(i)+'.csv'
+    root = os.path.join(path, name)
+    if os.path.exists(root):
+      df=pd.read_csv(root, header=None, names=['Horizontal_vibration_signals', 'Vertical_vibration_signals'])
+      df = np.expand_dims(np.array(df)[1:], axis=0).astype(np.float32)
+      if all_file == []:
+        all_file = df
+      else:
+        all_file = np.concatenate((all_file, df))
+  save_df(all_file, save_path)
+
 def read_data_as_df(base_dir):
   '''
   saves each file in the base_dir as a df and concatenate all dfs into one
@@ -386,3 +401,4 @@ def percent_error(y_true, y_pred):
         else:
             A.append(np.exp(np.log(0.5)*(i/20.)))
     return np.mean(A), SD
+
