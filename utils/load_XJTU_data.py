@@ -21,6 +21,9 @@ test_label_path_1D  = train_main_dir + f'test_label_1D_{opt.condition}.pkz'
 train_data_path_extract = train_main_dir + f'train_data_extract_{opt.condition}.pkz'
 test_data_path_extract  = train_main_dir + f'test_data_extract_{opt.condition}.pkz'
 
+train_c_path = main_dir_colab + f'train_c_{opt.condition}.pkz'
+test_c_path = main_dir_colab + f'test_c_{opt.condition}.pkz'
+
 if os.path.exists(test_data_path_2D) == False:
   for type_data in opt.data_type:
     # Train data-------------------------------------------------------------------------
