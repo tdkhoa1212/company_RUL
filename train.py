@@ -24,6 +24,7 @@ def parse_opt(known=False):
     parser.add_argument('--save_dir', default=None, type=str)
     parser.add_argument('--data_type', default=['2d', '1d', 'extract'], type=str, help='shape of data. They can be 1d, 2d, extract')
     parser.add_argument('--condition', default=None, type=str, help='c_1, c_2, c_3, c_all')
+    parser.add_argument('--type', default=None, type=str, help='PHM, XJTU')
     parser.add_argument('--scaler', default=None, type=str)
     parser.add_argument('--main_dir_colab', default=None, type=str)
     parser.add_argument('--epochs', default=100, type=int)
@@ -101,11 +102,20 @@ def main(opt, train_data_rul_1D, train_label_rul_1D, test_data_rul_1D, test_labe
 if __name__ == '__main__':
   opt = parse_opt()
   # start_save_data(opt)
-  from utils.load_rul_data import train_data_rul_1D, train_label_rul_1D, \
-                                  test_data_rul_1D, test_label_rul_1D, \
-                                  train_data_rul_2D, \
-                                  test_data_rul_2D,\
-                                  train_data_rul_extract, \
-                                  test_data_rul_extract,\
-                                  train_c, test_c
+  if opt.type == 'PHM':
+    from utils.load_PHM_data import train_data_rul_1D, train_label_rul_1D, \
+                                    test_data_rul_1D, test_label_rul_1D, \
+                                    train_data_rul_2D, \
+                                    test_data_rul_2D,\
+                                    train_data_rul_extract, \
+                                    test_data_rul_extract,\
+                                    train_c, test_c
+  else:
+    from utils.load_XJTU_data import train_data_rul_1D, train_label_rul_1D, \
+                                    test_data_rul_1D, test_label_rul_1D, \
+                                    train_data_rul_2D, \
+                                    test_data_rul_2D,\
+                                    train_data_rul_extract, \
+                                    test_data_rul_extract,\
+                                    train_c, test_c
   main(opt, train_data_rul_1D, train_label_rul_1D, test_data_rul_1D, test_label_rul_1D, train_data_rul_2D, test_data_rul_2D, train_data_rul_extract, test_data_rul_extract, train_c, test_c)

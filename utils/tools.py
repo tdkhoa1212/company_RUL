@@ -194,14 +194,20 @@ def scaler_transform(signals, scale_method):
     data.append(scale.fit_transform(signal))
   return np.array(data)
 
-def extract_feature_image(df, opt, type_data, feature_name='horiz accel'):
+def extract_feature_image(df, opt, type_data, feature_name='horiz accel', type=None):
     DATA_POINTS_PER_FILE=2560
     WIN_SIZE = 20
     WAVELET_TYPE = 'morl'
-    if feature_name == 'horiz accel':
-        data = df[4]
+    if type == 'PHM':
+      if feature_name == 'horiz accel':
+          data = df[4]
+      else:
+          data = df[5]
     else:
-        data = df[5]
+      if feature_name == 'Horizontal_vibration_signals':
+          data = df[0]
+      else:
+          data = df[1]
         
     if type_data == '2d':
         data = np.array([np.mean(data[i: i+WIN_SIZE]) for i in range(0, DATA_POINTS_PER_FILE, WIN_SIZE)])
@@ -225,25 +231,39 @@ def denoise(signals):
         # all_signal.append(nr.reduce_noise(y=x, sr=2559, hop_length=20, time_constant_s=0.1, prop_decrease=0.5, freq_mask_smooth_hz=25600))
     return np.expand_dims(all_signal, axis=-1)
 
-def convert_to_image(name_bearing, opt, type_data, num_files, time=None):
+def convert_to_image(name_bearing, opt, type_data, time=None, type=None):
     data = {'x': [], 'y': []}
     if type_data == '2d':
       print('-'*10, f'Convert to 2D data', '-'*10, '\n')
     else:
       print('-'*10, f'Maintain 1D data', '-'*10, '\n')
     
-    for i in range(num_files):
-        name = f"/acc_{str(i+1).zfill(5)}.csv"
-        file_ = os.path.join(opt.main_dir_colab, name_bearing)+name
-        # print(file_)
-        if path.exists(file_):
-            df = pd.read_csv(file_, header=None)
-            coef_h = np.expand_dims(extract_feature_image(df, opt, type_data, feature_name='horiz accel'), axis=-1)
-            coef_v = np.expand_dims(extract_feature_image(df, opt, type_data, feature_name='vert accel'), axis=-1)
-            x_ = np.concatenate((coef_h, coef_v), axis=-1).tolist()
-            y_ = gen_rms(coef_h)
-            data['x'].append(x_)
-            data['y'].append(y_)
+    num_files = len([i for i in os.listdir(name_bearing)])
+    if type == 'PHM':
+      for i in range(num_files):
+          name = f"/acc_{str(i+1).zfill(5)}.csv"
+          file_ = os.path.join(opt.main_dir_colab, name_bearing)+name
+          if path.exists(file_):
+              df = pd.read_csv(file_, header=None)
+              coef_h = np.expand_dims(extract_feature_image(df, opt, type_data, feature_name='horiz accel', type=type), axis=-1)
+              coef_v = np.expand_dims(extract_feature_image(df, opt, type_data, feature_name='vert accel', type=type), axis=-1)
+              x_ = np.concatenate((coef_h, coef_v), axis=-1).tolist()
+              y_ = gen_rms(coef_h)
+              data['x'].append(x_)
+              data['y'].append(y_)
+    else:
+      for i in range(num_files):
+          name = f"{str(i+1)}.csv"
+          file_ = os.path.join(name_bearing, name)
+          if path.exists(file_):
+              df = pd.read_csv(file_, header=None)
+              coef_h = np.expand_dims(extract_feature_image(df, opt, type_data, feature_name='Horizontal_vibration_signals', type=type), axis=-1)
+              coef_v = np.expand_dims(extract_feature_image(df, opt, type_data, feature_name='Vertical_vibration_signals', type=type), axis=-1)
+              x_ = np.concatenate((coef_h, coef_v), axis=-1).tolist()
+              y_ = gen_rms(coef_h)
+              data['x'].append(x_)
+              data['y'].append(y_)
+        
     
     if time != None:
       t_label = np.linspace(1, 0, len(data['y'][time: ]))
