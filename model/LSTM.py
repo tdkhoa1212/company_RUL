@@ -59,12 +59,12 @@ def lstm_model(opt, training=None, inputs=None):
 
   x = MaxPooling1D(pool_size=4, strides=None)(x)
 
-  for i in range(8):
+  for i in range(4):
     x = identity_block(x, kernel_size=3, filters=128, stage=2, block=i, training=training)
 
   x = MaxPooling1D(pool_size=4, strides=None)(x)
 
-  for i in range(36):
+  for i in range(23):
     x = identity_block(x, kernel_size=3, filters=256, stage=3, block=i, training=training)
 
   x = MaxPooling1D(pool_size=4, strides=None)(x)
