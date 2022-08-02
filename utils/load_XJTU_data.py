@@ -7,6 +7,8 @@ from matplotlib import pyplot as plt
 from train import parse_opt
 from utils.tools import load_df, save_df, extract_feature_image, convert_to_image, predict_time, seg_data, gen_rms
 
+opt = parse_opt()
+
 
 train_main_dir = '/content/drive/MyDrive/Khoa/XJTU_data/XJTU-SY_Bearing_Datasets/'
 
