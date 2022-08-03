@@ -205,9 +205,9 @@ def extract_feature_image(df, opt, type_data, feature_name='horiz accel', type=N
           data = df[5]
     else:
       if feature_name == 'Horizontal_vibration_signals':
-          data = df[0]
+          data = df[:, 0].astype(np.float32)
       else:
-          data = df[1]
+          data = df[:, 1].astype(np.float32)
         
     if type_data == '2d':
         data = np.array([np.mean(data[i: i+WIN_SIZE]) for i in range(0, DATA_POINTS_PER_FILE, WIN_SIZE)])
@@ -256,7 +256,7 @@ def convert_to_image(name_bearing, opt, type_data, time=None, type=None):
           name = f"{str(i+1)}.csv"
           file_ = os.path.join(name_bearing, name)
           if path.exists(file_):
-              df = pd.read_csv(file_, header=None)
+              df = np.array(pd.read_csv(file_, header=None))[1:]
               coef_h = np.expand_dims(extract_feature_image(df, opt, type_data, feature_name='Horizontal_vibration_signals', type=type), axis=-1)
               coef_v = np.expand_dims(extract_feature_image(df, opt, type_data, feature_name='Vertical_vibration_signals', type=type), axis=-1)
               x_ = np.concatenate((coef_h, coef_v), axis=-1).tolist()
