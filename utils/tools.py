@@ -195,15 +195,16 @@ def scaler_transform(signals, scale_method):
   return np.array(data)
 
 def extract_feature_image(df, opt, type_data, feature_name='horiz accel', type=None):
-    DATA_POINTS_PER_FILE=2560
     WIN_SIZE = 20
     WAVELET_TYPE = 'morl'
     if type == 'PHM':
+      DATA_POINTS_PER_FILE=2560
       if feature_name == 'horiz accel':
           data = df[4]
       else:
           data = df[5]
     else:
+      DATA_POINTS_PER_FILE=32768
       if feature_name == 'Horizontal_vibration_signals':
           data = df[:, 0].astype(np.float32)
       else:
