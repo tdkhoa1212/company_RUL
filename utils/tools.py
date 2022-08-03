@@ -195,7 +195,6 @@ def scaler_transform(signals, scale_method):
   return np.array(data)
 
 def extract_feature_image(df, opt, type_data, feature_name='horiz accel', type=None):
-    WIN_SIZE = 20
     WAVELET_TYPE = 'morl'
     if type == 'PHM':
       DATA_POINTS_PER_FILE=2560
@@ -209,7 +208,9 @@ def extract_feature_image(df, opt, type_data, feature_name='horiz accel', type=N
           data = df[:, 0].astype(np.float32)
       else:
           data = df[:, 1].astype(np.float32)
-        
+
+    WIN_SIZE = DATA_POINTS_PER_FILE//128
+    
     if type_data == '2d':
         data = np.array([np.mean(data[i: i+WIN_SIZE]) for i in range(0, DATA_POINTS_PER_FILE, WIN_SIZE)])
         coef, _ = pywt.cwt(data, np.linspace(1, 128, 128), WAVELET_TYPE)
