@@ -18,7 +18,7 @@ callbacks = tf.keras.callbacks.EarlyStopping(monitor='val_loss', mode='min', ver
 def parse_opt(known=False):
     parser = argparse.ArgumentParser()
    
-    parser.add_argument('--input_shape', default=2560, type=int, help='1279 for using fft, 2559 for raw data')
+    parser.add_argument('--input_shape', default=None, type=int, help='1279 for using fft, 2560 for raw data in PHM, 32768 for raw data in XJTU')
     parser.add_argument('--num_classes', default=1, type=str, help='class condition number: 3, class rul condition: 1')
     parser.add_argument('--model', default='cnn_2d', type=str, help='mix, lstm, dnn, cnn_1d, resnet_cnn_2d, cnn_2d, autoencoder')
     parser.add_argument('--save_dir', default=None, type=str)
@@ -76,10 +76,10 @@ def main(opt, train_data_rul_1D, train_label_rul_1D, test_data_rul_1D, test_labe
     test_label = [test_c, test_label_rul_1D]
   
   if opt.load_weight:
-    if os.path.exists(os.path.join(opt.save_dir, f'model_{opt.condition}')):
-      name = f'model_{opt.condition}'
+    if os.path.exists(os.path.join(opt.save_dir, f'model_{opt.condition}_{opt.type}')):
+      name = f'model_{opt.condition}_{opt.type}'
       print(f'\nLoad weight: {os.path.join(opt.save_dir, name)}\n')
-      network.load_weights(os.path.join(opt.save_dir, f'model_{opt.condition}'))
+      network.load_weights(os.path.join(opt.save_dir, f'model_{opt.condition}_{opt.type}'))
       
   network.compile(optimizer=tf.keras.optimizers.RMSprop(1e-4),
                   loss=['categorical_crossentropy', tf.keras.losses.MeanSquaredLogarithmicError()], 
@@ -91,7 +91,7 @@ def main(opt, train_data_rul_1D, train_label_rul_1D, test_data_rul_1D, test_labe
                         epochs     = opt.epochs,
                         batch_size = opt.batch_size,
                         validation_data = (val_data, val_label),)
-  network.save(os.path.join(opt.save_dir, f'model_{opt.condition}'))
+  network.save(os.path.join(opt.save_dir, f'model_{opt.condition}_{opt.type}'))
   _, _, _, Condition_acc, _, _, _, _, RUL_mae, RUL_r_square, RUL_mean_squared_error = network.evaluate(test_data, test_label, verbose=0)
   Condition_acc = round(Condition_acc*100, 4)
   RUL_mae = round(RUL_mae, 4)
