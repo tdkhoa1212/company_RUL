@@ -6,17 +6,17 @@ from keras import layers, regularizers
 import keras.backend as K
 
 def TransformerLayer(q, v, k, num_heads=4, training=None):
-    x = v
+    x = k
     # Transformer layer https://arxiv.org/abs/2010.11929 (LayerNorm layers removed for better performance)
-    q = tf.keras.layers.Dense(1024,   activation='relu',
+    q = tf.keras.layers.Dense(256,   activation='relu',
                                  kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                  bias_regularizer=regularizers.l2(1e-4),
                                  activity_regularizer=regularizers.l2(1e-5))(q)
-    k = tf.keras.layers.Dense(1024,   activation='relu',
+    k = tf.keras.layers.Dense(256,   activation='relu',
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(k)
-    v = tf.keras.layers.Dense(1024,   activation='relu',
+    v = tf.keras.layers.Dense(256,   activation='relu',
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(v)
@@ -55,12 +55,12 @@ def mix_model(opt, cnn_1d_model, resnet_50, lstm_extracted_model, input_1D, inpu
   hidden_out_extracted = network_extracted([input_extracted])
   
   merged_value_0 = TransformerLayer(hidden_out_1D, hidden_out_2D, hidden_out_extracted, 8, training)
-#   merged_value_1 = add(hidden_out_1D, merged_value_0, hidden_out_2D, training=training)
+  merged_value_1 = concatenate((hidden_out_1D, merged_value_0, hidden_out_2D))
     
   Condition = Dense(3, 
                     activation='softmax', 
-                    name='Condition')(merged_value_0)
+                    name='Condition')(merged_value_1)
   RUL = Dense(1, 
               activation='sigmoid', 
-              name='RUL')(merged_value_0)
+              name='RUL')(merged_value_1)
   return Condition, RUL
