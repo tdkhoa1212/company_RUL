@@ -75,11 +75,11 @@ def main(opt, train_data_rul_1D, train_label_rul_1D, test_data_rul_1D, test_labe
     test_data = [test_data_rul_1D, test_data_rul_2D, test_data_rul_extract]
     test_label = [test_c, test_label_rul_1D]
   
+  weight_path = os.path.join(opt.save_dir, f'model_{opt.condition}_{opt.type}')
   if opt.load_weight:
-    if os.path.exists(os.path.join(opt.save_dir, f'model_{opt.condition}_{opt.type}')):
-      name = f'model_{opt.condition}_{opt.type}'
-      print(f'\nLoad weight: {os.path.join(opt.save_dir, name)}\n')
-      network.load_weights(os.path.join(opt.save_dir, f'model_{opt.condition}_{opt.type}'))
+    if os.path.exists(weight_path):
+      print(f'\nLoad weight: {weight_path}\n')
+      network.load_weights(weight_path)
       
   network.compile(optimizer=tf.keras.optimizers.RMSprop(1e-4),
                   loss=['categorical_crossentropy', tf.keras.losses.MeanSquaredLogarithmicError()], 
@@ -91,7 +91,7 @@ def main(opt, train_data_rul_1D, train_label_rul_1D, test_data_rul_1D, test_labe
                         epochs     = opt.epochs,
                         batch_size = opt.batch_size,
                         validation_data = (val_data, val_label),)
-  network.save(os.path.join(opt.save_dir, f'model_{opt.condition}_{opt.type}'))
+  network.save(weight_path)
   _, _, _, Condition_acc, _, _, _, _, RUL_mae, RUL_r_square, RUL_mean_squared_error = network.evaluate(test_data, test_label, verbose=0)
   Condition_acc = round(Condition_acc*100, 4)
   RUL_mae = round(RUL_mae, 4)
