@@ -250,7 +250,7 @@ def convert_to_image(name_bearing, opt, type_data, time=None, type=None):
           file_ = os.path.join(opt.main_dir_colab, name_bearing)+name
           if path.exists(file_):
               df = pd.read_csv(file_, header=None)
-              coef_h = extract_feature_image(df, opt, type_data, feature_name='horiz accel', type=type), axis=-1)
+              coef_h = extract_feature_image(df, opt, type_data, feature_name='horiz accel', type=type)
               coef_v = extract_feature_image(df, opt, type_data, feature_name='vert accel', type=type)
               x_ = np.concatenate((coef_h, coef_v), axis=-1).tolist()
               y_ = gen_rms(coef_h)
