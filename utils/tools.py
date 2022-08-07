@@ -218,10 +218,12 @@ def extract_feature_image(df, opt, type_data, feature_name='horiz accel', type=N
         coef = np.log2(coef**2 + 0.001)
         coef = (coef - coef.min())/(coef.max() - coef.min())
         coef = np.expand_dims(coef, axis=-1)
-    else:
+    if type_data=='1d':
         scaler = StandardScaler()
         data = np.expand_dims(data, axis=-1)
         coef = scaler.fit_transform(data)
+    if type_data=='extract':
+        coef = np.expand_dims(data, axis=-1)
     return coef
 
 def denoise(signals):
