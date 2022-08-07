@@ -217,8 +217,11 @@ def extract_feature_image(df, opt, type_data, feature_name='horiz accel', type=N
         # transform to power and apply logarithm?!
         coef = np.log2(coef**2 + 0.001)
         coef = (coef - coef.min())/(coef.max() - coef.min())
+        coef = np.expand_dims(coef, axis=-1)
     else:
-        coef = data 
+        scaler = StandardScaler()
+        data = np.expand_dims(data, axis=-1)
+        coef = scaler.fit_transform(data)
     return coef
 
 def denoise(signals):
@@ -247,8 +250,8 @@ def convert_to_image(name_bearing, opt, type_data, time=None, type=None):
           file_ = os.path.join(opt.main_dir_colab, name_bearing)+name
           if path.exists(file_):
               df = pd.read_csv(file_, header=None)
-              coef_h = np.expand_dims(extract_feature_image(df, opt, type_data, feature_name='horiz accel', type=type), axis=-1)
-              coef_v = np.expand_dims(extract_feature_image(df, opt, type_data, feature_name='vert accel', type=type), axis=-1)
+              coef_h = extract_feature_image(df, opt, type_data, feature_name='horiz accel', type=type), axis=-1)
+              coef_v = extract_feature_image(df, opt, type_data, feature_name='vert accel', type=type)
               x_ = np.concatenate((coef_h, coef_v), axis=-1).tolist()
               y_ = gen_rms(coef_h)
               data['x'].append(x_)
@@ -259,8 +262,8 @@ def convert_to_image(name_bearing, opt, type_data, time=None, type=None):
           file_ = os.path.join(name_bearing, name)
           if path.exists(file_):
               df = np.array(pd.read_csv(file_, header=None))[1:]
-              coef_h = np.expand_dims(extract_feature_image(df, opt, type_data, feature_name='Horizontal_vibration_signals', type=type), axis=-1)
-              coef_v = np.expand_dims(extract_feature_image(df, opt, type_data, feature_name='Vertical_vibration_signals', type=type), axis=-1)
+              coef_h = extract_feature_image(df, opt, type_data, feature_name='Horizontal_vibration_signals', type=type)
+              coef_v = extract_feature_image(df, opt, type_data, feature_name='Vertical_vibration_signals', type=type)
               x_ = np.concatenate((coef_h, coef_v), axis=-1).tolist()
               y_ = gen_rms(coef_h)
               data['x'].append(x_)
