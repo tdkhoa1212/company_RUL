@@ -48,9 +48,10 @@ def Predict(data, model):
     input_2D = Input((128, 128, 2), name='CNN_input')
     Condition, RUL = mix_model(opt, lstm_model, resnet_101, lstm_extracted_model, input_1D, input_2D, input_extracted, False)
     network = Model(inputs=[input_1D, input_2D, input_extracted], outputs=[Condition, RUL])
-  name = f'model_{opt.condition}'
-  print(f'\nLoad weight: {os.path.join(opt.save_dir, name)}\n')
-  network.load_weights(os.path.join(opt.save_dir,  f'model_{opt.condition}'))
+
+  weight_path = os.path.join(opt.save_dir, f'model_{opt.condition}_{opt.type}')
+  print(f'\nLoad weight: {weight_path}\n')
+  network.load_weights(weight_path)
       
   Condition, RUL = network.predict(data)
   return Condition, RUL 
