@@ -45,7 +45,7 @@ else:
               'Bearing2_5': 219,
               'Bearing3_3': 31,
               'Bearing3_4': 97,
-              'Bearing4_5': 105}
+              'Bearing3_5': 105}
     main_dir_colab = '/content/drive/MyDrive/Khoa/XJTU_data/XJTU-SY_Bearing_Datasets/'
 
 
