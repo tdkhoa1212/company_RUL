@@ -71,7 +71,7 @@ def lstm_model(opt, training=None, inputs=None):
 
   for i in range(3):
     x = identity_block(x, kernel_size=3, filters=512, stage=4, block=i, training=training)
-  x = tf.keras.layers.Bidirectional(LSTM(units=512, return_sequences=False))(x)
+  x = tf.keras.layers.Bidirectional(LSTM(units=256, return_sequences=False))(x)
 
   if opt.mix_model:
       return x
