@@ -7,8 +7,8 @@ import keras.backend as K
 
 def TransformerLayer(q, v, k, num_heads=4, training=None):
     # Transformer layer https://arxiv.org/abs/2010.11929 (LayerNorm layers removed for better performance)
-    x1 = q
-    x2 = v
+    x1 = Dropout(0.1)(q, training=training)
+    x2 = Dropout(0.1)(v, training=training)
     q = tf.keras.layers.Dense(128,   activation='relu',
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
@@ -45,8 +45,8 @@ def add(x1, x2, x3, training=None):
     return x
 
 def mix_model(opt, cnn_1d_model, resnet_50, lstm_extracted_model, input_1D, input_2D, input_extracted, training=False):
-  out_1D = Dropout(0.1)(cnn_1d_model(opt, training, input_1D), training=training)
-  out_2D = Dropout(0.1)(resnet_50(opt)(input_2D, training=training), training=training)
+  out_1D = cnn_1d_model(opt, training, input_1D)
+  out_2D = resnet_50(opt)(input_2D, training=training)
   out_extracted = lstm_extracted_model(opt, training, input_extracted)
   
   network_1D = Model(input_1D, out_1D, name='network_1D')
