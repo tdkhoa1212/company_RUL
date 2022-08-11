@@ -245,7 +245,7 @@ def convert_to_image(name_bearing, opt, type_data, time=None, type=None):
     else:
       print('-'*10, f'Maintain 1D data', '-'*10, '\n')
     
-    num_files = len([i for i in os.listdir(name_bearing)])
+    num_files = len([i for i in os.listdir(os.path.join(opt.main_dir_colab, name_bearing))])
     if type == 'PHM':
       for i in range(num_files):
           name = f"/acc_{str(i+1).zfill(5)}.csv"
