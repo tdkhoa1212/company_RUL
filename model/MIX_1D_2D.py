@@ -22,6 +22,8 @@ def TransformerLayer(q, v, k, num_heads=4, training=None):
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(v)
     ma  = MultiHeadAttention(head_size=num_heads, num_heads=num_heads)([q, k, v])
+    ma = BatchNormalization()(ma, training=training)
+    ma = Activation('relu')(ma) 
    
     x1 = tf.keras.layers.Dense(128,   activation='relu',
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
@@ -31,10 +33,8 @@ def TransformerLayer(q, v, k, num_heads=4, training=None):
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(x2)
-    all_ = x1 + ma + x2
-    all_ = BatchNormalization()(all_, training=training)
-    all_ = Activation('relu')(all_) 
-    all_ = Dropout(0.1)(all_, training=training)
+    all_ = ma + x2
+    # all_ = Dropout(0.1)(all_, training=training)
     return all_
 
 
