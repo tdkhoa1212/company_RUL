@@ -40,21 +40,6 @@ def TransformerLayer(q, v, k, num_heads=4, training=None):
     all_ = concatenate((x1, ma, x2))
     return all_
 
-def add(x1, x2, x3, training=None):
-    x1 = tf.keras.layers.Dense(1024,   activation='relu',
-                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
-                                     bias_regularizer=regularizers.l2(1e-4),
-                                     activity_regularizer=regularizers.l2(1e-5))(x1)
-    x2 = tf.keras.layers.Dense(1024,   activation='relu',
-                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
-                                     bias_regularizer=regularizers.l2(1e-4),
-                                     activity_regularizer=regularizers.l2(1e-5))(x2)
-    x3 = tf.keras.layers.Dense(1024,   activation='relu',
-                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
-                                     bias_regularizer=regularizers.l2(1e-4),
-                                     activity_regularizer=regularizers.l2(1e-5))(x3)
-    x = x1 + x2 + x3  
-    return x
 
 def mix_model(opt, cnn_1d_model, resnet_50, lstm_extracted_model, input_1D, input_2D, input_extracted, training=False):
   out_1D = cnn_1d_model(opt, training, input_1D)
