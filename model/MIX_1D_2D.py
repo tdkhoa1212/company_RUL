@@ -9,35 +9,33 @@ def TransformerLayer(q, v, k, num_heads=4, training=None):
     # Transformer layer https://arxiv.org/abs/2010.11929 (LayerNorm layers removed for better performance)
     x1 = q
     x2 = v
-    q = tf.keras.layers.Dense(128,   activation='relu',
+    q = tf.keras.layers.Dense(256,   activation='relu',
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(q)
-    k = tf.keras.layers.Dense(128,   activation='relu',
+    k = tf.keras.layers.Dense(256,   activation='relu',
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(k)
-    v = tf.keras.layers.Dense(128,   activation='relu',
+    v = tf.keras.layers.Dense(256,   activation='relu',
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(v)
     ma  = MultiHeadAttention(head_size=num_heads, num_heads=num_heads)([q, k, v])
     ma = BatchNormalization()(ma, training=training)
     ma = Activation('relu')(ma) 
-    # ma = Dropout(0.1)(ma, training=training)
 
     
-    x1 = tf.keras.layers.Dense(128,   activation='relu',
+    x1 = tf.keras.layers.Dense(256,   activation='relu',
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(x1)
-    # x1 = Dropout(0.1)(x1, training=training)
-    x2 = tf.keras.layers.Dense(128,   activation='relu',
+    x2 = tf.keras.layers.Dense(256,   activation='relu',
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(x2)
     all_ = x1 + ma + x2
-    all_ = Dropout(0.1)(all_, training=training)
+    # all_ = Dropout(0.1)(all_, training=training)
     return all_
 
 def add(x1, x2, x3, training=None):
@@ -69,7 +67,7 @@ def mix_model(opt, cnn_1d_model, resnet_50, lstm_extracted_model, input_1D, inpu
   hidden_out_2D = network_2D([input_2D])
   hidden_out_extracted = network_extracted([input_extracted])
   
-  merged_value_0 = TransformerLayer(hidden_out_1D, hidden_out_2D, hidden_out_extracted, 4, training)
+  merged_value_0 = concatenate((hidden_out_1D, hidden_out_2D, hidden_out_extracted))
   merged_value_1 = TransformerLayer(hidden_out_1D, hidden_out_2D, hidden_out_extracted, 4, training)
     
   Condition = Dense(3, 
@@ -77,5 +75,5 @@ def mix_model(opt, cnn_1d_model, resnet_50, lstm_extracted_model, input_1D, inpu
                     name='Condition')(merged_value_0)
   RUL = Dense(1, 
               activation='sigmoid', 
-              name='RUL')(merged_value_0)
+              name='RUL')(merged_value_1)
   return Condition, RUL
