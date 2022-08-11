@@ -90,8 +90,7 @@ def main(opt, train_data_rul_1D, train_label_rul_1D, test_data_rul_1D, test_labe
   history = network.fit(train_data, train_label,
                         epochs     = opt.epochs,
                         batch_size = opt.batch_size,
-                        validation_data = (val_data, val_label),
-                        callbacks=[callback])
+                        validation_data = (val_data, val_label))
   network.save(weight_path)
   _, _, _, Condition_acc, _, _, _, _, RUL_mae, RUL_r_square, RUL_mean_squared_error = network.evaluate(test_data, test_label, verbose=0)
   Condition_acc = round(Condition_acc*100, 4)
