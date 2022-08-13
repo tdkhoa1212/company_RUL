@@ -7,33 +7,34 @@ import keras.backend as K
 
 def TransformerLayer(q, v, k, num_heads=4, training=None):
     # Transformer layer https://arxiv.org/abs/2010.11929 (LayerNorm layers removed for better performance)
-    x1 = q
-    x2 = v
-    q = tf.keras.layers.Dense(128,   activation='relu',
+    # x1 = q
+    # x2 = v
+    q = tf.keras.layers.Dense(256,   activation='relu',
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(q)
-    k = tf.keras.layers.Dense(128,   activation='relu',
+    k = tf.keras.layers.Dense(256,   activation='relu',
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(k)
-    v = tf.keras.layers.Dense(128,   activation='relu',
+    v = tf.keras.layers.Dense(256,   activation='relu',
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(v)
-    ma  = MultiHeadAttention(head_size=num_heads, num_heads=num_heads)([q, k, v])
-    ma = BatchNormalization()(ma, training=training)
-    ma = Activation('relu')(ma) 
+    all_ = concatenate((q, k, v))
+    # ma  = MultiHeadAttention(head_size=num_heads, num_heads=num_heads)([q, k, v])
+    # ma = BatchNormalization()(ma, training=training)
+    # ma = Activation('relu')(ma) 
    
-    x1 = tf.keras.layers.Dense(128,   activation='relu',
-                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
-                                     bias_regularizer=regularizers.l2(1e-4),
-                                     activity_regularizer=regularizers.l2(1e-5))(x1)
-    x2 = tf.keras.layers.Dense(128,   activation='relu',
-                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
-                                     bias_regularizer=regularizers.l2(1e-4),
-                                     activity_regularizer=regularizers.l2(1e-5))(x2)
-    all_ = ma + x2
+    # x1 = tf.keras.layers.Dense(128,   activation='relu',
+    #                                  kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+    #                                  bias_regularizer=regularizers.l2(1e-4),
+    #                                  activity_regularizer=regularizers.l2(1e-5))(x1)
+    # x2 = tf.keras.layers.Dense(128,   activation='relu',
+    #                                  kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+    #                                  bias_regularizer=regularizers.l2(1e-4),
+    #                                  activity_regularizer=regularizers.l2(1e-5))(x2)
+    # all_ = ma + x2
     # all_ = Dropout(0.1)(all_, training=training)
     return all_
 
