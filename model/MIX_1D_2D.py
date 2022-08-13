@@ -9,25 +9,30 @@ def TransformerLayer(q, v, k, num_heads=4, training=None):
     # Transformer layer https://arxiv.org/abs/2010.11929 (LayerNorm layers removed for better performance)
     # x1 = q
     # x2 = v
+    q = tf.expand_dims(q, axis=-2)
+    k = tf.expand_dims(k, axis=-2)
+    v = tf.expand_dims(v, axis=-2)
+
     q = tf.keras.layers.Dense(256,   activation='relu',
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(q)
-    q = Dropout(0.1)(q, training=training)
+    # q = Dropout(0.1)(q, training=training)
     k = tf.keras.layers.Dense(256,   activation='relu',
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(k)
-    k = Dropout(0.1)(k, training=training)
+    # k = Dropout(0.1)(k, training=training)
     v = tf.keras.layers.Dense(256,   activation='relu',
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(v)
-    v = Dropout(0.1)(v, training=training)
-    all_ = concatenate((q, k, v))
-    # ma  = MultiHeadAttention(head_size=num_heads, num_heads=num_heads)([q, k, v])
-    # ma = BatchNormalization()(ma, training=training)
-    # ma = Activation('relu')(ma) 
+    # v = Dropout(0.1)(v, training=training)
+    # all_ = concatenate((q, k, v))
+    ma  = MultiHeadAttention(head_size=num_heads, num_heads=num_heads)([q, k, v])
+    ma = BatchNormalization()(ma, training=training)
+    ma = Activation('relu')(ma) 
+    ma = tf.keras.layers.GRU(128, return_sequences=False)(ma)
    
     # x1 = tf.keras.layers.Dense(128,   activation='relu',
     #                                  kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
@@ -39,7 +44,7 @@ def TransformerLayer(q, v, k, num_heads=4, training=None):
     #                                  activity_regularizer=regularizers.l2(1e-5))(x2)
     # all_ = ma + x2
     # all_ = Dropout(0.1)(all_, training=training)
-    return all_
+    return ma
 
 
 def mix_model(opt, cnn_1d_model, resnet_50, lstm_extracted_model, input_1D, input_2D, input_extracted, training=False):
