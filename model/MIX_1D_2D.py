@@ -43,9 +43,9 @@ def TransformerLayer(q, v, k, num_heads=4, training=None):
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(v)
 
-    ma  = MultiHeadAttention(head_size=num_heads, num_heads=num_heads)([q, k, v]) + v
+    ma  = MultiHeadAttention(head_size=num_heads, num_heads=num_heads)([q, k, v]) 
     ma = BatchNormalization()(ma, training=training)
-    ma = Activation('relu')(ma) 
+    ma = Activation('relu')(ma) + v + q
     ma = tf.keras.layers.GRU(128, return_sequences=False)(ma)
     ma = Dropout(0.1)(ma, training=training)
     return ma
