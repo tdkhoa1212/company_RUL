@@ -46,7 +46,7 @@ def TransformerLayer(q, v, k, num_heads=4, training=None):
     ma  = MultiHeadAttention(head_size=num_heads, num_heads=num_heads)([q, k, v]) 
     ma = BatchNormalization()(ma, training=training)
     ma = Activation('relu')(ma) 
-    ma = tf.keras.layers.GRU(128, return_sequences=False)(ma) 
+    ma = tf.keras.layers.GRU(256, return_sequences=False)(ma) + v
     ma = Dropout(0.1)(ma, training=training)
     return ma
 
