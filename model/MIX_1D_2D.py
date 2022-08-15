@@ -26,6 +26,16 @@ import keras.backend as K
 
 def TransformerLayer(q, v, k, num_heads=4, training=None):
     # Transformer layer https://arxiv.org/abs/2010.11929 (LayerNorm layers removed for better performance)
+
+    x = tf.keras.layers.Dense(128,   activation='relu',
+                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+                                     bias_regularizer=regularizers.l2(1e-4),
+                                     activity_regularizer=regularizers.l2(1e-5))(v)
+
+    q = tf.expand_dims(q, axis=-2)
+    k = tf.expand_dims(k, axis=-2)
+    v = tf.expand_dims(v, axis=-2)
+
     q = tf.keras.layers.Dense(256,   activation='relu',
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
@@ -38,16 +48,11 @@ def TransformerLayer(q, v, k, num_heads=4, training=None):
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(v)
-    x1 = v
-    
-    q = tf.expand_dims(q, axis=-1)
-    k = tf.expand_dims(k, axis=-1)
-    v = tf.expand_dims(v, axis=-1)
     
     ma  = MultiHeadAttention(head_size=num_heads, num_heads=num_heads)([q, k, v]) 
     ma = BatchNormalization()(ma, training=training)
     ma = Activation('relu')(ma) 
-    ma = tf.keras.layers.GRU(256, return_sequences=False)(ma) 
+    ma = tf.keras.layers.GRU(128, return_sequences=False)(ma) + x
     ma = Dropout(0.1)(ma, training=training)
     return ma
 
@@ -73,5 +78,5 @@ def mix_model(opt, cnn_1d_model, resnet_50, lstm_extracted_model, input_1D, inpu
                     name='Condition')(merged_value_0)
   RUL = Dense(1, 
               activation='sigmoid', 
-              name='RUL')(merged_value_0)
+              name='RUL')(merged_value_1)
   return Condition, RUL
