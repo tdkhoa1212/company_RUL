@@ -47,7 +47,7 @@ def TransformerLayer(q, v, k, num_heads=4, training=None):
     ma  = MultiHeadAttention(head_size=num_heads, num_heads=num_heads)([q, k, v]) 
     ma = BatchNormalization()(ma, training=training)
     ma = Activation('relu')(ma) 
-    ma = tf.keras.layers.GRU(256, return_sequences=False)(ma) + x1
+    ma = tf.keras.layers.GRU(256, return_sequences=False)(ma) 
     ma = Dropout(0.1)(ma, training=training)
     return ma
 
@@ -73,5 +73,5 @@ def mix_model(opt, cnn_1d_model, resnet_50, lstm_extracted_model, input_1D, inpu
                     name='Condition')(merged_value_0)
   RUL = Dense(1, 
               activation='sigmoid', 
-              name='RUL')(merged_value_1)
+              name='RUL')(merged_value_0)
   return Condition, RUL
