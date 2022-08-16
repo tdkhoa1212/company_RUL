@@ -219,10 +219,6 @@ def extract_feature_image(df, opt, type_data, feature_name='horiz accel', type_=
         coef = np.log2(coef**2 + 0.001)
         coef = (coef - coef.min())/(coef.max() - coef.min())
         coef = np.expand_dims(coef, axis=-1)
-#     if type_data=='1d':
-#         scaler = StandardScaler()
-#         data = np.expand_dims(data, axis=-1)
-#         coef = scaler.fit_transform(data)
     if type_data=='extract' or type_data=='1d':
         coef = np.expand_dims(data, axis=-1)
     return coef
@@ -249,7 +245,7 @@ def convert_to_image(name_bearing, opt, type_data, time=None, type_=None):
     num_files = len([i for i in os.listdir(os.path.join(opt.main_dir_colab, name_bearing))])
     if type_ == 'PHM':
       model = autoencoder_model(type_)
-      model.load_weights(f'/content/drive/MyDrive/Khoa/autoencoder/{type}.h5')
+      model.load_weights(f'/content/drive/MyDrive/Khoa/autoencoder/{type_}.h5')
       for i in range(num_files):
           name = f"/acc_{str(i+1).zfill(5)}.csv"
           file_ = os.path.join(opt.main_dir_colab, name_bearing)+name
@@ -257,17 +253,20 @@ def convert_to_image(name_bearing, opt, type_data, time=None, type_=None):
               df = pd.read_csv(file_, header=None)
               coef_h = extract_feature_image(df, opt, type_data, feature_name='horiz accel', type_=type_)
               coef_v = extract_feature_image(df, opt, type_data, feature_name='vert accel', type_=type_)
-              x_ = np.concatenate((coef_h, coef_v), axis=-1).tolist()
-              x_ = np.expand_dim(x_.reshape(x_.shape[1], x_.shape[0]), axis=0)
-              x_ = autoencoder_model(x_)
-              x_ = np.squeeze(x_)
-              x_ = x_.reshape(x_.shape[1], x_.shape[0])
+              x_ = np.concatenate((coef_h, coef_v), axis=-1)
+              if type_data=='1d' or type_data=='extract':
+                x_ = np.expand_dims(x_.reshape(x_.shape[1], x_.shape[0]), axis=0)
+                x_ = autoencoder_model(x_)
+                x_ = np.squeeze(x_)
+                x_ = x_.reshape(x_.shape[1], x_.shape[0]).tolist()
+              else:
+                x_ = x_.tolist()
               y_ = gen_rms(coef_h)
               data['x'].append(x_)
               data['y'].append(y_)
     else:
       model = autoencoder_model(type_)
-      model.load_weights(f'/content/drive/MyDrive/Khoa/autoencoder/{type}.h5')
+      model.load_weights(f'/content/drive/MyDrive/Khoa/autoencoder/{type_}.h5')
       for i in range(num_files):
           name = f"{str(i+1)}.csv"
           file_ = os.path.join(name_bearing, name)
@@ -275,11 +274,14 @@ def convert_to_image(name_bearing, opt, type_data, time=None, type_=None):
               df = np.array(pd.read_csv(file_, header=None))[1:]
               coef_h = extract_feature_image(df, opt, type_data, feature_name='Horizontal_vibration_signals', type_=type_)
               coef_v = extract_feature_image(df, opt, type_data, feature_name='Vertical_vibration_signals', type_=type_)
-              x_ = np.concatenate((coef_h, coef_v), axis=-1).tolist()
-              x_ = np.expand_dim(x_.reshape(x_.shape[1], x_.shape[0]), axis=0)
-              x_ = autoencoder_model(x_)
-              x_ = np.squeeze(x_)
-              x_ = x_.reshape(x_.shape[1], x_.shape[0])
+              x_ = np.concatenate((coef_h, coef_v), axis=-1)
+              if type_data=='1d' or type_data=='extract':
+                x_ = np.expand_dims(x_.reshape(x_.shape[1], x_.shape[0]), axis=0)
+                x_ = autoencoder_model(x_)
+                x_ = np.squeeze(x_)
+                x_ = x_.reshape(x_.shape[1], x_.shape[0]).tolist()
+              else:
+                x_ = x_.tolist()
               y_ = gen_rms(coef_h)
               data['x'].append(x_)
               data['y'].append(y_)
