@@ -256,7 +256,7 @@ def convert_to_image(name_bearing, opt, type_data, time=None, type_=None):
               x_ = np.concatenate((coef_h, coef_v), axis=-1)
               if type_data=='1d' or type_data=='extract':
                 x_ = np.expand_dims(x_.reshape(x_.shape[1], x_.shape[0]), axis=0)
-                x_ = autoencoder_model(x_)
+                x_ = model.predict(x_)
                 x_ = np.squeeze(x_)
                 x_ = x_.reshape(x_.shape[1], x_.shape[0]).tolist()
               else:
@@ -277,7 +277,7 @@ def convert_to_image(name_bearing, opt, type_data, time=None, type_=None):
               x_ = np.concatenate((coef_h, coef_v), axis=-1)
               if type_data=='1d' or type_data=='extract':
                 x_ = np.expand_dims(x_.reshape(x_.shape[1], x_.shape[0]), axis=0)
-                x_ = autoencoder_model(x_)
+                x_ = model.predict(x_)
                 x_ = np.squeeze(x_)
                 x_ = x_.reshape(x_.shape[1], x_.shape[0]).tolist()
               else:
