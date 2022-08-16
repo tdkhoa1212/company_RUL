@@ -18,6 +18,7 @@ from os import path
 import scipy
 import statistics
 from sklearn.cluster import KMeans, SpectralClustering
+from model.autoencoder import autoencoder_model
 
 def hankel_svdvals(data, hankel_window_size, slice_window_size):
     """ Slices data in 'slice_window_size' and compute hankel matrix singular values with 'hankel_window_size' """
@@ -247,6 +248,8 @@ def convert_to_image(name_bearing, opt, type_data, time=None, type=None):
     
     num_files = len([i for i in os.listdir(os.path.join(opt.main_dir_colab, name_bearing))])
     if type == 'PHM':
+      model = autoencoder_model()
+      model.load_weights(f'/content/drive/MyDrive/Khoa/autoencoder/{type}.h5')
       for i in range(num_files):
           name = f"/acc_{str(i+1).zfill(5)}.csv"
           file_ = os.path.join(opt.main_dir_colab, name_bearing)+name
@@ -255,10 +258,16 @@ def convert_to_image(name_bearing, opt, type_data, time=None, type=None):
               coef_h = extract_feature_image(df, opt, type_data, feature_name='horiz accel', type=type)
               coef_v = extract_feature_image(df, opt, type_data, feature_name='vert accel', type=type)
               x_ = np.concatenate((coef_h, coef_v), axis=-1).tolist()
+              x_ = np.expand_dim(x_.reshape(x_.shape[1], x_.shape[0]), axis=0)
+              x_ = autoencoder_model(x_)
+              x_ = np.squeeze(x_)
+              x_ = x_.reshape(x_.shape[1], x_.shape[0])
               y_ = gen_rms(coef_h)
               data['x'].append(x_)
               data['y'].append(y_)
     else:
+      model = autoencoder_model()
+      model.load_weights(f'/content/drive/MyDrive/Khoa/autoencoder/{type}.h5')
       for i in range(num_files):
           name = f"{str(i+1)}.csv"
           file_ = os.path.join(name_bearing, name)
@@ -267,6 +276,10 @@ def convert_to_image(name_bearing, opt, type_data, time=None, type=None):
               coef_h = extract_feature_image(df, opt, type_data, feature_name='Horizontal_vibration_signals', type=type)
               coef_v = extract_feature_image(df, opt, type_data, feature_name='Vertical_vibration_signals', type=type)
               x_ = np.concatenate((coef_h, coef_v), axis=-1).tolist()
+              x_ = np.expand_dim(x_.reshape(x_.shape[1], x_.shape[0]), axis=0)
+              x_ = autoencoder_model(x_)
+              x_ = np.squeeze(x_)
+              x_ = x_.reshape(x_.shape[1], x_.shape[0])
               y_ = gen_rms(coef_h)
               data['x'].append(x_)
               data['y'].append(y_)
