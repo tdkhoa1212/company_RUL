@@ -56,12 +56,12 @@ if opt.predict_time:
 if os.path.exists(test_data_path_2D) == False:
   for type_data in opt.data_type:
     # Train data-------------------------------------------------------------------------
-    Bearing1_1_path = train_main_dir + 'denoising_Bearing1_1'
-    Bearing1_2_path = train_main_dir + 'denoising_Bearing1_2'
-    Bearing2_1_path = train_main_dir + 'denoising_Bearing2_1'
-    Bearing2_2_path = train_main_dir + 'denoising_Bearing2_2'
-    Bearing3_1_path = train_main_dir + 'denoising_Bearing3_1'
-    Bearing3_2_path = train_main_dir + 'denoising_Bearing3_2'
+    Bearing1_1_path = train_main_dir + 'Bearing1_1'
+    Bearing1_2_path = train_main_dir + 'Bearing1_2'
+    Bearing2_1_path = train_main_dir + 'Bearing2_1'
+    Bearing2_2_path = train_main_dir + 'Bearing2_2'
+    Bearing3_1_path = train_main_dir + 'Bearing3_1'
+    Bearing3_2_path = train_main_dir + 'Bearing3_2'
     print('\n Training rul data'+'-'*100)
     Bearing1_1_data = convert_to_image(Bearing1_1_path, opt, type_data, 1400, 'PHM')
     Bearing1_2_data = convert_to_image(Bearing1_2_path, opt, type_data, 825, 'PHM')
@@ -88,17 +88,17 @@ if os.path.exists(test_data_path_2D) == False:
       train_c_type = np.concatenate((train_c_type_1, train_c_type_2, train_c_type_3))
 
     # Test data---------------------------------------------------------------------------
-    Bearing1_3_path = test_main_dir + 'denoising_Bearing1_3'
-    Bearing1_4_path = test_main_dir + 'denoising_Bearing1_4'
-    Bearing1_5_path = test_main_dir + 'denoising_Bearing1_5'
-    Bearing1_6_path = test_main_dir + 'denoising_Bearing1_6'
-    Bearing1_7_path = test_main_dir + 'denoising_Bearing1_7'
-    Bearing2_3_path = test_main_dir + 'denoising_Bearing2_3'
-    Bearing2_4_path = test_main_dir + 'denoising_Bearing2_4'
-    Bearing2_5_path = test_main_dir + 'denoising_Bearing2_5'
-    Bearing2_6_path = test_main_dir + 'denoising_Bearing2_6'
-    Bearing2_7_path = test_main_dir + 'denoising_Bearing2_7'
-    Bearing3_3_path = test_main_dir + 'denoising_Bearing3_3'
+    Bearing1_3_path = test_main_dir + 'Bearing1_3'
+    Bearing1_4_path = test_main_dir + 'Bearing1_4'
+    Bearing1_5_path = test_main_dir + 'Bearing1_5'
+    Bearing1_6_path = test_main_dir + 'Bearing1_6'
+    Bearing1_7_path = test_main_dir + 'Bearing1_7'
+    Bearing2_3_path = test_main_dir + 'Bearing2_3'
+    Bearing2_4_path = test_main_dir + 'Bearing2_4'
+    Bearing2_5_path = test_main_dir + 'Bearing2_5'
+    Bearing2_6_path = test_main_dir + 'Bearing2_6'
+    Bearing2_7_path = test_main_dir + 'Bearing2_7'
+    Bearing3_3_path = test_main_dir + 'Bearing3_3'
     print('\n Test rul data'+'-'*100)
     Bearing1_3_data = convert_to_image(Bearing1_3_path, opt, type_data, 573, 'PHM')
     Bearing1_4_data = convert_to_image(Bearing1_4_path, opt, type_data, 34, 'PHM')
