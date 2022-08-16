@@ -26,7 +26,7 @@ test_data_path_extract  = train_main_dir + f'test_data_extract_{opt.condition}.p
 train_c_path = train_main_dir + f'train_c_{opt.condition}.pkz'
 test_c_path = train_main_dir + f'test_c_{opt.condition}.pkz'
 
-if os.path.exists(test_data_path_2D) == False:
+if True:
   for type_data in opt.data_type:
     # Train data-------------------------------------------------------------------------
     Bearing1_1_path = train_main_dir + '35Hz12kN/' + 'Bearing1_1'
