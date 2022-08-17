@@ -26,18 +26,18 @@ def TransformerLayer(q, v, k, num_heads=4, training=None):
     return ma
 
 def fully_concatenate(hidden_out_1D, hidden_out_2D, hidden_out_extracted):
-    hidden_out_1D = tf.keras.layers.Dense(512,   activation='relu',
-                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
-                                     bias_regularizer=regularizers.l2(1e-4),
-                                     activity_regularizer=regularizers.l2(1e-5))(hidden_out_1D)
-    hidden_out_2D = tf.keras.layers.Dense(512,   activation='relu',
-                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
-                                     bias_regularizer=regularizers.l2(1e-4),
-                                     activity_regularizer=regularizers.l2(1e-5))(hidden_out_2D)
-    hidden_out_extracted = tf.keras.layers.Dense(512,   activation='relu',
-                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
-                                     bias_regularizer=regularizers.l2(1e-4),
-                                     activity_regularizer=regularizers.l2(1e-5))(hidden_out_extracted)
+#     hidden_out_1D = tf.keras.layers.Dense(512,   activation='relu',
+#                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+#                                      bias_regularizer=regularizers.l2(1e-4),
+#                                      activity_regularizer=regularizers.l2(1e-5))(hidden_out_1D)
+#     hidden_out_2D = tf.keras.layers.Dense(512,   activation='relu',
+#                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+#                                      bias_regularizer=regularizers.l2(1e-4),
+#                                      activity_regularizer=regularizers.l2(1e-5))(hidden_out_2D)
+#     hidden_out_extracted = tf.keras.layers.Dense(512,   activation='relu',
+#                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+#                                      bias_regularizer=regularizers.l2(1e-4),
+#                                      activity_regularizer=regularizers.l2(1e-5))(hidden_out_extracted)
     all_ = concatenate((hidden_out_1D, hidden_out_2D, hidden_out_extracted))
     return all_
 
