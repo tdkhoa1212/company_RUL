@@ -80,9 +80,10 @@ def lstm_model(opt, training=None, inputs=None):
   return m
 
 def lstm_extracted_model(opt, training=None, inputs=None):
-  x = GlobalAveragePooling1D()(inputs) 
-  x = tf.keras.layers.Dense(256,   activation='relu',
-                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
-                                     bias_regularizer=regularizers.l2(1e-4),
-                                     activity_regularizer=regularizers.l2(1e-5))(x)
+  # x = GlobalAveragePooling1D()(inputs) 
+  # x = tf.keras.layers.Dense(256,   activation='relu',
+  #                                    kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+  #                                    bias_regularizer=regularizers.l2(1e-4),
+  #                                    activity_regularizer=regularizers.l2(1e-5))(x)
+  x = tf.keras.layers.Bidirectional(LSTM(units=256, return_sequences=False))(inputs)
   return x
