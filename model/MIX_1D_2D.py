@@ -34,9 +34,9 @@ def TransformerLayer(q, v, k, num_heads=4, training=None):
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(v)
     
-    ma  = MultiHeadAttention(head_size=num_heads, num_heads=num_heads)([q, k, v]) 
+    ma  = MultiHeadAttention(head_size=num_heads, num_heads=num_heads)([q, k, v]) + x1 + x2
     ma = BatchNormalization()(ma, training=training)
-    ma = Activation('relu')(ma) + x1 + x2
+    ma = Activation('relu')(ma)
     ma = Dropout(0.1)(ma, training=training)
     return ma
 
