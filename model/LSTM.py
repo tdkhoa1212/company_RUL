@@ -71,7 +71,7 @@ def lstm_model(opt, training=None, inputs=None):
 
   for i in range(3):
     x = identity_block(x, kernel_size=3, filters=512, stage=4, block=i, training=training)
-  x = tf.keras.layers.Bidirectional(LSTM(units=256, return_sequences=False))(x)
+  x = tf.keras.layers.Bidirectional(LSTM(units=256, return_sequences=False, activation='relu'))(x)
 
   if opt.mix_model:
       return x
@@ -80,10 +80,5 @@ def lstm_model(opt, training=None, inputs=None):
   return m
 
 def lstm_extracted_model(opt, training=None, inputs=None):
-  # x = GlobalAveragePooling1D()(inputs) 
-  # x = tf.keras.layers.Dense(256,   activation='relu',
-  #                                    kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
-  #                                    bias_regularizer=regularizers.l2(1e-4),
-  #                                    activity_regularizer=regularizers.l2(1e-5))(x)
-  x = tf.keras.layers.Bidirectional(LSTM(units=256, return_sequences=False))(inputs)
+  x = tf.keras.layers.Bidirectional(LSTM(units=256, return_sequences=False, activation='relu'))(inputs)
   return x
