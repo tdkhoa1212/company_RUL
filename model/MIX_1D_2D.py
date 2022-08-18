@@ -6,28 +6,36 @@ from keras import layers, regularizers
 import keras.backend as K
 
 def TransformerLayer(q, v, k, num_heads=4, training=None):
-    q = tf.expand_dims(q, axis=-2)
-    k = tf.expand_dims(k, axis=-2)
-    v = tf.expand_dims(v, axis=-2)
-
     q = tf.keras.layers.Dense(128,  kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(q)
+    q = Dropout(0.1)(q, training=training)
     k = tf.keras.layers.Dense(128,   kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(k)
+    k = Dropout(0.1)(k, training=training)
     v = tf.keras.layers.Dense(128,   kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(v)
-    
+    v = Dropout(0.1)(v, training=training)
+
+    q = tf.expand_dims(q, axis=-1)
+    k = tf.expand_dims(k, axis=-1)
+    v = tf.expand_dims(v, axis=-1)
+
     ma  = MultiHeadAttention(head_size=num_heads, num_heads=num_heads)([q, k, v]) 
     ma = BatchNormalization()(ma, training=training)
-    ma = tf.keras.layers.Dense(128,  activation='sigmoid',
+    ma = tf.keras.layers.Dense(64,  activation='relu',
+                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+                                     bias_regularizer=regularizers.l2(1e-4),
+                                     activity_regularizer=regularizers.l2(1e-5))(ma)
+    ma = tf.keras.layers.Dense(64,  activation='relu',
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(ma)
     ma = Dropout(0.1)(ma, training=training)
     ma = tf.keras.layers.GRU(64, return_sequences=False)(ma)
+    ma = Activation('sigmoid')(ma)
     ma = Dropout(0.1)(ma, training=training)
     return ma
 
