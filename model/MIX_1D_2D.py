@@ -26,18 +26,10 @@ def TransformerLayer(q, v, k, num_heads=4, training=None):
     return ma
 
 def fully_concatenate(hidden_out_1D, hidden_out_2D, hidden_out_extracted):
-#     hidden_out_1D = tf.keras.layers.Dense(512,   activation='relu',
-#                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
-#                                      bias_regularizer=regularizers.l2(1e-4),
-#                                      activity_regularizer=regularizers.l2(1e-5))(hidden_out_1D)
-#     hidden_out_2D = tf.keras.layers.Dense(512,   activation='relu',
-#                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
-#                                      bias_regularizer=regularizers.l2(1e-4),
-#                                      activity_regularizer=regularizers.l2(1e-5))(hidden_out_2D)
-#     hidden_out_extracted = tf.keras.layers.Dense(512,   activation='relu',
-#                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
-#                                      bias_regularizer=regularizers.l2(1e-4),
-#                                      activity_regularizer=regularizers.l2(1e-5))(hidden_out_extracted)
+    hidden_out_1D = Dropout(0.1)(hidden_out_1D, training=training)
+    hidden_out_2D = Dropout(0.1)(hidden_out_2D, training=training)
+    hidden_out_extracted = Dropout(0.1)(hidden_out_extracted, training=training)
+    
     all_ = concatenate((hidden_out_1D, hidden_out_2D, hidden_out_extracted))
     return all_
 
@@ -54,8 +46,10 @@ def mix_model(opt, cnn_1d_model, resnet_50, lstm_extracted_model, input_1D, inpu
   hidden_out_2D = network_2D([input_2D])
   hidden_out_extracted = network_extracted([input_extracted])
   
+  merged_value_0 = fully_concatenate(hidden_out_1D, hidden_out_2D, hidden_out_extracted)
   merged_value_1 = TransformerLayer(hidden_out_1D, hidden_out_2D, hidden_out_extracted, 8, training)
-  merged_value_0 = fully_concatenate(hidden_out_1D, hidden_out_2D, merged_value_1)
+  merged_value_2 = TransformerLayer(hidden_out_1D, hidden_out_2D, hidden_out_extracted, 8, training)
+  merged_value_3 = concatenate((merged_value_1, merged_value_2))
     
   Condition = Dense(3, 
                     activation='softmax', 
