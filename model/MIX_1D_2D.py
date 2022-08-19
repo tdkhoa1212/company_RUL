@@ -30,7 +30,7 @@ def TransformerLayer(q, v, k, num_heads=4, training=None):
     ma = concatenate((q, k, v), axis=-1)
 
     # ma  = MultiHeadAttention(head_size=num_heads, num_heads=num_heads)([q, k, v]) 
-    ma = BatchNormalization()(ma, training=training)
+    # ma = BatchNormalization()(ma, training=training)
     # ma = tf.keras.layers.Dense(128,   activation='relu',
     #                                  kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
     #                                  bias_regularizer=regularizers.l2(1e-4),
