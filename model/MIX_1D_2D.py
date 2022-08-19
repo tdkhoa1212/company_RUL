@@ -26,30 +26,43 @@ def TransformerLayer(q, v, k, num_heads=4, training=None):
     k = tf.expand_dims(k, axis=-2)
     v = tf.expand_dims(v, axis=-2)
 
-    ma  = MultiHeadAttention(head_size=num_heads, num_heads=num_heads)([q, k, v]) 
-#     ma = BatchNormalization()(ma, training=training)
-    ma = tf.keras.layers.Dense(128,   activation='relu',
-                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
-                                     bias_regularizer=regularizers.l2(1e-4),
-                                     activity_regularizer=regularizers.l2(1e-5))(ma) + q
-    ma = tf.keras.layers.Dense(128,  activation='relu',
-                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
-                                     bias_regularizer=regularizers.l2(1e-4),
-                                     activity_regularizer=regularizers.l2(1e-5))(ma) + k
-    ma = tf.keras.layers.Dense(128,  activation='relu',
-                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
-                                     bias_regularizer=regularizers.l2(1e-4),
-                                     activity_regularizer=regularizers.l2(1e-5))(ma) + v
+    ma = q + k + v
+    # ma  = MultiHeadAttention(head_size=num_heads, num_heads=num_heads)([q, k, v]) 
+    ma = BatchNormalization()(ma, training=training)
+    # ma = tf.keras.layers.Dense(128,   activation='relu',
+    #                                  kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+    #                                  bias_regularizer=regularizers.l2(1e-4),
+    #                                  activity_regularizer=regularizers.l2(1e-5))(ma) + q
+    # ma = tf.keras.layers.Dense(128,  activation='relu',
+    #                                  kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+    #                                  bias_regularizer=regularizers.l2(1e-4),
+    #                                  activity_regularizer=regularizers.l2(1e-5))(ma) + k
+    # ma = tf.keras.layers.Dense(128,  activation='relu',
+    #                                  kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+    #                                  bias_regularizer=regularizers.l2(1e-4),
+    #                                  activity_regularizer=regularizers.l2(1e-5))(ma) + v
 #     ma = Dropout(0.1)(ma, training=training)
     ma = tf.keras.layers.GRU(64, return_sequences=False)(ma)
-    ma = Activation('relu')(ma)
+    # ma = Activation('sigmoid')(ma)
     ma = Dropout(0.1)(ma, training=training)
     return ma
 
 def fully_concatenate(hidden_out_1D, hidden_out_2D, hidden_out_extracted, training):
-    # hidden_out_1D = Dropout(0.1)(hidden_out_1D, training=training)
-    # hidden_out_2D = Dropout(0.1)(hidden_out_2D, training=training)
-    # hidden_out_extracted = Dropout(0.1)(hidden_out_extracted, training=training)
+    hidden_out_1D = tf.keras.layers.Dense(1024,   activation='relu',
+                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+                                     bias_regularizer=regularizers.l2(1e-4),
+                                     activity_regularizer=regularizers.l2(1e-5))(hidden_out_1D) 
+    hidden_out_2D = tf.keras.layers.Dense(512,   activation='relu',
+                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+                                     bias_regularizer=regularizers.l2(1e-4),
+                                     activity_regularizer=regularizers.l2(1e-5))(hidden_out_2D) 
+    hidden_out_extracted = tf.keras.layers.Dense(256,   activation='relu',
+                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+                                     bias_regularizer=regularizers.l2(1e-4),
+                                     activity_regularizer=regularizers.l2(1e-5))(hidden_out_extracted) 
+    hidden_out_1D = Dropout(0.1)(hidden_out_1D, training=training)
+    hidden_out_2D = Dropout(0.1)(hidden_out_2D, training=training)
+    hidden_out_extracted = Dropout(0.1)(hidden_out_extracted, training=training)
     
     all_ = concatenate((hidden_out_1D, hidden_out_2D, hidden_out_extracted))
     return all_
