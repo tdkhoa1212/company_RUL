@@ -22,20 +22,24 @@ def TransformerLayer(q, v, k, num_heads=4, training=None):
                                      activity_regularizer=regularizers.l2(1e-5))(v)
 #     v = Dropout(0.1)(v, training=training)
 
-    q = tf.expand_dims(q, axis=-1)
-    k = tf.expand_dims(k, axis=-1)
-    v = tf.expand_dims(v, axis=-1)
+    q = tf.expand_dims(q, axis=-2)
+    k = tf.expand_dims(k, axis=-2)
+    v = tf.expand_dims(v, axis=-2)
 
     ma  = MultiHeadAttention(head_size=num_heads, num_heads=num_heads)([q, k, v]) 
 #     ma = BatchNormalization()(ma, training=training)
-    ma = tf.keras.layers.Dense(32,   activation='relu',
+    ma = tf.keras.layers.Dense(128,   activation='relu',
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
-                                     activity_regularizer=regularizers.l2(1e-5))(ma)
-    ma = tf.keras.layers.Dense(64,  activation='relu',
+                                     activity_regularizer=regularizers.l2(1e-5))(ma) + q
+    ma = tf.keras.layers.Dense(128,  activation='relu',
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
-                                     activity_regularizer=regularizers.l2(1e-5))(ma)
+                                     activity_regularizer=regularizers.l2(1e-5))(ma) + k
+    ma = tf.keras.layers.Dense(128,  activation='relu',
+                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+                                     bias_regularizer=regularizers.l2(1e-4),
+                                     activity_regularizer=regularizers.l2(1e-5))(ma) + v
 #     ma = Dropout(0.1)(ma, training=training)
     ma = tf.keras.layers.GRU(64, return_sequences=False)(ma)
     ma = Activation('relu')(ma)
