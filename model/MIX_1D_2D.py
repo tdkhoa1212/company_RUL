@@ -6,26 +6,29 @@ from keras import layers, regularizers
 import keras.backend as K
 
 def TransformerLayer(q, v, k, num_heads=4, training=None):
-    q = tf.keras.layers.Dense(128,  kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+    q = tf.keras.layers.Dense(128,   activation='relu',
+                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(q)
-    q = Dropout(0.1)(q, training=training)
-    k = tf.keras.layers.Dense(128,   kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+#     q = Dropout(0.1)(q, training=training)
+    k = tf.keras.layers.Dense(128,   activation='relu',
+                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(k)
-    k = Dropout(0.1)(k, training=training)
-    v = tf.keras.layers.Dense(128,   kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+#     k = Dropout(0.1)(k, training=training)
+    v = tf.keras.layers.Dense(128,   activation='relu',
+                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(v)
-    v = Dropout(0.1)(v, training=training)
+#     v = Dropout(0.1)(v, training=training)
 
     q = tf.expand_dims(q, axis=-1)
     k = tf.expand_dims(k, axis=-1)
     v = tf.expand_dims(v, axis=-1)
 
     ma  = MultiHeadAttention(head_size=num_heads, num_heads=num_heads)([q, k, v]) 
-    ma = BatchNormalization()(ma, training=training)
-    ma = tf.keras.layers.Dense(64,  activation='relu',
+#     ma = BatchNormalization()(ma, training=training)
+    ma = tf.keras.layers.Dense(32,   activation='relu',
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(ma)
@@ -33,9 +36,9 @@ def TransformerLayer(q, v, k, num_heads=4, training=None):
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(ma)
-    ma = Dropout(0.1)(ma, training=training)
+#     ma = Dropout(0.1)(ma, training=training)
     ma = tf.keras.layers.GRU(64, return_sequences=False)(ma)
-    ma = Activation('sigmoid')(ma)
+    ma = Activation('relu')(ma)
     ma = Dropout(0.1)(ma, training=training)
     return ma
 
