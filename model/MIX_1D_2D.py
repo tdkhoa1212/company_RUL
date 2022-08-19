@@ -6,23 +6,23 @@ from keras import layers, regularizers
 import keras.backend as K
 
 def TransformerLayer(x, num_heads=4, training=None):
-    x = tf.keras.layers.Dense(112,   activation='relu',
+    x = tf.keras.layers.Dense(56,   activation='relu',
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(x)
     x = Dropout(0.1)(x, training=training)
     ma  = MultiHeadAttention(head_size=num_heads, num_heads=num_heads)([x, x, x]) 
 #     ma = BatchNormalization()(ma, training=training)
-    ma = tf.keras.layers.Dense(112,   activation='relu',
+    ma = tf.keras.layers.Dense(56,   activation='relu',
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(ma) 
-    ma = tf.keras.layers.Dense(112,  activation='relu',
+    ma = tf.keras.layers.Dense(56,  activation='relu',
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(ma) 
     ma = Dropout(0.1)(ma, training=training)
-    ma = tf.keras.layers.GRU(112, return_sequences=False, return_state=True)(ma)
+    ma = tf.keras.layers.GRU(56, return_sequences=False, return_state=True)(ma)
     ma = Dropout(0.1)(ma, training=training)
     return ma
 
