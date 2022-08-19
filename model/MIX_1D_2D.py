@@ -22,13 +22,13 @@ def TransformerLayer(q, v, k, num_heads=4, training=None):
                                      activity_regularizer=regularizers.l2(1e-5))(v)
 #     v = Dropout(0.1)(v, training=training)
 
-    q = tf.expand_dims(q, axis=-2)
-    k = tf.expand_dims(k, axis=-2)
-    v = tf.expand_dims(v, axis=-2)
+    q = tf.expand_dims(q, axis=-1)
+    k = tf.expand_dims(k, axis=-1)
+    v = tf.expand_dims(v, axis=-1)
 
-    ma = q + k + v
-    # ma = concatenate((q, k, v), axis=-2)
-    
+    # ma = q + k + v
+    ma = concatenate((q, k, v), axis=-1)
+
     # ma  = MultiHeadAttention(head_size=num_heads, num_heads=num_heads)([q, k, v]) 
     ma = BatchNormalization()(ma, training=training)
     # ma = tf.keras.layers.Dense(128,   activation='relu',
