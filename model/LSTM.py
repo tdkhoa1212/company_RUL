@@ -1,6 +1,6 @@
 from tensorflow.keras.layers import Conv1D, Activation, \
                                     Dense, concatenate, BatchNormalization, GlobalAveragePooling1D,\
-                                    Input, MaxPooling1D, Lambda, GlobalAveragePooling2D, ReLU, 
+                                    Input, MaxPooling1D, Lambda, GlobalAveragePooling2D, ReLU, \
                                     MaxPooling2D, Flatten, Dropout, LSTM, AveragePooling1D
 import tensorflow as tf
 from keras.models import Model
@@ -89,7 +89,7 @@ def lstm_extracted_model(opt, training=None, inputs=None):
                padding='same',
                kernel_initializer='glorot_uniform',
                kernel_regularizer=regularizers.l2(l=0.0001))(inputs)
-  x = BatchNormalization()(x, training=training)
+  x = BatchNormalization()(x, training=training)(x)
   x = Activation('relu')(x)
   x = AveragePooling1D(pool_size=1, padding='same')(x)
 
@@ -99,7 +99,7 @@ def lstm_extracted_model(opt, training=None, inputs=None):
                padding='same',
                kernel_initializer='glorot_uniform',
                kernel_regularizer=regularizers.l2(l=0.0001))(x)
-  x = BatchNormalization()(x, training=training)
+  x = BatchNormalization()(x, training=training)(x)
   x = Activation('relu')(x)
   x = AveragePooling1D(pool_size=1, padding='same')(x)
   
