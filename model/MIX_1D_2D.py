@@ -10,48 +10,29 @@ def TransformerLayer(q, v, k, num_heads=4, training=None):
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(q)
-    q = Dropout(0.1)(q, training=training)
+#     q = Dropout(0.1)(q, training=training)
     k = tf.keras.layers.Dense(256,   activation='relu',
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(k)
-    k = Dropout(0.1)(k, training=training)
+#     k = Dropout(0.1)(k, training=training)
     v = tf.keras.layers.Dense(256,   activation='relu',
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(v)
-    v = Dropout(0.1)(v, training=training)
+#     v = Dropout(0.1)(v, training=training)
 
-    # q = tf.expand_dims(q, axis=-1)
-    # k = tf.expand_dims(k, axis=-1)
-    # v = tf.expand_dims(v, axis=-1)
-
-    ma = concatenate((q, k, v))
-    ma = tf.keras.layers.Dense(128,   activation='sigmoid',
+    ma  = MultiHeadAttention(head_size=num_heads, num_heads=num_heads)([q, k, v]) 
+#     ma = BatchNormalization()(ma, training=training)
+    ma = tf.keras.layers.Dense(256,   activation='relu',
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
-                                     activity_regularizer=regularizers.l2(1e-5))(ma)
+                                     activity_regularizer=regularizers.l2(1e-5))(ma) 
+    ma = tf.keras.layers.Dense(256,  activation='relu',
+                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+                                     bias_regularizer=regularizers.l2(1e-4),
+                                     activity_regularizer=regularizers.l2(1e-5))(ma) 
     ma = Dropout(0.1)(ma, training=training)
-    # ma = concatenate((q, k, v), axis=-1)
-
-    # ma  = MultiHeadAttention(head_size=num_heads, num_heads=num_heads)([q, k, v]) 
-    # ma = BatchNormalization()(ma, training=training)
-    # ma = tf.keras.layers.Dense(128,   activation='relu',
-    #                                  kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
-    #                                  bias_regularizer=regularizers.l2(1e-4),
-    #                                  activity_regularizer=regularizers.l2(1e-5))(ma) + q
-    # ma = tf.keras.layers.Dense(128,  activation='relu',
-    #                                  kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
-    #                                  bias_regularizer=regularizers.l2(1e-4),
-    #                                  activity_regularizer=regularizers.l2(1e-5))(ma) + k
-    # ma = tf.keras.layers.Dense(128,  activation='relu',
-    #                                  kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
-    #                                  bias_regularizer=regularizers.l2(1e-4),
-    #                                  activity_regularizer=regularizers.l2(1e-5))(ma) + v
-#     ma = Dropout(0.1)(ma, training=training)
-#     ma = tf.keras.layers.GRU(64, return_sequences=False)(ma)
-    # ma = Activation('sigmoid')(ma)
-#     ma = Dropout(0.1)(ma, training=training)
     return ma
 
 def fully_concatenate(hidden_out_1D, hidden_out_2D, hidden_out_extracted, training):
@@ -87,8 +68,8 @@ def mix_model(opt, cnn_1d_model, resnet_50, lstm_extracted_model, input_1D, inpu
   hidden_out_2D = network_2D([input_2D])
   hidden_out_extracted = network_extracted([input_extracted])
   
-  merged_value_0 = fully_concatenate(hidden_out_1D, hidden_out_2D, hidden_out_extracted, training)
   merged_value_1 = TransformerLayer(hidden_out_1D, hidden_out_2D, hidden_out_extracted, 8, training)
+  merged_value_0 = fully_concatenate(hidden_out_1D, merged_value_1, hidden_out_2D, training)
   # merged_value_2 = TransformerLayer(hidden_out_1D, hidden_out_2D, hidden_out_extracted, 8, training)
   # merged_value_3 = TransformerLayer(hidden_out_1D, hidden_out_2D, hidden_out_extracted, 8, training)
   # merged_value_4 = concatenate((merged_value_1, merged_value_2, merged_value_3))
