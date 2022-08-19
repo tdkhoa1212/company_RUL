@@ -80,5 +80,5 @@ def lstm_model(opt, training=None, inputs=None):
   return m
 
 def lstm_extracted_model(opt, training=None, inputs=None):
-  x = tf.keras.layers.Bidirectional(LSTM(units=256, return_sequences=False, activation='relu'))(inputs)
+  x = tf.keras.layers.Bidirectional(LSTM(units=56, return_sequences=True, activation='relu'))(inputs)
   return x
