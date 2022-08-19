@@ -22,7 +22,7 @@ def TransformerLayer(x, num_heads=4, training=None):
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(ma) 
     ma = Dropout(0.1)(ma, training=training)
-    ma = tf.keras.layers.GRU(56, return_sequences=False, return_state=True)(ma)
+    ma = tf.keras.layers.GRU(56, return_sequences=False)(ma)
     ma = Dropout(0.1)(ma, training=training)
     return ma
 
