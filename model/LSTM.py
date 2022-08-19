@@ -1,4 +1,7 @@
-from tensorflow.keras.layers import Conv1D, Activation, Dense, concatenate, BatchNormalization, GlobalAveragePooling1D, Input, MaxPooling1D, Lambda, GlobalAveragePooling2D, ReLU, MaxPooling2D, Flatten, Dropout, LSTM
+from tensorflow.keras.layers import Conv1D, Activation, \
+                                    Dense, concatenate, BatchNormalization, GlobalAveragePooling1D,\
+                                    Input, MaxPooling1D, Lambda, GlobalAveragePooling2D, ReLU, 
+                                    MaxPooling2D, Flatten, Dropout, LSTM, AveragePooling1D
 import tensorflow as tf
 from keras.models import Model
 from keras import layers, regularizers
@@ -80,5 +83,25 @@ def lstm_model(opt, training=None, inputs=None):
   return m
 
 def lstm_extracted_model(opt, training=None, inputs=None):
-  x = tf.keras.layers.Bidirectional(LSTM(units=56, return_sequences=True, activation='relu'))(inputs)
+    x = Conv1D(56,
+               kernel_size=4,
+               strides=1,
+               padding='same',
+               kernel_initializer='glorot_uniform',
+               kernel_regularizer=regularizers.l2(l=0.0001))(inputs)
+  x = BatchNormalization()(x, training=training)
+  x = Activation('relu')(x)
+  x = AveragePooling1D(pool_size=1, padding='same')(x)
+
+  x = Conv1D(56,
+               kernel_size=4,
+               strides=1,
+               padding='same',
+               kernel_initializer='glorot_uniform',
+               kernel_regularizer=regularizers.l2(l=0.0001))(x)
+  x = BatchNormalization()(x, training=training)
+  x = Activation('relu')(x)
+  x = AveragePooling1D(pool_size=1, padding='same')(x)
+  
+#   x = tf.keras.layers.Bidirectional(LSTM(units=56, return_sequences=True, activation='relu'))(inputs)
   return x
