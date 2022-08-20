@@ -35,7 +35,7 @@ def fully_concatenate(hidden_out_1D, hidden_out_2D, hidden_out_extracted, traini
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(hidden_out_2D) 
-    hidden_out_extracted = tf.keras.layers.Dense(512,   activation='relu',
+    hidden_out_extracted = tf.keras.layers.Dense(64,   activation='relu',
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(hidden_out_extracted) 
@@ -60,7 +60,7 @@ def mix_model(opt, cnn_1d_model, resnet_50, lstm_extracted_model, input_1D, inpu
   hidden_out_extracted = network_extracted([input_extracted])
   
   merged_value_1 = fully_concatenate(hidden_out_1D, hidden_out_2D, hidden_out_extracted, training)
-  merged_value_0 = fully_concatenate(hidden_out_1D, hidden_out_2D, hidden_out_extracted, training)
+#   merged_value_0 = fully_concatenate(hidden_out_1D, hidden_out_2D, hidden_out_extracted, training)
   # merged_value_2 = TransformerLayer(hidden_out_1D, hidden_out_2D, hidden_out_extracted, 8, training)
   # merged_value_3 = TransformerLayer(hidden_out_1D, hidden_out_2D, hidden_out_extracted, 8, training)
   # merged_value_4 = concatenate((merged_value_1, merged_value_2, merged_value_3))
@@ -72,7 +72,7 @@ def mix_model(opt, cnn_1d_model, resnet_50, lstm_extracted_model, input_1D, inpu
     
   Condition = Dense(3, 
                     activation='softmax', 
-                    name='Condition')(merged_value_0)
+                    name='Condition')(merged_value_1)
   RUL = Dense(1, 
               activation='sigmoid', 
               name='RUL')(merged_value_1)
