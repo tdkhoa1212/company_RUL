@@ -102,5 +102,5 @@ def lstm_extracted_model(opt, training=None, inputs=None):
   x = BatchNormalization()(x, training=training)
   x = Activation('relu')(x)
   x = AveragePooling1D(pool_size=1, padding='same')(x)
-  x = tf.keras.layers.Bidirectional(LSTM(units=56, return_sequences=False, activation='relu'))(inputs)
+  x = tf.keras.layers.Bidirectional(LSTM(units=56, return_sequences=False, activation='relu'))(x)
   return x
