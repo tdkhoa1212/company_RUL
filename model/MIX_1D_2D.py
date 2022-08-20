@@ -5,26 +5,26 @@ from tensorflow_addons.layers import MultiHeadAttention
 from keras import layers, regularizers
 import keras.backend as K
 
-def TransformerLayer(x, num_heads=4, training=None):
-    x = tf.keras.layers.Dense(56,   activation='relu',
-                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
-                                     bias_regularizer=regularizers.l2(1e-4),
-                                     activity_regularizer=regularizers.l2(1e-5))(x)
-    x = Dropout(0.1)(x, training=training)
-    ma  = MultiHeadAttention(head_size=num_heads, num_heads=num_heads)([x, x, x]) 
+# def TransformerLayer(x, num_heads=4, training=None):
+#     x = tf.keras.layers.Dense(56,   activation='relu',
+#                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+#                                      bias_regularizer=regularizers.l2(1e-4),
+#                                      activity_regularizer=regularizers.l2(1e-5))(x)
+#     x = Dropout(0.1)(x, training=training)
+#     ma  = MultiHeadAttention(head_size=num_heads, num_heads=num_heads)([x, x, x]) 
 #     ma = BatchNormalization()(ma, training=training)
-    ma = tf.keras.layers.Dense(56,   activation='relu',
-                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
-                                     bias_regularizer=regularizers.l2(1e-4),
-                                     activity_regularizer=regularizers.l2(1e-5))(ma) 
-    ma = tf.keras.layers.Dense(56,  activation='relu',
-                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
-                                     bias_regularizer=regularizers.l2(1e-4),
-                                     activity_regularizer=regularizers.l2(1e-5))(ma) 
-    ma = Dropout(0.1)(ma, training=training)
-    ma = tf.keras.layers.GRU(56, return_sequences=False)(ma)
-    ma = Dropout(0.1)(ma, training=training)
-    return ma
+#     ma = tf.keras.layers.Dense(56,   activation='relu',
+#                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+#                                      bias_regularizer=regularizers.l2(1e-4),
+#                                      activity_regularizer=regularizers.l2(1e-5))(ma) 
+#     ma = tf.keras.layers.Dense(56,  activation='relu',
+#                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+#                                      bias_regularizer=regularizers.l2(1e-4),
+#                                      activity_regularizer=regularizers.l2(1e-5))(ma) 
+#     ma = Dropout(0.1)(ma, training=training)
+#     ma = tf.keras.layers.GRU(56, return_sequences=False)(ma)
+#     ma = Dropout(0.1)(ma, training=training)
+#     return ma
 
 def fully_concatenate(hidden_out_1D, hidden_out_2D, training):
     hidden_out_1D = tf.keras.layers.Dense(1024,   activation='relu',
@@ -35,13 +35,8 @@ def fully_concatenate(hidden_out_1D, hidden_out_2D, training):
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(hidden_out_2D) 
-#     hidden_out_extracted = tf.keras.layers.Dense(256,   activation='relu',
-#                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
-#                                      bias_regularizer=regularizers.l2(1e-4),
-#                                      activity_regularizer=regularizers.l2(1e-5))(hidden_out_extracted) 
     hidden_out_1D = Dropout(0.1)(hidden_out_1D, training=training)
     hidden_out_2D = Dropout(0.1)(hidden_out_2D, training=training)
-#     hidden_out_extracted = Dropout(0.1)(hidden_out_extracted, training=training)
     
     all_ = concatenate((hidden_out_1D, hidden_out_2D))
     return all_
@@ -59,7 +54,7 @@ def mix_model(opt, cnn_1d_model, resnet_50, lstm_extracted_model, input_1D, inpu
   hidden_out_2D = network_2D([input_2D])
   hidden_out_extracted = network_extracted([input_extracted])
   
-  merged_value_1 = TransformerLayer(hidden_out_extracted, 8, training)
+  merged_value_1 = fully_concatenate(hidden_out_1D, hidden_out_2D, training)
   merged_value_0 = fully_concatenate(hidden_out_1D, hidden_out_2D, training)
   # merged_value_2 = TransformerLayer(hidden_out_1D, hidden_out_2D, hidden_out_extracted, 8, training)
   # merged_value_3 = TransformerLayer(hidden_out_1D, hidden_out_2D, hidden_out_extracted, 8, training)
@@ -75,5 +70,5 @@ def mix_model(opt, cnn_1d_model, resnet_50, lstm_extracted_model, input_1D, inpu
                     name='Condition')(merged_value_0)
   RUL = Dense(1, 
               activation='sigmoid', 
-              name='RUL')(merged_value_1)
+              name='RUL')(merged_value_0)
   return Condition, RUL
