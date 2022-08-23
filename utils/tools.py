@@ -244,8 +244,8 @@ def convert_to_image(name_bearing, opt, type_data, time=None, type_=None):
     
     num_files = len([i for i in os.listdir(os.path.join(opt.main_dir_colab, name_bearing))])
     if type_ == 'PHM':
-      model = autoencoder_model(type_)
-      model.load_weights(f'/content/drive/MyDrive/Khoa/autoencoder/{type_}.h5')
+      # model = autoencoder_model(type_)
+      # model.load_weights(f'/content/drive/MyDrive/Khoa/autoencoder/{type_}.h5')
       for i in range(num_files):
           name = f"/acc_{str(i+1).zfill(5)}.csv"
           file_ = os.path.join(opt.main_dir_colab, name_bearing)+name
@@ -256,7 +256,7 @@ def convert_to_image(name_bearing, opt, type_data, time=None, type_=None):
               x_ = np.concatenate((coef_h, coef_v), axis=-1)
               if type_data=='1d' or type_data=='extract':
                 x_ = np.expand_dims(x_.reshape(x_.shape[1], x_.shape[0]), axis=0)
-                x_ = model.predict(x_)
+                # x_ = model.predict(x_)
                 x_ = np.squeeze(x_)
                 x_ = x_.reshape(x_.shape[1], x_.shape[0]).tolist()
               else:
@@ -265,8 +265,8 @@ def convert_to_image(name_bearing, opt, type_data, time=None, type_=None):
               data['x'].append(x_)
               data['y'].append(y_)
     else:
-      model = autoencoder_model(type_)
-      model.load_weights(f'/content/drive/MyDrive/Khoa/autoencoder/{type_}.h5')
+      # model = autoencoder_model(type_)
+      # model.load_weights(f'/content/drive/MyDrive/Khoa/autoencoder/{type_}.h5')
       for i in range(num_files):
           name = f"{str(i+1)}.csv"
           file_ = os.path.join(name_bearing, name)
@@ -277,7 +277,7 @@ def convert_to_image(name_bearing, opt, type_data, time=None, type_=None):
               x_ = np.concatenate((coef_h, coef_v), axis=-1)
               if type_data=='1d' or type_data=='extract':
                 x_ = np.expand_dims(x_.reshape(x_.shape[1], x_.shape[0]), axis=0)
-                x_ = model.predict(x_)
+                # x_ = model.predict(x_)
                 x_ = np.squeeze(x_)
                 x_ = x_.reshape(x_.shape[1], x_.shape[0]).tolist()
               else:
