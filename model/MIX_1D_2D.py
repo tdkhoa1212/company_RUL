@@ -19,7 +19,6 @@ def mix_model(opt, cnn_1d_model, resnet_50, lstm_extracted_model, input_1D, inpu
   
   hidden_out_1D = network_1D([input_1D])
   hidden_out_2D = network_2D([input_2D])
-  hidden_out_2D = Dropout(0.1)(hidden_out_2D, training=training)
   hidden_out_extracted = network_extracted([input_extracted])
   
   merged_value_1 = fully_concatenate(hidden_out_1D, hidden_out_2D, hidden_out_extracted, training)
