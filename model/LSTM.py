@@ -118,7 +118,7 @@ def lstm_model(opt, training=None, inputs=None):
 
   for i in range(3):
     x = identity_block(x, kernel_size=3, filters=512, stage=4, block=i, training=training)
-  x = TransformerLayer(x, 256, num_heads=16, training=training)
+  x = TransformerLayer(x, 512, num_heads=16, training=training)
 
   if opt.mix_model:
       return x
