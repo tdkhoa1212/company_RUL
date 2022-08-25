@@ -1,7 +1,29 @@
 import tensorflow as tf
 from model.residual_block import make_basic_block_layer, make_bottleneck_layer
-from model.cnn import TransformerLayer
+from model.LSTM import TransformerLayer
 from tensorflow.keras.layers import Conv1D, Activation, Dense, concatenate, BatchNormalization, GlobalAveragePooling1D, Input, MaxPooling1D, Lambda, GlobalAveragePooling2D, ReLU, MaxPooling2D, Flatten, Dropout, LSTM
+
+def TransformerLayer(x, c, num_heads=4, training=None):
+    a = x
+    x = tf.keras.layers.Dense(c,   activation='relu',
+                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+                                     bias_regularizer=regularizers.l2(1e-4),
+                                     activity_regularizer=regularizers.l2(1e-5))(x)
+    x = Dropout(0.1)(x, training=training)
+    ma  = MultiHeadAttention(head_size=num_heads, num_heads=num_heads)([x, x, x]) 
+    ma = BatchNormalization()(ma, training=training)
+    ma = tf.keras.layers.Dense(c,   activation='relu',
+                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+                                     bias_regularizer=regularizers.l2(1e-4),
+                                     activity_regularizer=regularizers.l2(1e-5))(ma) 
+    ma = tf.keras.layers.Dense(c,  activation='relu',
+                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+                                     bias_regularizer=regularizers.l2(1e-4),
+                                     activity_regularizer=regularizers.l2(1e-5))(ma) 
+    ma = Dropout(0.1)(ma, training=training)
+    ma = tf.keras.layers.Bidirectional(LSTM(units=c, return_sequences=False, activation='relu'))(ma)
+    ma = Dropout(0.1)(ma, training=training)
+    return ma
 
 class ResNetTypeI(tf.keras.Model):
     def __init__(self, opt, layer_params):
@@ -30,7 +52,7 @@ class ResNetTypeI(tf.keras.Model):
 
         self.avgpool = tf.keras.layers.GlobalAveragePooling2D()
         self.fc = tf.keras.layers.Dense(units=opt.num_classes, activation=tf.keras.activations.softmax)
-
+        self.transform = TransformerLayer
     def call(self, inputs, training=None, mask=None):
         x = self.conv1(inputs)
         x = self.bn1(x, training=training)
@@ -40,7 +62,8 @@ class ResNetTypeI(tf.keras.Model):
         x = self.layer2(x, training=training)
         x = self.layer3(x, training=training)
         x = self.layer4(x, training=training)
-        x = self.avgpool(x)
+        x = self.transform(x, 512, training=training)
+#         x = self.avgpool(x)
 #         x = self.fc(x)
 
         return x
