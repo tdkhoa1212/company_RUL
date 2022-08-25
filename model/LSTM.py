@@ -8,12 +8,12 @@ from keras import layers, regularizers
 import keras.backend as K
 from tensorflow_addons.layers import MultiHeadAttention
 
+'''
 def TransformerLayer(x, c, num_heads=4, training=None):
     x = tf.keras.layers.Dense(c,   activation='relu',
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(x)
-#     x = Dropout(0.1)(x, training=training)
     ma  = MultiHeadAttention(head_size=num_heads, num_heads=num_heads)([x, x, x]) 
     ma = BatchNormalization()(ma, training=training)
     ma = tf.keras.layers.Dense(c,   activation='relu',
@@ -25,9 +25,27 @@ def TransformerLayer(x, c, num_heads=4, training=None):
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(ma) 
     ma = Dropout(0.1)(ma, training=training)
-#     ma = tf.keras.layers.GRU(56, return_sequences=False)(ma)
     ma = tf.keras.layers.Bidirectional(LSTM(units=c, return_sequences=False, activation='relu'))(ma)
-#     ma = Dropout(0.1)(ma, training=training)
+    return ma
+'''
+
+def TransformerLayer(x, c, num_heads=4, training=None):
+    x = tf.keras.layers.Dense(c,   activation='relu',
+                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+                                     bias_regularizer=regularizers.l2(1e-4),
+                                     activity_regularizer=regularizers.l2(1e-5))(x)
+    ma  = MultiHeadAttention(head_size=num_heads, num_heads=num_heads)([x, x, x]) 
+    ma = BatchNormalization()(ma, training=training)
+    ma = tf.keras.layers.Dense(c,   activation='relu',
+                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+                                     bias_regularizer=regularizers.l2(1e-4),
+                                     activity_regularizer=regularizers.l2(1e-5))(ma) 
+    ma = tf.keras.layers.Dense(c,  activation='relu',
+                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+                                     bias_regularizer=regularizers.l2(1e-4),
+                                     activity_regularizer=regularizers.l2(1e-5))(ma) + x
+    ma = tf.keras.layers.Bidirectional(LSTM(units=c, return_sequences=False, activation='relu'))(ma)
+    ma = Dropout(0.1)(ma, training=training)
     return ma
 
 def identity_block(input_tensor, kernel_size, filters, stage, block, training):
@@ -96,7 +114,7 @@ def lstm_model(opt, training=None, inputs=None):
 
   for i in range(3):
     x = identity_block(x, kernel_size=3, filters=512, stage=4, block=i, training=training)
-  x = TransformerLayer(x, 256, num_heads=8, training=training)
+  x = TransformerLayer(x, 256, num_heads=16, training=training)
 
   if opt.mix_model:
       return x
@@ -124,5 +142,5 @@ def lstm_extracted_model(opt, training=None, inputs=None):
   x = BatchNormalization()(x, training=training)
   x = Activation('relu')(x)
   x = AveragePooling1D(pool_size=2)(x)
-  x = TransformerLayer(x, 56, num_heads=8, training=training)
+  x = TransformerLayer(x, 56, num_heads=16, training=training)
   return x
