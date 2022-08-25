@@ -9,7 +9,7 @@ import keras.backend as K
 from tensorflow_addons.layers import MultiHeadAttention
 
 '''
-def TransformerLayer(x, c, num_heads=4, training=None):
+def TransformerLayer(x, c, num_heads=16, training=None):
     a = x
     x = tf.keras.layers.Dense(c,   activation='relu',
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
@@ -32,7 +32,7 @@ def TransformerLayer(x, c, num_heads=4, training=None):
     return ma
 '''
 
-def TransformerLayer(x, c, num_heads=4, training=None):
+def TransformerLayer(x, c, num_heads=16, training=None):
     a = x
     x = tf.keras.layers.Dense(c,   activation='relu',
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
@@ -120,7 +120,7 @@ def lstm_model(opt, training=None, inputs=None):
 
   for i in range(3):
     x = identity_block(x, kernel_size=3, filters=512, stage=4, block=i, training=training)
-  x = TransformerLayer(x, 512, num_heads=16, training=training)
+  x = TransformerLayer(x, 512, training=training)
 
   if opt.mix_model:
       return x
@@ -148,5 +148,5 @@ def lstm_extracted_model(opt, training=None, inputs=None):
   x = BatchNormalization()(x, training=training)
   x = Activation('relu')(x)
   x = AveragePooling1D(pool_size=2)(x)
-  x = TransformerLayer(x, 56, num_heads=16, training=training)
+  x = TransformerLayer(x, 56, training=training)
   return x
