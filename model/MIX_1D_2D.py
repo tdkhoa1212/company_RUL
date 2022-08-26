@@ -1,4 +1,8 @@
-from tensorflow.keras.layers import Conv1D, Activation, Dense, concatenate, BatchNormalization, GlobalAveragePooling1D, Input, MaxPooling1D, Lambda, GlobalAveragePooling2D, ReLU, MaxPooling2D, Flatten, Dropout, LSTM
+from tensorflow.keras.layers import Conv1D, Activation, Dense, \
+                                    concatenate, BatchNormalization, \
+                                    GlobalAveragePooling1D, Input, \
+                                    MaxPooling1D, Lambda, GlobalAveragePooling2D, \
+                                    ReLU, MaxPooling2D, Flatten, Dropout, LSTM, Reshape
 import tensorflow as tf
 from keras.models import Model
 from keras import layers, regularizers
@@ -7,6 +11,10 @@ import keras.backend as K
 def fully_concatenate(hidden_out_1D, hidden_out_2D, hidden_out_extracted, training):
     all_ = concatenate((hidden_out_1D, hidden_out_2D, hidden_out_extracted))
     return all_
+
+def reshape(x):
+    out = Reshape((x.shape[-2]*x.shape[-3], x.shape[-1]))(x)
+    return out
 
 def mix_model(opt, cnn_1d_model, resnet_50, lstm_extracted_model, input_1D, input_2D, input_extracted, training=False):
   out_1D = cnn_1d_model(opt, training, input_1D)
@@ -20,6 +28,9 @@ def mix_model(opt, cnn_1d_model, resnet_50, lstm_extracted_model, input_1D, inpu
   hidden_out_1D = network_1D([input_1D])
   hidden_out_2D = network_2D([input_2D])
   hidden_out_extracted = network_extracted([input_extracted])
+
+  hidden_out_2D = reshape(hidden_out_2D)
+  hidden_out_2D = TransformerLayer(hidden_out_2D, hidden_out_2D.shape[-1], training=training)
   
   merged_value_1 = fully_concatenate(hidden_out_1D, hidden_out_2D, hidden_out_extracted, training)
     
