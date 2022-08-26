@@ -29,9 +29,16 @@ def mix_model(opt, cnn_1d_model, resnet_50, lstm_extracted_model, input_1D, inpu
   hidden_out_1D = network_1D([input_1D])
   hidden_out_2D = network_2D([input_2D])
   hidden_out_extracted = network_extracted([input_extracted])
-
-  hidden_out_2D = reshape(hidden_out_2D)
-  hidden_out_2D = TransformerLayer(hidden_out_2D, hidden_out_2D.shape[-1], training=training)
+  
+  rul_hidden_out_1D = TransformerLayer(hidden_out_1D, hidden_out_1D.shape[-1], training=training)
+  rul_hidden_out_2D = reshape(hidden_out_2D)
+  rul_hidden_out_2D = TransformerLayer(rul_hidden_out_2D, rul_hidden_out_2D.shape[-1], training=training)
+  rul_hidden_out_extracted = TransformerLayer(hidden_out_extracted, hidden_out_extracted.shape[-1], training=training)
+  
+  con_hidden_out_1D = GlobalAveragePooling1D()(hidden_out_1D)
+  con_hidden_out_2D = GlobalAveragePooling2D()(hidden_out_2D)
+  con_hidden_out_extracted = GlobalAveragePooling1D()(hidden_out_extracted)
+  
   
   merged_value_1 = fully_concatenate(hidden_out_1D, hidden_out_2D, hidden_out_extracted, training)
     
