@@ -6,28 +6,9 @@ from tensorflow.keras.layers import Conv1D, Activation, Dense, \
                                     Input, MaxPooling1D, Lambda, \
                                     GlobalAveragePooling2D, ReLU, MaxPooling2D, \
                                     Flatten, Dropout, LSTM
-
-def TransformerLayer(x, c, num_heads=4, training=None):
-    a = x
-    x = tf.keras.layers.Dense(c,   activation='relu',
-                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
-                                     bias_regularizer=regularizers.l2(1e-4),
-                                     activity_regularizer=regularizers.l2(1e-5))(x)
-    x = Dropout(0.1)(x, training=training)
-    ma  = MultiHeadAttention(head_size=num_heads, num_heads=num_heads)([x, x, x]) 
-    ma = BatchNormalization()(ma, training=training)
-    ma = tf.keras.layers.Dense(c,   activation='relu',
-                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
-                                     bias_regularizer=regularizers.l2(1e-4),
-                                     activity_regularizer=regularizers.l2(1e-5))(ma) 
-    ma = tf.keras.layers.Dense(c,  activation='relu',
-                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
-                                     bias_regularizer=regularizers.l2(1e-4),
-                                     activity_regularizer=regularizers.l2(1e-5))(ma) 
-    ma = Dropout(0.1)(ma, training=training)
-    ma = tf.keras.layers.Bidirectional(LSTM(units=c, return_sequences=False, activation='relu'))(ma)
-    ma = Dropout(0.1)(ma, training=training)
-    return ma
+def reshape_2D(x):
+  out = Reshape((x.shape[-2]*x.shape[-3], x.shape[-1]))
+  return out
 
 class ResNetTypeI(tf.keras.Model):
     def __init__(self, opt, layer_params):
@@ -99,7 +80,7 @@ class ResNetTypeII(tf.keras.Model):
 
         self.avgpool = tf.keras.layers.GlobalAveragePooling2D()
         self.expand_dims = tf.expand_dims
-#         self.norm = BatchNormalization()
+        self.reshape = reshape_2D(x)
         self.fc = tf.keras.layers.Dense(units=1024, activation='relu')
         self.transform = TransformerLayer
 
@@ -113,8 +94,8 @@ class ResNetTypeII(tf.keras.Model):
         x = self.layer3(x, training=training)
         x = self.layer4(x, training=training)
         x = self.avgpool(x)
-#         x = self.transform(x, 512, training=training)
-
+        x = self.reshape(x)
+        x = self.transform(x, 512, training=training)
         return x
 
 
