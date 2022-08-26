@@ -1,7 +1,11 @@
 import tensorflow as tf
 from model.residual_block import make_basic_block_layer, make_bottleneck_layer
 from model.LSTM import TransformerLayer
-from tensorflow.keras.layers import Conv1D, Activation, Dense, concatenate, BatchNormalization, GlobalAveragePooling1D, Input, MaxPooling1D, Lambda, GlobalAveragePooling2D, ReLU, MaxPooling2D, Flatten, Dropout, LSTM
+from tensorflow.keras.layers import Conv1D, Activation, Dense, \
+                                    concatenate, BatchNormalization, GlobalAveragePooling1D, \
+                                    Input, MaxPooling1D, Lambda, \
+                                    GlobalAveragePooling2D, ReLU, MaxPooling2D, \
+                                    Flatten, Dropout, LSTM
 
 def TransformerLayer(x, c, num_heads=4, training=None):
     a = x
