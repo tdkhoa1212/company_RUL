@@ -6,9 +6,6 @@ from tensorflow.keras.layers import Conv1D, Activation, Dense, \
                                     Input, MaxPooling1D, Lambda, \
                                     GlobalAveragePooling2D, ReLU, MaxPooling2D, \
                                     Flatten, Dropout, LSTM, Reshape
-def reshape_2D(x):
-  out = Reshape((x.shape[-2]*x.shape[-3], x.shape[-1]))(x)
-  return out
 
 class ResNetTypeI(tf.keras.Model):
     def __init__(self, opt, layer_params):
@@ -46,11 +43,9 @@ class ResNetTypeI(tf.keras.Model):
         x = self.layer1(x, training=training)
         x = self.layer2(x, training=training)
         x = self.layer3(x, training=training)
-        x = self.layer4(x, training=training)
-        
-#         x = self.avgpool(x)
+        x = self.layer4(x, training=training) 
+        x = self.avgpool(x)
 #         x = self.fc(x)
-
         return x
 
 
@@ -80,10 +75,8 @@ class ResNetTypeII(tf.keras.Model):
 
         self.avgpool = tf.keras.layers.GlobalAveragePooling2D()
         self.expand_dims = tf.expand_dims
-        self.reshape = reshape_2D
         self.fc = tf.keras.layers.Dense(units=1024, activation='relu')
-        self.transform = TransformerLayer
-
+      
     def call(self, inputs, training=None, mask=None):
         x = self.conv1(inputs)
         x = self.bn1(x, training=training)
@@ -94,8 +87,6 @@ class ResNetTypeII(tf.keras.Model):
         x = self.layer3(x, training=training)
         x = self.layer4(x, training=training)
         # x = self.avgpool(x)
-        x = self.reshape(x)
-        x = self.transform(x, 512, training=training)
         return x
 
 
