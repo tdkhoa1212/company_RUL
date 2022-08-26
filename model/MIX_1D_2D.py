@@ -5,6 +5,7 @@ from tensorflow.keras.layers import Conv1D, Activation, Dense, \
                                     ReLU, MaxPooling2D, Flatten, Dropout, LSTM, Reshape
 import tensorflow as tf
 from keras.models import Model
+from model.LSTM import TransformerLayer
 from keras import layers, regularizers
 import keras.backend as K
 
