@@ -52,7 +52,7 @@ class ResNetTypeI(tf.keras.Model):
 
         self.avgpool = tf.keras.layers.GlobalAveragePooling2D()
         self.fc = tf.keras.layers.Dense(units=opt.num_classes, activation=tf.keras.activations.softmax)
-        self.transform = TransformerLayer
+        
     def call(self, inputs, training=None, mask=None):
         x = self.conv1(inputs)
         x = self.bn1(x, training=training)
@@ -62,7 +62,7 @@ class ResNetTypeI(tf.keras.Model):
         x = self.layer2(x, training=training)
         x = self.layer3(x, training=training)
         x = self.layer4(x, training=training)
-        x = self.transform(x, 512, training=training)
+        
 #         x = self.avgpool(x)
 #         x = self.fc(x)
 
@@ -97,6 +97,7 @@ class ResNetTypeII(tf.keras.Model):
         self.expand_dims = tf.expand_dims
 #         self.norm = BatchNormalization()
         self.fc = tf.keras.layers.Dense(units=1024, activation='relu')
+        self.transform = TransformerLayer
 
     def call(self, inputs, training=None, mask=None):
         x = self.conv1(inputs)
@@ -108,8 +109,8 @@ class ResNetTypeII(tf.keras.Model):
         x = self.layer3(x, training=training)
         x = self.layer4(x, training=training)
         x = self.avgpool(x)
-        # x = self.fc(x)
-#         x = self.norm(x, training=training)
+#         x = self.transform(x, 512, training=training)
+
         return x
 
 
