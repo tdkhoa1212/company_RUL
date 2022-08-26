@@ -9,7 +9,7 @@ from model.LSTM import TransformerLayer
 from keras import layers, regularizers
 import keras.backend as K
 
-def fully_concatenate(hidden_out_1D, hidden_out_2D, hidden_out_extracted, training):
+def fully_concatenate(hidden_out_1D, hidden_out_2D, hidden_out_extracted):
     all_ = concatenate((hidden_out_1D, hidden_out_2D, hidden_out_extracted))
     return all_
 
@@ -39,13 +39,13 @@ def mix_model(opt, cnn_1d_model, resnet_50, lstm_extracted_model, input_1D, inpu
   con_hidden_out_2D = GlobalAveragePooling2D()(hidden_out_2D)
   con_hidden_out_extracted = GlobalAveragePooling1D()(hidden_out_extracted)
   
-  
-  merged_value_1 = fully_concatenate(hidden_out_1D, hidden_out_2D, hidden_out_extracted, training)
+  merged_value_0 = fully_concatenate(rul_hidden_out_1D, rul_hidden_out_2D, rul_hidden_out_extracted)
+  merged_value_1 = fully_concatenate(con_hidden_out_1D, con_hidden_out_2D, con_hidden_out_extracted)
     
   Condition = Dense(3, 
                     activation='softmax', 
                     name='Condition')(merged_value_1)
   RUL = Dense(1, 
               activation='sigmoid', 
-              name='RUL')(merged_value_1)
+              name='RUL')(merged_value_0)
   return Condition, RUL
