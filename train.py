@@ -13,6 +13,7 @@ import argparse
 import numpy as np
 import os
 import tensorflow as tf
+
 callbacks = tf.keras.callbacks.EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=2)
 
 def parse_opt(known=False):
@@ -29,10 +30,12 @@ def parse_opt(known=False):
     parser.add_argument('--main_dir_colab', default=None, type=str)
     parser.add_argument('--epochs', default=100, type=int)
     parser.add_argument('--batch_size', default=32, type=int)
-    parser.add_argument('--rul_train', default=True, type=bool)
+    
+    parser.add_argument('--rul_train',    default=True,  type=bool)
     parser.add_argument('--predict_time', default=False, type=bool)
-    parser.add_argument('--mix_model', default=True, type=bool)
-    parser.add_argument('--load_weight', default=False, type=bool)
+    parser.add_argument('--mix_model',    default=True,  type=bool)
+    parser.add_argument('--encoder',      default=False, type=bool)
+    parser.add_argument('--load_weight',  default=False, type=bool)
     
     opt = parser.parse_known_args()[0] if known else parser.parse_args()
     return opt
