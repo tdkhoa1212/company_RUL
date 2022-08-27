@@ -255,10 +255,12 @@ def convert_to_image(name_bearing, opt, type_data, time=None, type_=None):
               coef_v = extract_feature_image(df, opt, type_data, feature_name='vert accel', type_=type_)
               x_ = np.concatenate((coef_h, coef_v), axis=-1)
               if type_data=='1d' or type_data=='extract':
-                x_ = np.expand_dims(x_.reshape(x_.shape[1], x_.shape[0]), axis=0)
-                # x_ = model.predict(x_)
-                x_ = np.squeeze(x_)
-                x_ = x_.reshape(x_.shape[1], x_.shape[0]).tolist()
+                if opt.encoder:
+                    x_ = np.expand_dims(x_.reshape(x_.shape[1], x_.shape[0]), axis=0)
+                    x_ = model.predict(x_)
+                    x_ = np.squeeze(x_)
+                    x_ = x_.reshape(x_.shape[1], x_.shape[0])
+                x_ = x_.tolist()
               else:
                 x_ = x_.tolist()
               y_ = gen_rms(coef_h)
@@ -276,17 +278,19 @@ def convert_to_image(name_bearing, opt, type_data, time=None, type_=None):
               coef_v = extract_feature_image(df, opt, type_data, feature_name='Vertical_vibration_signals', type_=type_)
               x_ = np.concatenate((coef_h, coef_v), axis=-1)
               if type_data=='1d' or type_data=='extract':
-                x_ = np.expand_dims(x_.reshape(x_.shape[1], x_.shape[0]), axis=0)
-                # x_ = model.predict(x_)
-                x_ = np.squeeze(x_)
-                x_ = x_.reshape(x_.shape[1], x_.shape[0]).tolist()
+                if opt.encoder:
+                    x_ = np.expand_dims(x_.reshape(x_.shape[1], x_.shape[0]), axis=0)
+                    x_ = model.predict(x_)
+                    x_ = np.squeeze(x_)
+                    x_ = x_.reshape(x_.shape[1], x_.shape[0])
+                x_ = x_.tolist()
               else:
                 x_ = x_.tolist()
               y_ = gen_rms(coef_h)
               data['x'].append(x_)
               data['y'].append(y_)
         
-    
+    ################ Create linear label based on FPT points #########################
     if time != None:
       t_label = np.linspace(1, 0, len(data['y'][time: ]))
       data['y'] = t_label
@@ -295,6 +299,7 @@ def convert_to_image(name_bearing, opt, type_data, time=None, type_=None):
     else:
       data['y'] = np.linspace(1, 0, len(data['y']))
         
+    ############## Extract 1D-data to extraction data #####################
     if type_data=='extract':
       print('-'*10, 'Convert to Extracted data', '-'*10, '\n')
       hor_data = extracted_feature_of_signal(np.array(data['x'])[:, :, 0])
@@ -302,40 +307,42 @@ def convert_to_image(name_bearing, opt, type_data, time=None, type_=None):
       data_x = np.concatenate((hor_data, ver_data), axis=-1)
       data['x'] = data_x
     
-    if opt.scaler == 'MinMaxScaler':
-      scaler = MinMaxScaler
-    if opt.scaler == 'MaxAbsScaler':
-      scaler = MaxAbsScaler
-    if opt.scaler == 'StandardScaler':
-      scaler = StandardScaler
-    if opt.scaler == 'RobustScaler':
-      scaler = RobustScaler
-    if opt.scaler == 'Normalizer':
-      scaler = Normalizer
-    if opt.scaler == 'QuantileTransformer':
-      scaler = QuantileTransformer
-    if opt.scaler == 'PowerTransformer':
-      scaler = PowerTransformer
-      
-    if opt.scaler != None:
-      hor_data = np.array(data['x'])[:, :, 0]
-      ver_data = np.array(data['x'])[:, :, 1]
-      print('-'*10, f'Use scaler: {opt.scaler}', '-'*10, '\n')
-      if opt.scaler == 'FFT':
-        hor_data = np.expand_dims(FFT(hor_data), axis=-1)
-        ver_data = np.expand_dims(FFT(ver_data), axis=-1)
-      elif opt.scaler == 'denoise':
-        hor_data = denoise(hor_data)
-        ver_data = denoise(ver_data)
-      else:
-        hor_data = scaler_transform(hor_data, scaler)
-        ver_data = scaler_transform(ver_data, scaler)
-      data_x = np.concatenate((hor_data, ver_data), axis=-1)
-      data['x'] = data_x
-    else:
-      print('-'*10, 'Raw data', '-'*10, '\n')
-      data['x'] = np.array(data['x'])
-#     data['y'], _ = fit_values(2.31e-5, 0.99, 1.10, 1.68e-93, 28.58, np.array(data['y']))
+    ############### scale extract and 1D-data ##############################
+    if type_data=='1d' or type_data=='extract':
+        if opt.scaler == 'MinMaxScaler':
+          scaler = MinMaxScaler
+        if opt.scaler == 'MaxAbsScaler':
+          scaler = MaxAbsScaler
+        if opt.scaler == 'StandardScaler':
+          scaler = StandardScaler
+        if opt.scaler == 'RobustScaler':
+          scaler = RobustScaler
+        if opt.scaler == 'Normalizer':
+          scaler = Normalizer
+        if opt.scaler == 'QuantileTransformer':
+          scaler = QuantileTransformer
+        if opt.scaler == 'PowerTransformer':
+          scaler = PowerTransformer
+
+        if opt.scaler != None:
+          hor_data = np.array(data['x'])[:, :, 0]
+          ver_data = np.array(data['x'])[:, :, 1]
+          print('-'*10, f'Use scaler: {opt.scaler}', '-'*10, '\n')
+          if opt.scaler == 'FFT':
+            hor_data = np.expand_dims(FFT(hor_data), axis=-1)
+            ver_data = np.expand_dims(FFT(ver_data), axis=-1)
+          elif opt.scaler == 'denoise':
+            hor_data = denoise(hor_data)
+            ver_data = denoise(ver_data)
+          else:
+            hor_data = scaler_transform(hor_data, scaler)
+            ver_data = scaler_transform(ver_data, scaler)
+          data_x = np.concatenate((hor_data, ver_data), axis=-1)
+          data['x'] = data_x
+        else:
+          print('-'*10, 'Raw data', '-'*10, '\n')
+          data['x'] = np.array(data['x'])
+    #     data['y'], _ = fit_values(2.31e-5, 0.99, 1.10, 1.68e-93, 28.58, np.array(data['y']))
 
     x_shape = data['x'].shape
     y_shape = data['y'].shape
