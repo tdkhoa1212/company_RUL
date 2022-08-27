@@ -289,7 +289,9 @@ def convert_to_image(name_bearing, opt, type_data, time=None, type_=None):
               y_ = gen_rms(coef_h)
               data['x'].append(x_)
               data['y'].append(y_)
-        
+    
+    data['x'] = np.array(data['x'])
+    data['y'] = np.array(data['y'])
     ################ Create linear label based on FPT points #########################
     if time != None:
       t_label = np.linspace(1, 0, len(data['y'][time: ]))
