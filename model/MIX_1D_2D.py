@@ -20,6 +20,8 @@ def reshape(x):
 def mix_model(opt, cnn_1d_model, resnet_50, lstm_extracted_model, input_1D, input_2D, input_extracted, training=False):
   out_1D = cnn_1d_model(opt, training, input_1D)
 #   out_2D = resnet_50(opt)(input_2D, training=training)
+
+  ##################### https://keras.io/api/applications/ #######################################
   base_model_2D = tf.keras.applications.EfficientNetV2B3(include_top=False,
                                                          input_shape=(128, 128, 2),
                                                          weights=None)
