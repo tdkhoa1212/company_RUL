@@ -31,7 +31,7 @@ def TransformerLayer(x, c, num_heads=16, training=None):
     return ma
 '''
 
-def TransformerLayer(x, c, num_heads=8, training=None):
+def TransformerLayer(x, c, num_heads=32, training=None):
     x = tf.keras.layers.Dense(c,   activation='relu',
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
