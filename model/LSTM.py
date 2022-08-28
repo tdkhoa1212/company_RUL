@@ -32,12 +32,22 @@ def TransformerLayer(x, c, num_heads=16, training=None):
 '''
 
 def TransformerLayer(x, c, num_heads=16, training=None):
-    x = tf.keras.layers.Dense(c,   activation='relu',
+    x1 = tf.keras.layers.Dense(c,   activation='relu',
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
-                                     activity_regularizer=regularizers.l2(1e-5))(x)
-    x = Dropout(0.2)(x, training=training)
-    ma  = MultiHeadAttention(head_size=num_heads, num_heads=num_heads)([x, x, x]) 
+                                     activity_regularizer=regularizers.l2(1e-5))(x1)
+    x1 = Dropout(0.2)(x1, training=training)
+    x2 = tf.keras.layers.Dense(c,   activation='relu',
+                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+                                     bias_regularizer=regularizers.l2(1e-4),
+                                     activity_regularizer=regularizers.l2(1e-5))(x2)
+    x2 = Dropout(0.2)(x2, training=training)
+    x3 = tf.keras.layers.Dense(c,   activation='relu',
+                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+                                     bias_regularizer=regularizers.l2(1e-4),
+                                     activity_regularizer=regularizers.l2(1e-5))(x3)
+    x3 = Dropout(0.2)(x3, training=training)
+    ma  = MultiHeadAttention(head_size=num_heads, num_heads=num_heads)([x1, x2, x3]) 
     ma = tf.keras.layers.Dense(c,   activation='relu',
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
@@ -48,7 +58,7 @@ def TransformerLayer(x, c, num_heads=16, training=None):
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(ma) 
     ma = Dropout(0.2)(ma, training=training)
-    ma = tf.keras.layers.Bidirectional(LSTM(units=c, return_sequences=False, activation='sigmoid', recurrent_dropout=0.2))(ma)
+    ma = tf.keras.layers.Bidirectional(LSTM(units=c, return_sequences=False, activation='relu', recurrent_dropout=0.2))(ma)
     ma = Dropout(0.2)(ma, training=training)
     return ma
 
