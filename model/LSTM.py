@@ -139,7 +139,7 @@ def lstm_extracted_model(opt, training=None, inputs=None):
   x = MaxPooling1D(pool_size=2, strides=None)(x)
 
   x = Conv1D(56,
-               kernel_size=4,
+               kernel_size=2,
                strides=1,
                padding='same',
                kernel_initializer='glorot_uniform',
@@ -147,7 +147,7 @@ def lstm_extracted_model(opt, training=None, inputs=None):
   x = BatchNormalization()(x, training=training)
   x = Activation('relu')(x)
   x = Conv1D(56,
-               kernel_size=4,
+               kernel_size=2,
                strides=1,
                padding='same',
                kernel_initializer='glorot_uniform',
@@ -155,6 +155,6 @@ def lstm_extracted_model(opt, training=None, inputs=None):
   x = BatchNormalization()(x, training=training)
   x = Activation('relu')(x)
 #   x = AveragePooling1D(pool_size=2)(x)
-  x = MaxPooling1D(pool_size=4, strides=None)(x)
+  x = MaxPooling1D(pool_size=2, strides=None)(x)
 
   return x
