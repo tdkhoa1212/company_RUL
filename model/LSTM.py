@@ -48,6 +48,11 @@ def TransformerLayer(x, c, num_heads=16, training=None):
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(ma) 
     ma = Dropout(0.2)(ma, training=training)
+    ma = tf.keras.layers.Dense(c,  activation='relu',
+                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+                                     bias_regularizer=regularizers.l2(1e-4),
+                                     activity_regularizer=regularizers.l2(1e-5))(ma) 
+    ma = Dropout(0.2)(ma, training=training)
     ma = tf.keras.layers.Bidirectional(LSTM(units=c, return_sequences=False, activation='relu', recurrent_dropout=0.2))(ma)
     ma = Dropout(0.2)(ma, training=training)
     return ma
@@ -112,8 +117,7 @@ def lstm_model(opt, training=None, inputs=None):
   for i in range(23):
     x = identity_block(x, kernel_size=3, filters=256, stage=3, block=i, training=training)
 
-#   x = MaxPooling1D(pool_size=4, strides=None)(x)
-  x = AveragePooling1D(pool_size=4, strides=None)(x)
+  x = MaxPooling1D(pool_size=4, strides=None)(x)
 
   for i in range(3):
     x = identity_block(x, kernel_size=3, filters=512, stage=4, block=i, training=training)
