@@ -48,7 +48,7 @@ def TransformerLayer(x, c, num_heads=16, training=None):
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(ma) 
     ma = Dropout(0.2)(ma, training=training)
-    ma = LSTM(units=c, return_sequences=Tr, activation='relu', recurrent_dropout=0.2)(ma)
+    ma = LSTM(units=c, return_sequences=True, activation='relu', recurrent_dropout=0.2)(ma)
     ma = Dropout(0.2)(ma, training=training)
     ma = tf.keras.layers.Bidirectional(LSTM(units=c, return_sequences=False, activation='relu', recurrent_dropout=0.2))(ma)
     ma = Dropout(0.2)(ma, training=training)
