@@ -97,20 +97,20 @@ def lstm_model(opt, training=None, inputs=None):
                kernel_regularizer=regularizers.l2(l=0.0001))(inputs)
   x = BatchNormalization()(x, training=training)
   x = Activation('relu')(x)
-#   x = MaxPooling1D(pool_size=4, strides=None)(x)
-  x = AveragePooling1D(pool_size=4, strides=None)(x)
+  x = MaxPooling1D(pool_size=4, strides=None)(x)
+  # x = AveragePooling1D(pool_size=4, strides=None)(x)
 
   for i in range(3):
     x = identity_block(x, kernel_size=3, filters=64, stage=1, block=i, training=training)
 
-#   x = MaxPooling1D(pool_size=4, strides=None)(x)
-  x = AveragePooling1D(pool_size=4, strides=None)(x)
+  x = MaxPooling1D(pool_size=4, strides=None)(x)
+  # x = AveragePooling1D(pool_size=4, strides=None)(x)
 
   for i in range(4):
     x = identity_block(x, kernel_size=3, filters=128, stage=2, block=i, training=training)
 
-#   x = MaxPooling1D(pool_size=4, strides=None)(x)
-  x = AveragePooling1D(pool_size=4, strides=None)(x)
+  x = MaxPooling1D(pool_size=4, strides=None)(x)
+  # x = AveragePooling1D(pool_size=4, strides=None)(x)
 
   for i in range(23):
     x = identity_block(x, kernel_size=3, filters=256, stage=3, block=i, training=training)
