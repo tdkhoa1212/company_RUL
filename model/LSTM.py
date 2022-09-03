@@ -145,7 +145,5 @@ def lstm_extracted_model(opt, training=None, inputs=None):
                kernel_regularizer=regularizers.l2(l=0.0001))(x)
   x = BatchNormalization()(x, training=training)
   x = Activation('relu')(x)
-#   x = AveragePooling1D(pool_size=2)(x)
-  x = MaxPooling1D(pool_size=2, strides=None)(x)
-
+  x = AveragePooling1D(pool_size=2)(x)
   return x
