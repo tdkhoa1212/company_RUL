@@ -31,33 +31,25 @@ def TransformerLayer(x, c, num_heads=16, training=None):
     return ma
 '''
 
-def TransformerLayer(x, c, num_heads=16, training=None, unroll=False):
-    x1 = tf.keras.layers.Dense(c,   activation='tanh',
-                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
-                                     bias_regularizer=regularizers.l2(1e-4),
-                                     activity_regularizer=regularizers.l2(1e-5))(x)
-    x1 = Dropout(0.2)(x1, training=training)
-    ma1  = MultiHeadAttention(head_size=num_heads, num_heads=num_heads)([x1, x1, x1]) 
-    x2 = tf.keras.layers.Dense(c,   activation=tf.keras.activations.elu,
-                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
-                                     bias_regularizer=regularizers.l2(1e-4),
-                                     activity_regularizer=regularizers.l2(1e-5))(x)
-    x2 = Dropout(0.2)(x2, training=training)
-    ma2  = MultiHeadAttention(head_size=num_heads, num_heads=num_heads)([x2, x2, x2]) 
-    ma = ma1 + ma2
-    
+def TransformerLayer(x, c, num_heads=16, training=None):
+    x = tf.keras.layers.Dense(c,  activation=None,
+                                  kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+                                  bias_regularizer=regularizers.l2(1e-4),
+                                  activity_regularizer=regularizers.l2(1e-5))(x)
+    x = Dropout(0.1)(x, training=training)
+    ma  = MultiHeadAttention(head_size=num_heads, num_heads=num_heads)([x, x, x]) 
     ma = tf.keras.layers.Dense(c,   activation='relu',
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(ma) 
-    ma = Dropout(0.2)(ma, training=training)
-    ma = tf.keras.layers.Dense(c,   activation='relu',
+    ma = Dropout(0.1)(ma, training=training)
+    ma = tf.keras.layers.Dense(c,  activation='relu',
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
                                      activity_regularizer=regularizers.l2(1e-5))(ma) 
-    ma = Dropout(0.2)(ma, training=training)
+    ma = Dropout(0.1)(ma, training=training)
     ma = tf.keras.layers.Bidirectional(LSTM(units=c, return_sequences=False, activation='relu', recurrent_dropout=0.2))(ma)
-    ma = Dropout(0.2)(ma, training=training)
+    ma = Dropout(0.1)(ma, training=training)
     return ma
 
 def identity_block(input_tensor, kernel_size, filters, stage, block, training):
