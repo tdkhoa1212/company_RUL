@@ -2,7 +2,7 @@ from tensorflow.keras.layers import Input, Dropout, Dense, LSTM, TimeDistributed
 import tensorflow as  tf
 from keras.models import Model
 
-def autoencoder_model(type_):
+def autoencoder_model(type_, training=False):
     if type_ == 'PHM':
       inputs = Input(shape=(2, 2560))
       x1 = 2
