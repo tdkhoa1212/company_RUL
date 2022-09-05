@@ -11,11 +11,15 @@ def autoencoder_model(type_):
       inputs = Input(shape=(2, 32768))
       x1 = 2
       x2 = 32768
-    L1 = LSTM(1024, activation='tanh', return_sequences=True, kernel_regularizer=tf.keras.regularizers.l2(0.00), dropout=0.1)(inputs)
-    L2 = LSTM(32, activation='tanh', return_sequences=False, kernel_regularizer=tf.keras.regularizers.l2(0.00), dropout=0.1)(L1)
-    L3 = RepeatVector(x1)(L2)
-    L4 = LSTM(32, activation='tanh', return_sequences=True, kernel_regularizer=tf.keras.regularizers.l2(0.00), dropout=0.1)(L3)
-    L5 = LSTM(1024, activation='tanh', return_sequences=True, kernel_regularizer=tf.keras.regularizers.l2(0.00), dropout=0.1)(L4)
+    L1 = LSTM(1024, activation='tanh', return_sequences=True, kernel_regularizer=tf.keras.regularizers.l2(0.00))(inputs)
+    L1 = Dropout(0.2)(L1, training=training)
+    L2 = LSTM(32, activation='tanh', return_sequences=False)(L1)
+    L2 = Dropout(0.2)(L2, training=training)
+    L3 = RepeatVector(X.shape[1])(L2)
+    L4 = LSTM(32, activation='tanh', return_sequences=True)(L3)
+    L4 = Dropout(0.2)(L4, training=training)
+    L5 = LSTM(1024, activation='tanh', return_sequences=True)(L4)
+    L5 = Dropout(0.2)(L5, training=training)
     output = TimeDistributed(Dense(x2))(L5)    
     model = Model(inputs=inputs, outputs=output)
     return model
