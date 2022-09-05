@@ -15,7 +15,7 @@ def autoencoder_model(type_, training=False):
     L1 = Dropout(0.2)(L1)
     L2 = LSTM(32, activation='tanh', return_sequences=False)(L1)
     L2 = Dropout(0.2)(L2)
-    L3 = RepeatVector(X.shape[1])(L2)
+    L3 = RepeatVector(x1)(L2)
     L4 = LSTM(32, activation='tanh', return_sequences=True)(L3)
     L4 = Dropout(0.2)(L4)
     L5 = LSTM(1024, activation='tanh', return_sequences=True)(L4)
