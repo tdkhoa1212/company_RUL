@@ -87,7 +87,7 @@ def main(opt, train_data_rul_1D, train_label_rul_1D, test_data_rul_1D, test_labe
   network.compile(optimizer=tf.keras.optimizers.RMSprop(1e-4),
                   loss=['categorical_crossentropy', tf.keras.losses.MeanSquaredLogarithmicError()], 
                   metrics=['acc', 'mae', tfa.metrics.RSquare(), tf.keras.metrics.RootMeanSquaredError()], 
-                  loss_weights=[1, 1],
+                  loss_weights=[0.01, 1],
 #                   run_eagerly=True
                     ) # https://keras.io/api/losses/ 
   network.summary()
