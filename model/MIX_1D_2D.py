@@ -9,24 +9,25 @@ from model.LSTM import TransformerLayer
 from keras import layers, regularizers
 import keras.backend as K
 
-def fully_concatenate(hidden_out_1D, hidden_out_2D, hidden_out_extracted):
-    hidden_out_1D = tf.keras.layers.Dense(hidden_out_1D.shape[-1],   activation='relu',
-                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
-                                     bias_regularizer=regularizers.l2(1e-4),
-                                     activity_regularizer=regularizers.l2(1e-5))(hidden_out_1D) 
-    hidden_out_1D = Dropout(0.2)(hidden_out_1D, training=training)
-    
-    hidden_out_2D = tf.keras.layers.Dense(hidden_out_2D.shape[-1],   activation='relu',
-                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
-                                     bias_regularizer=regularizers.l2(1e-4),
-                                     activity_regularizer=regularizers.l2(1e-5))(hidden_out_2D) 
-    hidden_out_2D = Dropout(0.2)(hidden_out_2D, training=training)
-    
-    hidden_out_extracted = tf.keras.layers.Dense(hidden_out_extracted.shape[-1],   activation='relu',
-                                     kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
-                                     bias_regularizer=regularizers.l2(1e-4),
-                                     activity_regularizer=regularizers.l2(1e-5))(hidden_out_extracted) 
-    hidden_out_extracted = Dropout(0.2)(hidden_out_extracted, training=training)
+def fully_concatenate(hidden_out_1D, hidden_out_2D, hidden_out_extracted, training=None, hidden=None):
+    if hidden:
+      hidden_out_1D = tf.keras.layers.Dense(hidden_out_1D.shape[-1],   activation='relu',
+                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+                                      bias_regularizer=regularizers.l2(1e-4),
+                                      activity_regularizer=regularizers.l2(1e-5))(hidden_out_1D) 
+      hidden_out_1D = Dropout(0.2)(hidden_out_1D, training=training)
+      
+      hidden_out_2D = tf.keras.layers.Dense(hidden_out_2D.shape[-1],   activation='relu',
+                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+                                      bias_regularizer=regularizers.l2(1e-4),
+                                      activity_regularizer=regularizers.l2(1e-5))(hidden_out_2D) 
+      hidden_out_2D = Dropout(0.2)(hidden_out_2D, training=training)
+      
+      hidden_out_extracted = tf.keras.layers.Dense(hidden_out_extracted.shape[-1],   activation='relu',
+                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+                                      bias_regularizer=regularizers.l2(1e-4),
+                                      activity_regularizer=regularizers.l2(1e-5))(hidden_out_extracted) 
+      hidden_out_extracted = Dropout(0.2)(hidden_out_extracted, training=training)
     
     all_ = concatenate((hidden_out_1D, hidden_out_2D, hidden_out_extracted))
     return all_
@@ -63,8 +64,8 @@ def mix_model(opt, cnn_1d_model, resnet_50, lstm_extracted_model, input_1D, inpu
   con_hidden_out_2D = GlobalAveragePooling2D()(hidden_out_2D)
   con_hidden_out_extracted = GlobalAveragePooling1D()(hidden_out_extracted)
   
-  merged_value_0 = fully_concatenate(rul_hidden_out_1D, rul_hidden_out_2D, rul_hidden_out_extracted)
-  merged_value_1 = fully_concatenate(con_hidden_out_1D, con_hidden_out_2D, con_hidden_out_extracted)
+  merged_value_0 = fully_concatenate(rul_hidden_out_1D, rul_hidden_out_2D, rul_hidden_out_extracted, hidden=False)
+  merged_value_1 = fully_concatenate(con_hidden_out_1D, con_hidden_out_2D, con_hidden_out_extracted, hidden=True)
     
   Condition = Dense(3, 
                     activation='softmax', 
