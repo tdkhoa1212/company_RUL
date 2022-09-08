@@ -14,6 +14,11 @@ import numpy as np
 import os
 import tensorflow as tf
 
+from tensorflow.compat.v1 import ConfigProto
+from tensorflow.compat.v1 import InteractiveSession
+config = ConfigProto()
+config.gpu_options.allow_growth = True
+
 callbacks = tf.keras.callbacks.EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=2)
 
 def parse_opt(known=False):
@@ -92,11 +97,9 @@ def main(opt, train_data_rul_1D, train_label_rul_1D, test_data_rul_1D, test_labe
                     ) # https://keras.io/api/losses/ 
   network.summary()
 
-  train_data = tf.ragged.constant(train_data)
-  train_label = tf.ragged.constant(train_label)
-  dataset_train = tf.data.Dataset.from_tensor_slices((train_data , train_label)).batch(opt.batch_size)
+  # dataset_train = tf.data.Dataset.from_tensor_slices((train_data , train_label)).batch(opt.batch_size)
   
-  history = network.fit(dataset_train,
+  history = network.fit(train_data , train_label,
                         epochs     = opt.epochs,
                         batch_size = opt.batch_size,
                         validation_data = (val_data, val_label))
