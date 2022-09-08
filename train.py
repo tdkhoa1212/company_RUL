@@ -49,7 +49,7 @@ def main(opt, train_data_rul_1D, train_label_rul_1D, test_data_rul_1D, test_labe
 
   if opt.model == 'dnn':
     train_data = [train_data[:, :, 0], train_data[:, :, 1]]
-    val_data, val_label = [test_data[:1000][:, :, 0], test_data[:1000][:, :, 1]], test_label[:1000]
+    val_data, val_label = [test_data[:100][:, :, 0], test_data[:100][:, :, 1]], test_label[:100]
     test_data = [test_data[:, :, 0], test_data[:, :, 1]]
     network = dnn_model(opt)
   if opt.model == 'cnn_1d':
