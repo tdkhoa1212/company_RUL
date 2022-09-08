@@ -91,7 +91,12 @@ def main(opt, train_data_rul_1D, train_label_rul_1D, test_data_rul_1D, test_labe
 #                   run_eagerly=True
                     ) # https://keras.io/api/losses/ 
   network.summary()
-  history = network.fit(train_data, train_label,
+
+  train_data = tf.ragged.constant(train_data)
+  train_label = tf.ragged.constant(train_label)
+  dataset_train = tf.data.Dataset.from_tensor_slices((train_data , train_label)).batch(opt.batch_size)
+  
+  history = network.fit(dataset_train,
                         epochs     = opt.epochs,
                         batch_size = opt.batch_size,
                         validation_data = (val_data, val_label))
