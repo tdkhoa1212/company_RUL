@@ -98,7 +98,8 @@ def main(opt, train_data_rul_1D, train_label_rul_1D, test_data_rul_1D, test_labe
   network.summary()
 
   # dataset_train = tf.data.Dataset.from_tensor_slices((train_data , train_label)).batch(opt.batch_size)
-  
+  tf.debugging.set_log_device_placement(True)
+
   history = network.fit(train_data , train_label,
                         epochs     = opt.epochs,
                         batch_size = opt.batch_size,
