@@ -87,6 +87,10 @@ def identity_block(input_tensor, kernel_size, filters, stage, block, training):
     return x
 
 def lstm_model(opt, training=None, inputs=None):
+  if opt.type == 'XJTU':
+    s = 4
+  else:
+    s = 2
   if opt.mix_model==False:
     inputs = Input(shape=[opt.input_shape, 2])
   x = Conv1D(64,
@@ -97,22 +101,22 @@ def lstm_model(opt, training=None, inputs=None):
                kernel_regularizer=regularizers.l2(l=0.0001))(inputs)
   x = BatchNormalization()(x, training=training)
   x = Activation('relu')(x)
-  x = AveragePooling1D(pool_size=4, strides=2, padding='same')(x)
+  x = AveragePooling1D(pool_size=4, strides=s, padding='same')(x)
 
   for i in range(3):
     x = identity_block(x, kernel_size=3, filters=64, stage=1, block=i, training=training)
 
-  x = AveragePooling1D(pool_size=4, strides=2, padding='same')(x)
+  x = AveragePooling1D(pool_size=4, strides=s, padding='same')(x)
 
   for i in range(4):
     x = identity_block(x, kernel_size=3, filters=128, stage=2, block=i, training=training)
 
-  x = AveragePooling1D(pool_size=4, strides=2, padding='same')(x)
+  x = AveragePooling1D(pool_size=4, strides=s, padding='same')(x)
 
   for i in range(23):
     x = identity_block(x, kernel_size=3, filters=256, stage=3, block=i, training=training)
 
-  x = MaxPooling1D(pool_size=4, strides=2, padding='same')(x)
+  x = MaxPooling1D(pool_size=4, strides=s, padding='same')(x)
 
   for i in range(3):
     x = identity_block(x, kernel_size=3, filters=512, stage=4, block=i, training=training)
