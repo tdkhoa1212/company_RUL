@@ -31,7 +31,7 @@ def TransformerLayer(x, c, num_heads=16, training=None):
     return ma
 '''
 
-def TransformerLayer(x, c, num_heads=16, training=None):
+def TransformerLayer(x, c, num_heads=24, training=None):
     x = tf.keras.layers.Dense(c,   activation='relu',
                                      kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
                                      bias_regularizer=regularizers.l2(1e-4),
@@ -88,8 +88,8 @@ def identity_block(input_tensor, kernel_size, filters, stage, block, training):
 
 def lstm_model(opt, training=None, inputs=None):
   if opt.type == 'XJTU':
-    s = 3
-    p = 6
+    s = 4
+    p = 4
   else:
     s = 2
     p = 4
