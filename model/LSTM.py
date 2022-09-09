@@ -88,8 +88,8 @@ def identity_block(input_tensor, kernel_size, filters, stage, block, training):
 
 def lstm_model(opt, training=None, inputs=None):
   if opt.type == 'XJTU':
-    s = 4
-    p = 8
+    s = 3
+    p = 6
   else:
     s = 2
     p = 4
