@@ -10,6 +10,26 @@ from keras import layers, regularizers
 import keras.backend as K
 
 def fully_concatenate(hidden_out_1D, hidden_out_2D, hidden_out_extracted):  
+    hidden_out_1D = BatchNormalization()(hidden_out_1D, training=training)
+    hidden_out_1D = Activation('relu')(hidden_out_1D)
+    hidden_out_1D = tf.keras.layers.Dense(hidden_out_1D.shape[-1],   activation='relu',
+                                         kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+                                         bias_regularizer=regularizers.l2(1e-4),
+                                         activity_regularizer=regularizers.l2(1e-5))(hidden_out_1D)
+    
+    hidden_out_2D = BatchNormalization()(hidden_out_2D, training=training)
+    hidden_out_2D = Activation('relu')(hidden_out_2D)
+    hidden_out_2D = tf.keras.layers.Dense(hidden_out_2D.shape[-1],   activation='relu',
+                                         kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+                                         bias_regularizer=regularizers.l2(1e-4),
+                                         activity_regularizer=regularizers.l2(1e-5))(hidden_out_2D)
+    
+    hidden_out_extracted = BatchNormalization()(hidden_out_extracted, training=training)
+    hidden_out_extracted = Activation('relu')(hidden_out_extracted)
+    hidden_out_extracted = tf.keras.layers.Dense(hidden_out_extracted.shape[-1],   activation='relu',
+                                                 kernel_regularizer=regularizers.l1_l2(l1=1e-5, l2=1e-4),
+                                                 bias_regularizer=regularizers.l2(1e-4),
+                                                 activity_regularizer=regularizers.l2(1e-5))(hidden_out_extracted)
     all_ = concatenate((hidden_out_1D, hidden_out_2D, hidden_out_extracted))
     return all_
 
