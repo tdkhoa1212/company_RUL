@@ -77,7 +77,7 @@ def mix_model(opt, cnn_1d_model, resnet_50, lstm_extracted_model, input_1D, inpu
   con_hidden_out_extracted = GlobalAveragePooling1D()(hidden_out_extracted)
   
   merged_value_0 = fully_concatenate(rul_hidden_out_1D, rul_hidden_out_2D, rul_hidden_out_extracted, training=training, fully=False)
-  merged_value_1 = fully_concatenate(con_hidden_out_1D, con_hidden_out_2D, con_hidden_out_extracted, training=training, fully=False)
+  merged_value_1 = fully_concatenate(con_hidden_out_1D, con_hidden_out_2D, con_hidden_out_extracted, training=training, fully=True)
     
   Condition = Dense(3, 
                     activation='softmax', 
