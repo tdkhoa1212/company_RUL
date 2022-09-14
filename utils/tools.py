@@ -292,14 +292,15 @@ def convert_to_image(name_bearing, opt, type_data, time=None, type_=None):
     
     data['x'] = np.array(data['x'])
     data['y'] = np.array(data['y'])
+    
     ################ Create linear label based on FPT points #########################
-    if time != None:
-      t_label = np.linspace(1, 0, len(data['y'][time: ]))
-      data['y'] = t_label
-      t_data = data['x'][time: ]
-      data['x'] = t_data
-    else:
-      data['y'] = np.linspace(1, 0, len(data['y']))
+    if time == None:
+      time = predict_time(data['y'])
+   
+    t_label = np.linspace(1, 0, len(data['y'][time: ]))
+    data['y'] = t_label
+    t_data = data['x'][time: ]
+    data['x'] = t_data
         
     ############## Extract 1D-data to extraction data #####################
     if type_data=='extract':
@@ -412,14 +413,9 @@ def convert_1_to_0(data):
     return 1-f_data
 
 def predict_time(data):
-  h = []
-  for i in np.squeeze(data[:, :, 0]):
-    # g = kurtosis(i)
-    g = gen_rms(i)
-    h.append(g)
-    
+  h = data
   h0 = convert_1_to_0(h)
-  length_seg = 50
+  length_seg = 100
   num_seg = len(h0)//length_seg
   h_seg = []
   for i in range(num_seg):
@@ -438,6 +434,40 @@ def predict_time(data):
 
   normal_time = (time+1)*length_seg
   return normal_time
+
+# def predict_time(data):
+#   '''
+#   INPUT =========================================
+#   data: - type: float32 (should be)
+#         - shape: 1D (for example: (1802, ))
+
+#   OUTPUT =======================================
+#   fpt: - type: int32 (should be)
+#        - shape: a interger value in N 
+#   '''
+#   nor = 50
+#   normal = data[:nor]
+#   mean_normal = np.mean(normal)
+#   std_normal = np.std(normal)
+
+#   limit_up = mean_normal + 3*std_normal
+#   limit_down = mean_normal - 3*std_normal
+
+#   fpt = 0
+#   i_n = 0
+#   check_c = 1
+#   for idx, i in enumerate(data):
+#     if i > limit_up or i < limit_down:
+#       if idx - check_c == 1:
+#         i_n += 1
+#       else:
+#         i_n = 0
+#       check_c = idx
+
+#       if i_n == 2:
+#         fpt = idx-2
+#         break
+#   return fpt
 
 def percent_error(y_true, y_pred):
     y_pred = y_pred.reshape(-1, )
