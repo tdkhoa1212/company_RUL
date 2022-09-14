@@ -462,7 +462,7 @@ def predict_time(data):
   fpt = 0
   i_n = 0
   check_c = 1
-  for idx, i in enumerate(data):
+  for idx, i in enumerate(h):
     if i > limit_up or i < limit_down:
       if idx - check_c == 1:
         i_n += 1
