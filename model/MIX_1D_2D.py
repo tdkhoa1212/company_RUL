@@ -77,7 +77,7 @@ def mix_model(opt, cnn_1d_model, resnet_50, lstm_extracted_model, input_1D, inpu
     
   Condition = Dense(3, 
                     activation='softmax', 
-                    name='Condition')(merged_value_0)
+                    name='Condition')(merged_value_1)
   RUL = Dense(1, 
               activation='sigmoid', 
               name='RUL')(merged_value_0)
