@@ -412,64 +412,68 @@ def convert_1_to_0(data):
       f_data = np.ones_like(data)
     return 1-f_data
 
+# def predict_time(data):
+#   h = []
+#   for i in data[:, :, 0]:
+#     h.append(gen_rms(i))
+#   h0 = convert_1_to_0(h)
+#   length_seg = 70
+#   num_seg = len(h0)//length_seg
+#   h_seg = []
+#   for i in range(num_seg):
+#     h_seg.append(h0[i: i+length_seg])
+#   h_seg = np.array(h_seg)
+
+#   # Apply clustering learning model ---------------------------------
+#   kmeans_1 = SpectralClustering(3, n_init=100, assign_labels='discretize').fit(h_seg) # https://scikit-learn.org/stable/modules/clustering.html#affinity-propagation
+#   time = 0
+#   type_all = np.array(kmeans_1.labels_)
+#   type_normal = type_all[0]
+#   for idx, i in enumerate(type_all):
+#     if i != type_normal:
+#       break
+#     time = idx
+
+#   normal_time = (time+1)*length_seg
+#   return normal_time
+
 def predict_time(data):
+  '''
+  INPUT =========================================
+  data: - type: float32 (should be)
+        - shape: 1D (for example: (1802, ))
+
+  OUTPUT =======================================
+  fpt: - type: int32 (should be)
+       - shape: a interger value in N 
+  '''
   h = []
   for i in data[:, :, 0]:
     h.append(gen_rms(i))
-  h0 = convert_1_to_0(h)
-  length_seg = 70
-  num_seg = len(h0)//length_seg
-  h_seg = []
-  for i in range(num_seg):
-    h_seg.append(h0[i: i+length_seg])
-  h_seg = np.array(h_seg)
+    
+  nor = 50
+  normal = h[:nor]
+  mean_normal = np.mean(normal)
+  std_normal = np.std(normal)
 
-  # Apply clustering learning model ---------------------------------
-  kmeans_1 = SpectralClustering(3, n_init=100, assign_labels='discretize').fit(h_seg) # https://scikit-learn.org/stable/modules/clustering.html#affinity-propagation
-  time = 0
-  type_all = np.array(kmeans_1.labels_)
-  type_normal = type_all[0]
-  for idx, i in enumerate(type_all):
-    if i != type_normal:
-      break
-    time = idx
+  limit_up = mean_normal + 3*std_normal
+  limit_down = mean_normal - 3*std_normal
 
-  normal_time = (time+1)*length_seg
-  return normal_time
+  fpt = 0
+  i_n = 0
+  check_c = 1
+  for idx, i in enumerate(data):
+    if i > limit_up or i < limit_down:
+      if idx - check_c == 1:
+        i_n += 1
+      else:
+        i_n = 0
+      check_c = idx
 
-# def predict_time(data):
-#   '''
-#   INPUT =========================================
-#   data: - type: float32 (should be)
-#         - shape: 1D (for example: (1802, ))
-
-#   OUTPUT =======================================
-#   fpt: - type: int32 (should be)
-#        - shape: a interger value in N 
-#   '''
-#   nor = 50
-#   normal = data[:nor]
-#   mean_normal = np.mean(normal)
-#   std_normal = np.std(normal)
-
-#   limit_up = mean_normal + 3*std_normal
-#   limit_down = mean_normal - 3*std_normal
-
-#   fpt = 0
-#   i_n = 0
-#   check_c = 1
-#   for idx, i in enumerate(data):
-#     if i > limit_up or i < limit_down:
-#       if idx - check_c == 1:
-#         i_n += 1
-#       else:
-#         i_n = 0
-#       check_c = idx
-
-#       if i_n == 2:
-#         fpt = idx-2
-#         break
-#   return fpt
+      if i_n == 2:
+        fpt = idx-2
+        break
+  return fpt
 
 def percent_error(y_true, y_pred):
     y_pred = y_pred.reshape(-1, )
