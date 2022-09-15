@@ -48,7 +48,7 @@ if opt.predict_time:
   data = load_df(full_data)
   train_data = seg_data(data, training_length)
   for i, name in enumerate(train_data):
-    time = predict_time(train_data[name])
+    time = predict_time(train_data[name], opt.length_seg)
     fake_time[name] = time
     print(f'Name: {name}  predict time: {time*10}')
 
