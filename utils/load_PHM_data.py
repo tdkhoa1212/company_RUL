@@ -33,7 +33,7 @@ if os.path.exists(saved_dir + 'Bearing1_1_' + '1d') == False:
     Bearing1_6 = convert_to_image(test_dir  + 'Bearing1_6', opt, type_data, FPT['Bearing1_6'], 'PHM')
     Bearing1_7 = convert_to_image(test_dir  + 'Bearing1_7', opt, type_data, FPT['Bearing1_7'], 'PHM')
     
-    # Save data in different types------------------------------------------------
+    # Save data and labels in different types------------------------------------------------
     save_df(saved_dir + 'Bearing1_1_data' + type_data, Bearing1_1['x'])
     save_df(saved_dir + 'Bearing1_2_data' + type_data, Bearing1_2['x'])
     save_df(saved_dir + 'Bearing1_3_data' + type_data, Bearing1_3['x'])
@@ -41,6 +41,14 @@ if os.path.exists(saved_dir + 'Bearing1_1_' + '1d') == False:
     save_df(saved_dir + 'Bearing1_5_data' + type_data, Bearing1_5['x'])
     save_df(saved_dir + 'Bearing1_6_data' + type_data, Bearing1_6['x'])
     save_df(saved_dir + 'Bearing1_7_data' + type_data, Bearing1_7['x'])
+
+    save_df(saved_dir + 'Bearing1_1_label' + type_data, Bearing1_1['y'])
+    save_df(saved_dir + 'Bearing1_2_label' + type_data, Bearing1_2['y'])
+    save_df(saved_dir + 'Bearing1_3_label' + type_data, Bearing1_3['y'])
+    save_df(saved_dir + 'Bearing1_4_label' + type_data, Bearing1_4['y'])
+    save_df(saved_dir + 'Bearing1_5_label' + type_data, Bearing1_5['y'])
+    save_df(saved_dir + 'Bearing1_6_label' + type_data, Bearing1_6['y'])
+    save_df(saved_dir + 'Bearing1_7_label' + type_data, Bearing1_7['y'])
 
 # Loading the converted data ==================================================================================
 Bearing1_1_data = convert_to_image(train_dir + 'Bearing1_1', opt, type_data, FPT['Bearing1_1'], 'PHM')
@@ -51,24 +59,54 @@ Bearing1_5_data = convert_to_image(test_dir  + 'Bearing1_5', opt, type_data, FPT
 Bearing1_6_data = convert_to_image(test_dir  + 'Bearing1_6', opt, type_data, FPT['Bearing1_6'], 'PHM')
 Bearing1_7_data = convert_to_image(test_dir  + 'Bearing1_7', opt, type_data, FPT['Bearing1_7'], 'PHM')
 
-train_2D = []
-test_2D = []
 
-train_1D = []
-test_1D = []
+def getting_data(bearing_list):
+  train_1D = []
+  test_1D = []
 
-train_extract = []
-test_extract = []
+  train_2D = []
+  test_2D = []
 
-train_label_Con = []
-test_label_RUL = []
+  train_extract = []
+  test_extract = []
 
-for type_data in opt.data_type:
+  test_label_RUL = []
+  for name in bearing_list:
+    for type_data in opt.data_type:
+      if type_data == '1d':
+        Bearing_data = load_df(saved_dir  + name + '_data'  + type_data)
+        Bearing_label = load_df(saved_dir + name + '_label' + type_data)
+        if train_1D == []:
+          train_1D = Bearing_data 
+          label = Bearing_label 
+        else:
+          data = np.concatenate((data, Bearing_data))
+          label = np.concatenate((label, Bearing_label))
+
+  Bearing1_2_data = load_df(saved_dir  + 'Bearing1_2_data'  + type_data)
+  Bearing1_2_label = load_df(saved_dir + 'Bearing1_2_label' + type_data)
+
+  Bearing1_3_data = load_df(saved_dir  + 'Bearing1_3_data'  + type_data)
+  Bearing1_3_label = load_df(saved_dir + 'Bearing1_3_label' + type_data)
+
+  Bearing1_4_data = load_df(saved_dir  + 'Bearing1_4_data'  + type_data)
+  Bearing1_4_label = load_df(saved_dir + 'Bearing1_4_label' + type_data)
+
+  Bearing1_5_data = load_df(saved_dir  + 'Bearing1_5_data'  + type_data)
+  Bearing1_5_label = load_df(saved_dir + 'Bearing1_5_label' + type_data)
+
+  Bearing1_6_data = load_df(saved_dir  + 'Bearing1_6_data'  + type_data)
+  Bearing1_6_label = load_df(saved_dir + 'Bearing1_6_label' + type_data)
+
+  Bearing1_7_data = load_df(saved_dir  + 'Bearing1_7_data'  + type_data)
+  Bearing1_7_label = load_df(saved_dir + 'Bearing1_7_label' + type_data)
+
+  test_label_RUL = np.concatenate((Bearing1_1_label, Bearing1_2_label, Bearing1_3_label, Bearing1_4_label, Bearing1_5_label, Bearing1_6_label, Bearing1_7_label))
+  data = np.concatenate((Bearing1_1_data, Bearing1_2_data, Bearing1_3_data, Bearing1_4_data, Bearing1_5_data, Bearing1_6_data, Bearing1_7_data))
   if type_data == '1d':
-    data   = load_df(train_c_path)
-
-train_c   = load_df(train_c_path)
-test_c  = load_df(test_c_path)
+    train_1D = data
+  if type_data == '2d':
+     
 
 print(f'Train shape 1D: {train_data_rul_1D.shape}   {train_label_rul_1D.shape}')  
 print(f'Test shape 1D: {test_data_rul_1D.shape}   {test_label_rul_1D.shape}\n')
