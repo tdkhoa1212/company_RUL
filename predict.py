@@ -7,12 +7,8 @@ from model.LSTM import lstm_extracted_model, lstm_model
 from model.MIX_1D_2D import mix_model
 from utils.load_predict_data import test_data_2D , test_data_1D , test_data_extract , test_data_c, test_label_1D
 from utils.tools import all_matric, back_onehot
-from utils.save_data import start_save_data
 from tensorflow.keras.layers import Input
 from tensorflow.keras.models import Model
-from angular_grad import AngularGrad
-import argparse
-import numpy as np
 import os
 import tensorflow as tf
 import matplotlib.pyplot as plt
@@ -25,8 +21,11 @@ import logging
 tf.get_logger().setLevel(logging.ERROR)
 logging.getLogger('tensorflow').disabled = True
 
+
 opt = parse_opt()
+
 def Predict(data, model):
+  # Choose one of NN models to predict
   if model == 'dnn':
     data = (data[:, :, 0], data[:, :, 1])
     network = dnn_model(opt)
@@ -64,11 +63,13 @@ def main():
     print(f'Shape 2D data: {test_data_2D[name].shape}')
     Condition, RUL = Predict([test_data_1D[name], test_data_2D[name], test_data_extract[name]], 'mix')
 
+    # Simulating the graphs
     plt.plot(test_label_1D[name], c='b')
     plt.plot(RUL, c='r')
     plt.title(f'{name}: combination prediction.')
     plt.savefig(f'{name}_all.png')
     plt.close()
+
     Condition = back_onehot(Condition)
     r2, mae_, mse_, acc = all_matric(test_label_1D[name], RUL, test_data_c[name], Condition)
     acc = round(acc*100, 4)

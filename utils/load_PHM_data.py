@@ -14,7 +14,7 @@ main_dir_colab = opt.main_dir_colab
 train_main_dir =  'Training_set/Learning_set/'
 test_main_dir = 'Test_set/'
 
-# Path for saving data-------------------------------------------------------------------
+# Get path of data in diffenrent forms-------------------------------------------------------------------
 train_data_path_2D = main_dir_colab + f'train_data_2D_{opt.condition}.pkz'
 test_data_path_2D = main_dir_colab + f'test_data_2D_{opt.condition}.pkz'
 
@@ -29,6 +29,7 @@ test_data_path_extract = main_dir_colab + f'test_data_extract_{opt.condition}.pk
 train_c_path = main_dir_colab + f'train_c_{opt.condition}.pkz'
 test_c_path = main_dir_colab + f'test_c_{opt.condition}.pkz'
 
+# Length and FPT of data-------------------------------------------------------------------
 training_length = {'Bearing1_1': 2803,
                   'Bearing1_2': 871,
                   'Bearing2_1': 912,
@@ -69,13 +70,6 @@ if os.path.exists(test_data_path_2D) == False:
     Bearing2_2_data = convert_to_image(Bearing2_2_path, opt, type_data, fake_time['Bearing2_2'], 'PHM')
     Bearing3_1_data = convert_to_image(Bearing3_1_path, opt, type_data, fake_time['Bearing3_1'], 'PHM')
     Bearing3_2_data = convert_to_image(Bearing3_2_path, opt, type_data, fake_time['Bearing3_2'], 'PHM')
-    
-#     Bearing1_1_data = convert_to_image(Bearing1_1_path, opt, type_data, 1400, 'PHM')
-#     Bearing1_2_data = convert_to_image(Bearing1_2_path, opt, type_data, 825, 'PHM')
-#     Bearing2_1_data = convert_to_image(Bearing2_1_path, opt, type_data, 12, 'PHM')
-#     Bearing2_2_data = convert_to_image(Bearing2_2_path, opt, type_data, 177, 'PHM')
-#     Bearing3_1_data = convert_to_image(Bearing3_1_path, opt, type_data, 20, 'PHM')
-#     Bearing3_2_data = convert_to_image(Bearing3_2_path, opt, type_data, 88, 'PHM')
     
     if opt.condition in ['c_1', 'c_all']:
       train_data_rul  = train_data_1 = np.concatenate((Bearing1_1_data['x'], Bearing1_2_data['x']))
