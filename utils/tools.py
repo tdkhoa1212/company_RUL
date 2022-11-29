@@ -4,7 +4,6 @@ from keras import backend as K
 import pandas as pd
 import pickle as pkl
 import pywt
-import noisereduce as nr
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import MaxAbsScaler
 from sklearn.preprocessing import StandardScaler
@@ -17,9 +16,25 @@ from sklearn.metrics import r2_score, accuracy_score
 from os import path
 import scipy
 import statistics
-from sklearn.cluster import KMeans, SpectralClustering
+from sklearn.cluster import SpectralClustering
 from model.autoencoder import autoencoder_model
 
+if opt.type == 'PHM':
+    
+else:
+    FPT = {'Bearing1_1': 76,
+            'Bearing1_2': 44,
+            'Bearing1_3': 60,
+            'Bearing1_5': 39,
+            'Bearing2_1': 455,
+            'Bearing2_2': 48,
+            'Bearing2_3': 327,
+            'Bearing2_4': 32,
+            'Bearing2_5': 141,
+            'Bearing3_1': 2344,
+            'Bearing3_3': 340,
+            'Bearing3_4': 1418,
+            'Bearing3_5': 9}
 def hankel_svdvals(data, hankel_window_size, slice_window_size):
     """ Slices data in 'slice_window_size' and compute hankel matrix singular values with 'hankel_window_size' """
 
@@ -236,6 +251,13 @@ def denoise(signals):
     return np.expand_dims(all_signal, axis=-1)
 
 def convert_to_image(name_bearing, opt, type_data, time=None, type_=None):
+    '''
+    This function is to get data and label from FPT points to later
+    name_bearing: bearing name
+    type_data: 1d, 2d, extract
+    time: FPT
+    type_: PHM, XJTU
+    '''
     data = {'x': [], 'y': []}
     if type_data == '2d':
       print('-'*10, f'Convert to 2D data', '-'*10, '\n')
@@ -294,15 +316,13 @@ def convert_to_image(name_bearing, opt, type_data, time=None, type_=None):
     data['y'] = np.array(data['y'])
     
     ################ Create linear label based on FPT points #########################
-    # if time == None:
-    #   time = predict_time(data['y'])
    
     t_label = np.linspace(1, 0, len(data['y'][time: ]))
     data['y'] = t_label
     t_data = data['x'][time: ]
     data['x'] = t_data
         
-    ############## Extract 1D-data to extraction data #####################
+    ############## 1D-data to extraction data #####################
     if type_data=='extract':
       print('-'*10, 'Convert to Extracted data', '-'*10, '\n')
       hor_data = extracted_feature_of_signal(np.array(data['x'])[:, :, 0])
@@ -310,7 +330,7 @@ def convert_to_image(name_bearing, opt, type_data, time=None, type_=None):
       data_x = np.concatenate((hor_data, ver_data), axis=-1)
       data['x'] = data_x
     
-    ############### scale extract and 1D-data ##############################
+    ############### scale data ##############################
     if type_data=='1d' or type_data=='extract':
         if opt.scaler == 'MinMaxScaler':
           scaler = MinMaxScaler
@@ -436,44 +456,6 @@ def predict_time(data, length_seg=None):
 
   normal_time = (time+1)*length_seg
   return normal_time
-
-# def predict_time(data):
-#   '''
-#   INPUT =========================================
-#   data: - type: float32 (should be)
-#         - shape: 1D (for example: (1802, ))
-
-#   OUTPUT =======================================
-#   fpt: - type: int32 (should be)
-#        - shape: a interger value in N 
-#   '''
-#   h = []
-#   for i in data[:, :, 0]:
-#     h.append(gen_rms(i))
-    
-#   nor = 50
-#   normal = h[:nor]
-#   mean_normal = np.mean(normal)
-#   std_normal = np.std(normal)
-
-#   limit_up = mean_normal + 3*std_normal
-#   limit_down = mean_normal - 3*std_normal
-
-#   fpt = 0
-#   i_n = 0
-#   check_c = 1
-#   for idx, i in enumerate(h):
-#     if i > limit_up or i < limit_down:
-#       if idx - check_c == 1:
-#         i_n += 1
-#       else:
-#         i_n = 0
-#       check_c = idx
-
-#       if i_n == 2:
-#         fpt = idx-2
-#         break
-#   return fpt
 
 def percent_error(y_true, y_pred):
     y_pred = y_pred.reshape(-1, )
