@@ -126,6 +126,7 @@ if os.path.exists(test_data_path_2D) == False:
 
 train_data_rul_1D  = load_df(train_data_path_1D)
 train_label_rul_1D = load_df(train_label_path_1D)
+
 test_data_rul_1D   = load_df(test_data_path_1D)
 test_label_rul_1D  = load_df(test_label_path_1D)
 
