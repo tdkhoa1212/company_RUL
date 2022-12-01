@@ -1,8 +1,7 @@
 import os
 import numpy as np
 from train import parse_opt
-from utils.tools import load_df, save_df, convert_to_image, predict_time, seg_data
-from utils.load_predict_data import length 
+from utils.tools import load_df, save_df, convert_to_image
 
 opt = parse_opt()
 np.random.seed(1234)
@@ -71,11 +70,13 @@ def getting_data(bearing_list):
   test_extract = []
 
   test_label_RUL = []
+  
   for name in bearing_list:
     for type_data in opt.data_type:
       if type_data == '1d':
-        Bearing_data = load_df(saved_dir  + name + '_data'  + type_data)
+        Bearing_data  = load_df(saved_dir + name + '_data'  + type_data)
         Bearing_label = load_df(saved_dir + name + '_label' + type_data)
+
         if train_1D == []:
           train_1D = Bearing_data 
           label = Bearing_label 
