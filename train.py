@@ -1,16 +1,13 @@
 from model.autoencoder import autoencoder_model
 from model.cnn import cnn_1d_model
 from model.MIX_1D_2D import mix_model
-from model.resnet import resnet_18, resnet_101, resnet_152, resnet_50
+from model.resnet import resnet_101, resnet_50
 from model.LSTM import lstm_extracted_model, lstm_model
-from utils.tools import recall_m, precision_m, f1_m, to_onehot, r2_keras, to_onehot
-from utils.save_data import start_save_data
+from utils.tools import to_onehot
 from tensorflow.keras.layers import Input
 from tensorflow.keras.models import Model
-from angular_grad import AngularGrad
 import tensorflow_addons as tfa
 import argparse
-import numpy as np
 import os
 import tensorflow as tf
 
@@ -34,10 +31,10 @@ def parse_opt(known=False):
     parser.add_argument('--model',          default='cnn_2d', type=str, help='mix, lstm, dnn, cnn_1d, resnet_cnn_2d, cnn_2d, autoencoder')
     parser.add_argument('--save_dir',       default=None, type=str)
     parser.add_argument('--data_type',      default=['2d', '1d', 'extract'], type=str, help='shape of data. They can be 1d, 2d, extract')
-    parser.add_argument('--train_bearing',      default=['Bearing1_2', 'Bearing1_3', 'Bearing1_4','Bearing1_5','Bearing1_6','Bearing1_7'], type=str)
-    parser.add_argument('--test_bearing',       default=['Bearing1_1'], type=str)
+    parser.add_argument('--train_bearing',  default=['Bearing1_2', 'Bearing1_3', 'Bearing1_4','Bearing1_5','Bearing1_6','Bearing1_7'], type=str)
+    parser.add_argument('--test_bearing',   default=['Bearing1_1'], type=str)
     parser.add_argument('--condition',      default=None, type=str, help='c_1, c_2, c_3, c_all')
-    parser.add_argument('--type',           default=None, type=str, help='PHM, XJTU, PHM_c1')
+    parser.add_argument('--type',           default=None, type=str, help='PHM, XJTU')
     parser.add_argument('--scaler',         default=None, type=str)
     parser.add_argument('--main_dir_colab', default=None, type=str)
 
