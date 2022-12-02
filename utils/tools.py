@@ -19,22 +19,7 @@ import statistics
 from sklearn.cluster import SpectralClustering
 from model.autoencoder import autoencoder_model
 
-if opt.type == 'PHM':
     
-else:
-    FPT = {'Bearing1_1': 76,
-            'Bearing1_2': 44,
-            'Bearing1_3': 60,
-            'Bearing1_5': 39,
-            'Bearing2_1': 455,
-            'Bearing2_2': 48,
-            'Bearing2_3': 327,
-            'Bearing2_4': 32,
-            'Bearing2_5': 141,
-            'Bearing3_1': 2344,
-            'Bearing3_3': 340,
-            'Bearing3_4': 1418,
-            'Bearing3_5': 9}
 def hankel_svdvals(data, hankel_window_size, slice_window_size):
     """ Slices data in 'slice_window_size' and compute hankel matrix singular values with 'hankel_window_size' """
 
@@ -470,4 +455,55 @@ def percent_error(y_true, y_pred):
         else:
             A.append(np.exp(np.log(0.5)*(i/20.)))
     return np.mean(A), SD
+
+def getting_data(saved_dir, bearing_list, opt):
+  _1D = []
+  _2D = []
+  extract = []
+
+  # Creating empty folder to catch labels--------------
+  if opt.type == 'PHM':
+    label_RUL_all = []
+  else:
+    label_RUL_all = []
+    label_Con_all = []
+
+  # Arranging data and labels in scheme---------------
+  for name in bearing_list:
+    for type_data in opt.data_type:
+
+      # Loading data and labels-----------------------
+      data = load_df(saved_dir + name + '_data'  + type_data)
+      label_RUL= load_df(saved_dir + name + '_label_RUL')
+      if opt.type == 'XJTU':
+        label_Con= load_df(saved_dir + name + '_label_Con')
+
+      # Getting 1D data and labels-----------------------------------
+      if type_data == '1d':
+        if _1D == []:
+          _1D = data 
+          label_RUL_all = label_RUL
+          if opt.type == 'XJTU':
+            label_Con_all = label_Con
+        else:
+          _1D = np.concatenate((_1D, data))
+          label_RUL_all = np.concatenate((label_RUL_all, label_RUL))
+          if opt.type == 'XJTU':
+            label_Con_all = np.concatenate((label_Con_all, label_Con))
+
+      # Getting 2D data --------------------------------------------
+      elif type_data == '2d':
+        if _2D == []:
+          _2D = data 
+        else:
+          _2D = np.concatenate((_2D, data))
+      
+      # Getting extract data ---------------------------------------
+      else:
+        if extract == []:
+          extract = data 
+        else:
+          extract = np.concatenate((extract, data))
+
+    return _1D, _2D, extract, label_RUL
 

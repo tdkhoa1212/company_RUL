@@ -1,151 +1,151 @@
 import os
 import numpy as np
-import pywt
-import pandas as pd
-import pickle as pkl
-from matplotlib import pyplot as plt
 from train import parse_opt
-from utils.tools import load_df, save_df, extract_feature_image, convert_to_image, predict_time, seg_data, gen_rms
+from utils.tools import load_df, save_df, convert_to_image, predict_time, seg_data, gen_rms
 
 opt = parse_opt()
 
+main_dir_colab = opt.main_dir_colab + '/XJTU_data/XJTU-SY_Bearing_Datasets/'
+saved_dir = opt.main_dir_colab + '/XJTU_data/saved_data/'
 
-train_main_dir = '/content/drive/MyDrive/Khoa/XJTU_data/XJTU-SY_Bearing_Datasets/'
+# FPT points of bearing sets ==================================================================================
+FPT = {'Bearing1_1': 76,
+       'Bearing1_2': 44,
+       'Bearing1_3': 60,
+       'Bearing1_5': 39,
+       'Bearing2_1': 455,
+       'Bearing2_2': 48,
+       'Bearing2_3': 327,
+       'Bearing2_4': 32,
+       'Bearing2_5': 141,
+       'Bearing3_1': 2344,
+       'Bearing3_3': 340,
+       'Bearing3_4': 1418,
+       'Bearing3_5': 9}
 
-train_data_path_2D = train_main_dir + f'train_data_2D_{opt.condition}.pkz'
-test_data_path_2D  = train_main_dir + f'test_data_2D_{opt.condition}.pkz'
-
-train_data_path_1D  = train_main_dir + f'train_data_1D_{opt.condition}.pkz'
-train_label_path_1D = train_main_dir + f'train_label_1D_{opt.condition}.pkz'
-test_data_path_1D   = train_main_dir + f'test_data_1D_{opt.condition}.pkz'
-test_label_path_1D  = train_main_dir + f'test_label_1D_{opt.condition}.pkz'
-
-train_data_path_extract = train_main_dir + f'train_data_extract_{opt.condition}.pkz'
-test_data_path_extract  = train_main_dir + f'test_data_extract_{opt.condition}.pkz'
-
-train_c_path = train_main_dir + f'train_c_{opt.condition}.pkz'
-test_c_path = train_main_dir + f'test_c_{opt.condition}.pkz'
-
-if os.path.exists(test_data_path_2D) == False:
+# Saving the converted data ==================================================================================
+if os.path.exists(saved_dir + 'Bearing1_1_' + '1d') == False:
   for type_data in opt.data_type:
     # Train data-------------------------------------------------------------------------
-    Bearing1_1_path = train_main_dir + '35Hz12kN/' + 'Bearing1_1'
-    Bearing1_2_path = train_main_dir + '35Hz12kN/' + 'Bearing1_2'
-    Bearing2_1_path = train_main_dir + '37.5Hz11kN/' + 'Bearing2_1'
-    Bearing2_2_path = train_main_dir + '37.5Hz11kN/' + 'Bearing2_2'
-    Bearing3_1_path = train_main_dir + '40Hz10kN/' + 'Bearing3_1'
-    Bearing3_2_path = train_main_dir + '40Hz10kN/' + 'Bearing3_2'
-    print('\n Training rul data'+'-'*100)
-    Bearing1_1_data = convert_to_image(Bearing1_1_path, opt, type_data, 76, 'XJTU')
-    Bearing1_2_data = convert_to_image(Bearing1_2_path, opt, type_data, 44, 'XJTU')
-    Bearing2_1_data = convert_to_image(Bearing2_1_path, opt, type_data, 455, 'XJTU')
-    Bearing2_2_data = convert_to_image(Bearing2_2_path, opt, type_data, 48, 'XJTU')
-    Bearing3_1_data = convert_to_image(Bearing3_1_path, opt, type_data, 2344, 'XJTU')
-    Bearing3_2_data = convert_to_image(Bearing3_2_path, opt, type_data, 1500, 'XJTU')
+    Bearing1_1_path = main_dir_colab + '35Hz12kN/'   + 'Bearing1_1'
+    Bearing1_2_path = main_dir_colab + '35Hz12kN/'   + 'Bearing1_2'
+    Bearing1_3_path = main_dir_colab + '35Hz12kN/'   + 'Bearing1_3'
+    Bearing1_5_path = main_dir_colab + '35Hz12kN/'   + 'Bearing1_5'
+
+    Bearing2_1_path = main_dir_colab + '40Hz10kN/' + 'Bearing2_1'
+    Bearing2_2_path = main_dir_colab + '40Hz10kN/' + 'Bearing2_2'
+    Bearing2_3_path = main_dir_colab + '40Hz10kN/' + 'Bearing2_3'
+    Bearing2_4_path = main_dir_colab + '40Hz10kN/' + 'Bearing2_4'
+    Bearing2_5_path = main_dir_colab + '40Hz10kN/' + 'Bearing2_5'
+
+    Bearing3_1_path = main_dir_colab + '37.5Hz11kN/' + 'Bearing3_1'
+    Bearing3_3_path = main_dir_colab + '37.5Hz11kN/' + 'Bearing3_3'
+    Bearing3_4_path = main_dir_colab + '37.5Hz11kN/' + 'Bearing3_4'
+    Bearing3_5_path = main_dir_colab + '37.5Hz11kN/' + 'Bearing3_5'
+
+    print('\n Saving data in XJTU data set'+'-'*100)
+
+    ############################################## Converting part #####################################################################################
+
+    # Loading all data ----------------------------------------------------------------------
+    Bearing1_1 = convert_to_image(Bearing1_1_path, opt, type_data, FPT['Bearing1_1'], 'XJTU')
+    Bearing1_2 = convert_to_image(Bearing1_2_path, opt, type_data, FPT['Bearing1_2'], 'XJTU')
+    Bearing1_3 = convert_to_image(Bearing1_3_path, opt, type_data, FPT['Bearing1_3'], 'XJTU')
+    Bearing1_5 = convert_to_image(Bearing1_5_path, opt, type_data, FPT['Bearing1_5'], 'XJTU')
+
+    Bearing2_1 = convert_to_image(Bearing2_1_path, opt, type_data, FPT['Bearing2_1'], 'XJTU')
+    Bearing2_2 = convert_to_image(Bearing2_2_path, opt, type_data, FPT['Bearing2_2'], 'XJTU')
+    Bearing2_3 = convert_to_image(Bearing2_3_path, opt, type_data, FPT['Bearing2_3'], 'XJTU')
+    Bearing2_4 = convert_to_image(Bearing2_4_path, opt, type_data, FPT['Bearing2_4'], 'XJTU')
+    Bearing2_5 = convert_to_image(Bearing2_5_path, opt, type_data, FPT['Bearing2_5'], 'XJTU')
     
-    if opt.condition in ['c_1', 'c_all']:
-      train_data_rul  = train_data_1 = np.concatenate((Bearing1_1_data['x'], Bearing1_2_data['x']))
-      train_label_rul = train_label_1 = np.concatenate((Bearing1_1_data['y'], Bearing1_2_data['y']))
-      train_c_type    = train_c_type_1 = np.array([1.]*len(train_label_1))
-    if opt.condition in ['c_2', 'c_all']:
-      train_data_rul  = train_data_2 = np.concatenate((Bearing2_1_data['x'], Bearing2_2_data['x']))
-      train_label_rul = train_label_2 = np.concatenate((Bearing2_1_data['y'], Bearing2_2_data['y']))
-      train_c_type    = train_c_type_2 = np.array([2.]*len(train_label_2))
-    if opt.condition in ['c_3', 'c_all']:
-      train_data_rul  = train_data_3 = np.concatenate((Bearing3_1_data['x'], Bearing3_2_data['x']))
-      train_label_rul = train_label_3 = np.concatenate((Bearing3_1_data['y'], Bearing3_2_data['y']))
-      train_c_type    = train_c_type_3 = np.array([3.]*len(train_label_3))
-    if opt.condition in ['c_all']:
-      train_data_rul = np.concatenate((train_data_1, train_data_2, train_data_3))
-      train_label_rul = np.concatenate((train_label_1, train_label_2, train_label_3))
-      train_c_type = np.concatenate((train_c_type_1, train_c_type_2, train_c_type_3))
+    Bearing3_1 = convert_to_image(Bearing3_1_path, opt, type_data, FPT['Bearing3_1'], 'XJTU')
+    Bearing3_3 = convert_to_image(Bearing3_3_path, opt, type_data, FPT['Bearing3_3'], 'XJTU')
+    Bearing3_4 = convert_to_image(Bearing3_4_path, opt, type_data, FPT['Bearing3_4'], 'XJTU')
+    Bearing3_5 = convert_to_image(Bearing3_5_path, opt, type_data, FPT['Bearing3_5'], 'XJTU')
 
-    # Test data---------------------------------------------------------------------------
-    Bearing1_3_path = train_main_dir + '35Hz12kN/' + 'Bearing1_3'
-    Bearing1_4_path = train_main_dir + '35Hz12kN/' + 'Bearing1_4'
-    Bearing1_5_path = train_main_dir + '35Hz12kN/' + 'Bearing1_5'
-    Bearing1_6_path = train_main_dir + '35Hz12kN/' + 'Bearing1_6'
-    Bearing1_7_path = train_main_dir + '35Hz12kN/' + 'Bearing1_7'
-    Bearing2_3_path = train_main_dir + '37.5Hz11kN/' + 'Bearing2_3'
-    Bearing2_4_path = train_main_dir + '37.5Hz11kN/' + 'Bearing2_4'
-    Bearing2_5_path = train_main_dir + '37.5Hz11kN/' + 'Bearing2_5'
-    Bearing2_6_path = train_main_dir + '37.5Hz11kN/' + 'Bearing2_6'
-    Bearing2_7_path = train_main_dir + '37.5Hz11kN/' + 'Bearing2_7'
-    Bearing3_3_path = train_main_dir + '40Hz10kN/' + 'Bearing3_3'
-    Bearing3_4_path = train_main_dir + '40Hz10kN/' + 'Bearing3_4'
-    Bearing3_5_path = train_main_dir + '40Hz10kN/' + 'Bearing3_5'
-    Bearing3_6_path = train_main_dir + '40Hz10kN/' + 'Bearing3_6'
-    Bearing3_7_path = train_main_dir + '40Hz10kN/' + 'Bearing3_7'
-    print('\n Test rul data'+'-'*100)
-    Bearing1_3_data = convert_to_image(Bearing1_3_path, opt, type_data, 60, 'XJTU')
-    Bearing1_4_data = convert_to_image(Bearing1_4_path, opt, type_data, 0, 'XJTU')
-    Bearing1_5_data = convert_to_image(Bearing1_5_path, opt, type_data, 39, 'XJTU')
+    # Creating condition data ---------------------------------------------------------------
+    Bearing1_1_label_Con = np.array([1.]*len(Bearing1_1['x']))
+    Bearing1_2_label_Con = np.array([1.]*len(Bearing1_2['x']))
+    Bearing1_3_label_Con = np.array([1.]*len(Bearing1_3['x']))
+    Bearing1_5_label_Con = np.array([1.]*len(Bearing1_5['x']))
 
-    Bearing2_3_data = convert_to_image(Bearing2_3_path, opt, type_data, 310, 'XJTU')
-    Bearing2_4_data = convert_to_image(Bearing2_4_path, opt, type_data, 29, 'XJTU')
-    Bearing2_5_data = convert_to_image(Bearing2_5_path, opt, type_data, 120, 'XJTU')
+    Bearing2_1_label_Con = np.array([2.]*len(Bearing2_1['x']))
+    Bearing2_2_label_Con = np.array([2.]*len(Bearing2_2['x']))
+    Bearing2_3_label_Con = np.array([2.]*len(Bearing2_3['x']))
+    Bearing2_4_label_Con = np.array([2.]*len(Bearing2_4['x']))
+    Bearing2_5_label_Con = np.array([2.]*len(Bearing2_5['x']))
 
-    Bearing3_3_data = convert_to_image(Bearing3_3_path, opt, type_data, 340, 'XJTU')
-    Bearing3_4_data = convert_to_image(Bearing3_4_path, opt, type_data, 1418, 'XJTU')
-    Bearing3_5_data = convert_to_image(Bearing3_5_path, opt, type_data, 9, 'XJTU')
+    Bearing3_1_label_Con = np.array([3.]*len(Bearing3_1['x']))
+    Bearing3_3_label_Con = np.array([3.]*len(Bearing3_3['x']))
+    Bearing3_4_label_Con = np.array([3.]*len(Bearing3_4['x']))
+    Bearing3_5_label_Con = np.array([3.]*len(Bearing3_5['x']))
     
-    if opt.condition in ['c_1', 'c_all']:
-      test_data_rul = test_data_1 = np.concatenate((Bearing1_3_data['x'], Bearing1_4_data['x'], Bearing1_5_data['x']))
-      test_label_rul = test_label_1 = np.concatenate((Bearing1_3_data['y'], Bearing1_4_data['y'], Bearing1_5_data['y']))
-      test_c_type    = test_c_type_1 = np.array([1.]*len(test_label_1))
-    if opt.condition in ['c_2', 'c_all']:
-      test_data_rul = test_data_2 = np.concatenate((Bearing2_3_data['x'], Bearing2_4_data['x'], Bearing2_5_data['x']))
-      test_label_rul = test_label_2 = np.concatenate((Bearing2_3_data['y'], Bearing2_4_data['y'], Bearing2_5_data['y']))
-      test_c_type    = test_c_type_2 = np.array([2.]*len(test_label_2))
-    if opt.condition in ['c_3', 'c_all']:
-      test_data_rul = test_data_3 = np.concatenate((Bearing3_3_data['x'], Bearing3_4_data['x'], Bearing3_5_data['x']))
-      test_label_rul = test_label_3 = np.concatenate((Bearing3_3_data['y'], Bearing3_4_data['y'], Bearing3_5_data['y']))
-      test_c_type    = test_c_type_3 = np.array([3.]*len(test_label_3))
-    if opt.condition in ['c_all']:
-      test_data_rul = np.concatenate((test_data_1, test_data_2, test_data_3))
-      test_label_rul = np.concatenate((test_label_1, test_label_2, test_label_3))
-      test_c_type = np.concatenate((test_c_type_1, test_c_type_2, test_c_type_3))
+    ############################################## Saving part #####################################################################################
     
-    # Save condition of data------------------------------------------------
-    save_df(train_c_type, train_c_path)
-    save_df(test_c_type, test_c_path)
+    # Save data in different types------------------------------------------------
+    save_df(saved_dir + 'Bearing1_1_data' + type_data, Bearing1_1['x'])
+    save_df(saved_dir + 'Bearing1_2_data' + type_data, Bearing1_2['x'])
+    save_df(saved_dir + 'Bearing1_3_data' + type_data, Bearing1_3['x'])
+    save_df(saved_dir + 'Bearing1_5_data' + type_data, Bearing1_5['x'])
+
+    save_df(saved_dir + 'Bearing2_1_data' + type_data, Bearing2_1['x'])
+    save_df(saved_dir + 'Bearing2_2_data' + type_data, Bearing2_2['x'])
+    save_df(saved_dir + 'Bearing2_3_data' + type_data, Bearing2_3['x'])
+    save_df(saved_dir + 'Bearing2_4_data' + type_data, Bearing2_4['x'])
+    save_df(saved_dir + 'Bearing2_5_data' + type_data, Bearing2_5['x'])
+
+    save_df(saved_dir + 'Bearing3_1_data' + type_data, Bearing3_1['x'])
+    save_df(saved_dir + 'Bearing3_3_data' + type_data, Bearing3_3['x'])
+    save_df(saved_dir + 'Bearing3_4_data' + type_data, Bearing3_4['x'])
+    save_df(saved_dir + 'Bearing3_5_data' + type_data, Bearing3_5['x'])
+
+    # Save RUL labels in different types------------------------------------------------
+    save_df(saved_dir + 'Bearing1_1_label_RUL' , Bearing1_1['y'])
+    save_df(saved_dir + 'Bearing1_2_label_RUL' , Bearing1_2['y'])
+    save_df(saved_dir + 'Bearing1_3_label_RUL' , Bearing1_3['y'])
+    save_df(saved_dir + 'Bearing1_5_label_RUL' , Bearing1_5['y'])
+
+    save_df(saved_dir + 'Bearing2_1_label_RUL' , Bearing2_1['y'])
+    save_df(saved_dir + 'Bearing2_2_label_RUL' , Bearing2_2['y'])
+    save_df(saved_dir + 'Bearing2_3_label_RUL' , Bearing2_3['y'])
+    save_df(saved_dir + 'Bearing2_4_label_RUL' , Bearing2_4['y'])
+    save_df(saved_dir + 'Bearing2_5_label_RUL' , Bearing2_5['y'])
+
+    save_df(saved_dir + 'Bearing3_1_label_RUL' , Bearing3_1['y'])
+    save_df(saved_dir + 'Bearing3_3_label_RUL' , Bearing3_3['y'])
+    save_df(saved_dir + 'Bearing3_4_label_RUL' , Bearing3_4['y'])
+    save_df(saved_dir + 'Bearing3_5_label_RUL' , Bearing3_5['y'])
+
+    # Save Con labels in different types------------------------------------------------
+    save_df(saved_dir + 'Bearing1_1_label_Con' , Bearing1_1_label_Con)
+    save_df(saved_dir + 'Bearing1_2_label_Con' , Bearing1_2_label_Con)
+    save_df(saved_dir + 'Bearing1_3_label_Con' , Bearing1_3_label_Con)
+    save_df(saved_dir + 'Bearing1_5_label_Con' , Bearing1_5_label_Con)
+
+    save_df(saved_dir + 'Bearing2_1_label_Con' , Bearing2_1_label_Con)
+    save_df(saved_dir + 'Bearing2_2_label_Con' , Bearing2_2_label_Con)
+    save_df(saved_dir + 'Bearing2_3_label_Con' , Bearing2_3_label_Con)
+    save_df(saved_dir + 'Bearing2_4_label_Con' , Bearing2_4_label_Con)
+    save_df(saved_dir + 'Bearing2_5_label_Con' , Bearing2_5_label_Con)
+
+    save_df(saved_dir + 'Bearing3_1_label_Con' , Bearing3_1_label_Con)
+    save_df(saved_dir + 'Bearing3_3_label_Con' , Bearing3_3_label_Con)
+    save_df(saved_dir + 'Bearing3_4_label_Con' , Bearing3_4_label_Con)
+    save_df(saved_dir + 'Bearing3_5_label_Con' , Bearing3_5_label_Con)
+
+
+test_1D, test_2D, test_extract, test_label_RUL = getting_data(saved_dir, opt.test_bearing, opt)
+train_1D, train_2D, train_extract, train_label_RUL = getting_data(saved_dir, opt.train_bearing, opt)
     
-    # Save data following to each type--------------------------------------
-    if type_data == '1d':
-      save_df(train_data_rul, train_data_path_1D)
-      save_df(train_label_rul, train_label_path_1D)
-      save_df(test_data_rul, test_data_path_1D)
-      save_df(test_label_rul, test_label_path_1D)
-    if type_data == 'extract':
-      save_df(train_data_rul, train_data_path_extract)
-      save_df(test_data_rul, test_data_path_extract)
-    if type_data == '2d':
-      save_df(test_data_rul, test_data_path_2D)
-      save_df(train_data_rul, train_data_path_2D)
-    print('#'*100)
+print(f'Shape of 1D training data: {train_1D.shape}')  
+print(f'Shape of 1D test data: {test_1D.shape}\n')
 
-train_data_rul_1D  = load_df(train_data_path_1D)
-train_label_rul_1D = load_df(train_label_path_1D)
+print(f'Shape of 2D training data: {train_2D.shape}')  
+print(f'Shape of 2D test data: {test_2D.shape}\n')
 
-test_data_rul_1D   = load_df(test_data_path_1D)
-test_label_rul_1D  = load_df(test_label_path_1D)
+print(f'Shape of extract training data: {train_extract.shape}')  
+print(f'Shape of extract test data: {test_extract.shape}\n')
 
-train_data_rul_2D  = load_df(train_data_path_2D)
-test_data_rul_2D   = load_df(test_data_path_2D)
-
-train_data_rul_extract  = load_df(train_data_path_extract)
-test_data_rul_extract   = load_df(test_data_path_extract)
-
-train_c   = load_df(train_c_path)
-test_c  = load_df(test_c_path)
-
-print(f'Train shape 1D: {train_data_rul_1D.shape}   {train_label_rul_1D.shape}')  
-print(f'Test shape 1D: {test_data_rul_1D.shape}   {test_label_rul_1D.shape}\n')
-
-print(f'Train shape 2D: {train_data_rul_2D.shape}')  
-print(f'Test shape 2D: {test_data_rul_2D.shape} \n')
-
-print(f'Train shape extract: {train_data_rul_extract.shape}')  
-print(f'Test shape extract: {test_data_rul_extract.shape} \n')
-
-print(f'shape of condition train and test: {train_c.shape}   {test_c.shape}\n')
+print(f'Shape of training label: {train_label_RUL.shape}')  
+print(f'Shape of test label: {test_label_RUL.shape}\n')
