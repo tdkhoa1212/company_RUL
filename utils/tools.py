@@ -505,5 +505,8 @@ def getting_data(saved_dir, bearing_list, opt):
         else:
           extract = np.concatenate((extract, data))
 
-    return _1D, _2D, extract, label_RUL
+    if opt.type == 'PHM':
+      return _1D, _2D, extract, label_RUL
+    else:
+      return _1D, _2D, extract, label_RUL, label_Con
 

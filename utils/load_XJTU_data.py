@@ -1,7 +1,7 @@
 import os
 import numpy as np
 from train import parse_opt
-from utils.tools import load_df, save_df, convert_to_image, predict_time, seg_data, gen_rms
+from utils.tools import save_df, convert_to_image, getting_data
 
 opt = parse_opt()
 
@@ -135,8 +135,8 @@ if os.path.exists(saved_dir + 'Bearing1_1_' + '1d') == False:
     save_df(saved_dir + 'Bearing3_5_label_Con' , Bearing3_5_label_Con)
 
 
-test_1D, test_2D, test_extract, test_label_RUL = getting_data(saved_dir, opt.test_bearing, opt)
-train_1D, train_2D, train_extract, train_label_RUL = getting_data(saved_dir, opt.train_bearing, opt)
+test_1D, test_2D, test_extract, test_label_RUL, test_label_Con = getting_data(saved_dir, opt.test_bearing, opt)
+train_1D, train_2D, train_extract, train_label_RUL, train_label_Con = getting_data(saved_dir, opt.train_bearing, opt)
     
 print(f'Shape of 1D training data: {train_1D.shape}')  
 print(f'Shape of 1D test data: {test_1D.shape}\n')
@@ -147,5 +147,8 @@ print(f'Shape of 2D test data: {test_2D.shape}\n')
 print(f'Shape of extract training data: {train_extract.shape}')  
 print(f'Shape of extract test data: {test_extract.shape}\n')
 
-print(f'Shape of training label: {train_label_RUL.shape}')  
-print(f'Shape of test label: {test_label_RUL.shape}\n')
+print(f'Shape of training RUL label: {train_label_RUL.shape}')  
+print(f'Shape of test RUL label: {test_label_RUL.shape}\n')
+
+print(f'Shape of training Con label: {train_label_Con.shape}')  
+print(f'Shape of test Con label: {test_label_Con.shape}\n')
