@@ -38,8 +38,8 @@ def parse_opt(known=False):
     parser.add_argument('--scaler',         default=None, type=str)
     parser.add_argument('--main_dir_colab', default=None, type=str)
 
-    parser.add_argument('--epochs',     default=100, type=int)
-    parser.add_argument('--batch_size', default=32, type=int)
+    parser.add_argument('--epochs',         default=100, type=int)
+    parser.add_argument('--batch_size',     default=32, type=int)
     parser.add_argument('--input_shape',    default=None, type=int, help='1279 for using fft, 2560 for raw data in PHM, 32768 for raw data in XJTU')
     parser.add_argument('--num_classes',    default=1, type=str, help='class condition number: 3, class rul condition: 1')
     
@@ -53,17 +53,17 @@ def parse_opt(known=False):
     opt = parser.parse_known_args()[0] if known else parser.parse_args()
     return opt
 
-def main(opt, train_data_rul_1D, train_label_rul_1D, test_data_rul_1D, test_label_rul_1D, train_data_rul_2D, test_data_rul_2D, train_data_rul_extract, test_data_rul_extract, train_c, test_c):
-  train_c = to_onehot(train_c)
-  test_c = to_onehot(test_c)
-  val_data_1D, val_data_2D, val_extract, val_c, val_label_RUL = test_data_rul_1D[:1000], test_data_rul_2D[:1000], test_data_rul_extract[:1000], test_c[:1000], test_label_rul_1D[:1000]
-  val_data = [val_data_1D, val_data_2D, val_extract]
-  val_label = [val_c, val_label_RUL]
+def main(opt, train_1D, train_2D, train_extract, train_label_RUL, train_label_Con, test_1D, test_2D, test_extract, test_label_RUL, test_label_Con):  
+  train_label_Con = to_onehot(train_label_Con)
+  test_label_Con  = to_onehot(test_label_Con)
+  val_2D, val_1D, val_extract, val_label_Con, val_label_RUL = test_2D, test_1D, test_extract, test_label_Con, test_label_RUL
+  val_data = [val_1D, val_2D, val_extract]
+  val_label = [val_label_Con, val_label_RUL]
 
   if opt.model == 'dnn':
-    train_data = [train_data[:, :, 0], train_data[:, :, 1]]
-    val_data, val_label = [test_data[:100][:, :, 0], test_data[:100][:, :, 1]], test_label[:100]
-    test_data = [test_data[:, :, 0], test_data[:, :, 1]]
+    train_data = [train_2D[:, :, 0], train_2D[:, :, 1]]
+    val_data, val_label = [test_2D[:100][:, :, 0], test_2D[:100][:, :, 1]], test_label_RUL[:100]
+    test_data = [test_2D[:, :, 0], test_data[:, :, 1]]
     network = dnn_model(opt)
   if opt.model == 'cnn_1d':
     network = cnn_1d_model(opt, training=True)
