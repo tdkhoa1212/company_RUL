@@ -1,12 +1,11 @@
-from tensorflow.keras.layers import Conv1D, Activation, Dense, \
-                                    concatenate, BatchNormalization, \
-                                    GlobalAveragePooling1D, Input, \
-                                    MaxPooling1D, Lambda, GlobalAveragePooling2D, \
-                                    ReLU, MaxPooling2D, Flatten, Dropout, LSTM, Reshape
+from tensorflow.keras.layers import  Dense, concatenate, BatchNormalization, \
+                                    GlobalAveragePooling1D, \
+                                    GlobalAveragePooling2D, \
+                                    Dropout, Reshape
 import tensorflow as tf
 from keras.models import Model
 from model.LSTM import TransformerLayer
-from keras import layers, regularizers
+from keras import regularizers
 import keras.backend as K
 
 def fully_concatenate(hidden_out_1D, hidden_out_2D, hidden_out_extracted, training=None, fully=None):

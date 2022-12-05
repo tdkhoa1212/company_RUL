@@ -85,10 +85,10 @@ def main(opt, train_1D, train_2D, train_extract, train_label_RUL, train_label_Co
     network = Model(inputs=[input_1D, input_2D, input_extracted], outputs=[Condition, RUL])
 
     # get three types of different forms from original data-------------------------------
-    train_data = [train_data_rul_1D, train_data_rul_2D, train_data_rul_extract]
-    train_label = [train_c, train_label_rul_1D]
-    test_data = [test_data_rul_1D, test_data_rul_2D, test_data_rul_extract]
-    test_label = [test_c, test_label_rul_1D]
+    train_data = [train_1D, train_2D, train_extract]
+    train_label = [train_label_Con, train_label_RUL]
+    test_data = [test_1D, test_2D, test_extract]
+    test_label = [test_label_Con, test_label_RUL]
   
   weight_path = os.path.join(opt.save_dir, f'model_{opt.condition}_{opt.type}')
   if opt.load_weight:
@@ -123,19 +123,9 @@ if __name__ == '__main__':
   opt = parse_opt()
   # start_save_data(opt)
   if opt.type == 'PHM':
-    from utils.load_PHM_data import train_data_rul_1D, train_label_rul_1D, \
-                                    test_data_rul_1D, test_label_rul_1D, \
-                                    train_data_rul_2D, \
-                                    test_data_rul_2D,\
-                                    train_data_rul_extract, \
-                                    test_data_rul_extract,\
-                                    train_c, test_c
+    from utils.load_PHM_data import train_1D, train_2D, train_extract, train_label_RUL,\
+                                    test_1D, test_2D, test_extract, test_label_Con, test_label_RUL
   else:
-    from utils.load_XJTU_data import train_data_rul_1D, train_label_rul_1D, \
-                                    test_data_rul_1D, test_label_rul_1D, \
-                                    train_data_rul_2D, \
-                                    test_data_rul_2D,\
-                                    train_data_rul_extract, \
-                                    test_data_rul_extract,\
-                                    train_c, test_c
-  main(opt, train_data_rul_1D, train_label_rul_1D, test_data_rul_1D, test_label_rul_1D, train_data_rul_2D, test_data_rul_2D, train_data_rul_extract, test_data_rul_extract, train_c, test_c)
+    from utils.load_XJTU_data import train_1D, train_2D, train_extract, train_label_Con, train_label_RUL,\
+                                     test_1D, test_2D, test_extract, test_label_Con, test_label_RUL
+  main(opt, train_1D, train_2D, train_extract, train_label_RUL, train_label_Con, test_1D, test_2D, test_extract, test_label_RUL, test_label_Con)
