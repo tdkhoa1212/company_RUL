@@ -28,7 +28,6 @@ callbacks = tf.keras.callbacks.EarlyStopping(monitor='val_loss', mode='min', ver
 def parse_opt(known=False):
     parser = argparse.ArgumentParser()
    
-    parser.add_argument('--model',          default='cnn_2d', type=str, help='mix, lstm, dnn, cnn_1d, resnet_cnn_2d, cnn_2d, autoencoder')
     parser.add_argument('--save_dir',       default=None, type=str)
     parser.add_argument('--data_type',      default=['2d', '1d', 'extract'], type=str, help='shape of data. They can be 1d, 2d, extract')
     parser.add_argument('--train_bearing',  default=['Bearing1_2', 'Bearing1_3', 'Bearing1_4','Bearing1_5','Bearing1_6','Bearing1_7'], type=str)
@@ -41,14 +40,11 @@ def parse_opt(known=False):
     parser.add_argument('--epochs',         default=100, type=int)
     parser.add_argument('--batch_size',     default=32, type=int)
     parser.add_argument('--input_shape',    default=None, type=int, help='1279 for using fft, 2560 for raw data in PHM, 32768 for raw data in XJTU')
-    parser.add_argument('--num_classes',    default=1, type=str, help='class condition number: 3, class rul condition: 1')
     
-    parser.add_argument('--rul_train',    default=True,  type=bool)
     parser.add_argument('--predict_time', default=False, type=bool)
     parser.add_argument('--mix_model',    default=True,  type=bool)
     parser.add_argument('--encoder',      default=False, type=bool)
     parser.add_argument('--load_weight',  default=False, type=bool)  
-    parser.add_argument('--length_seg',   default=None, type=int)
     
     opt = parser.parse_known_args()[0] if known else parser.parse_args()
     return opt
