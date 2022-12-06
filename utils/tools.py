@@ -118,7 +118,16 @@ def mae(y_true, predictions):
 def rmse(y_true, y_pred):
     return np.sqrt(np.square(np.subtract(y_true, y_pred)).mean())
 
-def all_matric(y_true_rul, y_pred_rul, y_true_con, y_pred_con):
+def all_matric_PHM(y_true_rul, y_pred_rul):
+    y_true_rul = np.squeeze(y_true_rul)
+    y_pred_rul = np.squeeze(y_pred_rul)
+    
+    r2 = r2_score(y_true_rul, y_pred_rul)
+    mae_ = mae(y_true_rul, y_pred_rul)
+    rmse_ = rmse(y_true_rul, y_pred_rul)
+    return r2, mae_, rmse_
+
+def all_matric_XJTU(y_true_rul, y_pred_rul, y_true_con, y_pred_con):
     y_true_rul = np.squeeze(y_true_rul)
     y_pred_rul = np.squeeze(y_pred_rul)
     y_true_con = np.squeeze(y_true_con)
