@@ -28,12 +28,12 @@ callbacks = tf.keras.callbacks.EarlyStopping(monitor='val_loss', mode='min', ver
 def parse_opt(known=False):
     parser = argparse.ArgumentParser()
    
-    parser.add_argument('--save_dir',       default=None, type=str)
+    parser.add_argument('--save_dir',       default='/content/drive/MyDrive/Khoa/vibration_project/RUL/results', type=str)
     parser.add_argument('--data_type',      default=['2d', '1d', 'extract'], type=str, help='shape of data. They can be 1d, 2d, extract')
     parser.add_argument('--train_bearing',  default=['Bearing1_2', 'Bearing1_3', 'Bearing1_4','Bearing1_5','Bearing1_6','Bearing1_7'], type=str)
     parser.add_argument('--test_bearing',   default=['Bearing1_1'], type=str)
     parser.add_argument('--condition',      default=None, type=str, help='c_1, c_2, c_3, c_all')
-    parser.add_argument('--type',           default=None, type=str, help='PHM, XJTU')
+    parser.add_argument('--type',           default='PHM', type=str, help='PHM, XJTU')
     parser.add_argument('--scaler',         default=None, type=str)
     parser.add_argument('--main_dir_colab', default=None, type=str)
 
