@@ -7,7 +7,6 @@ opt = parse_opt()
 np.random.seed(1234)
 
 # Link of original data ==================================================================================
-main_dir_colab = opt.main_dir_colab
 train_dir =  '/PHM_data/Learning_set/'
 test_dir = '/PHM_data/Test_set/'
 saved_dir = '/PHM_data/saved_data/'
