@@ -7,9 +7,9 @@ opt = parse_opt()
 np.random.seed(1234)
 
 # Link of original data ==================================================================================
-train_dir =  '/PHM_data/Learning_set/'
-test_dir = '/PHM_data/Test_set/'
-saved_dir = '/PHM_data/saved_data/'
+train_dir = opt.main_dir_colab + '/PHM_data/Learning_set/'
+test_dir = opt.main_dir_colab + '/PHM_data/Test_set/'
+saved_dir = opt.main_dir_colab + '/PHM_data/saved_data/'
 
 # FPT points of bearing sets ==================================================================================
 FPT = {'Bearing1_1': 1314,
@@ -25,13 +25,13 @@ if os.path.exists(saved_dir + 'Bearing1_1_' + '1d') == False:
   for type_data in opt.data_type:
     # Converting data-------------------------------------------------------------------------
     print('\n Saving data in XJTU data set'+'-'*100)
-    Bearing1_1 = convert_to_image(train_dir + 'Bearing1_1', opt, type_data, FPT['Bearing1_1'], 'PHM')
-    Bearing1_2 = convert_to_image(train_dir + 'Bearing1_2', opt, type_data, FPT['Bearing1_2'], 'PHM')
-    Bearing1_3 = convert_to_image(test_dir  + 'Bearing1_3', opt, type_data, FPT['Bearing1_3'], 'PHM')
-    Bearing1_4 = convert_to_image(test_dir  + 'Bearing1_4', opt, type_data, FPT['Bearing1_4'], 'PHM')
-    Bearing1_5 = convert_to_image(test_dir  + 'Bearing1_5', opt, type_data, FPT['Bearing1_5'], 'PHM')
-    Bearing1_6 = convert_to_image(test_dir  + 'Bearing1_6', opt, type_data, FPT['Bearing1_6'], 'PHM')
-    Bearing1_7 = convert_to_image(test_dir  + 'Bearing1_7', opt, type_data, FPT['Bearing1_7'], 'PHM')
+    Bearing1_1 = convert_to_image(train_dir + 'Bearing1_1/', opt, type_data, FPT['Bearing1_1'], 'PHM')
+    Bearing1_2 = convert_to_image(train_dir + 'Bearing1_2/', opt, type_data, FPT['Bearing1_2'], 'PHM')
+    Bearing1_3 = convert_to_image(test_dir  + 'Bearing1_3/', opt, type_data, FPT['Bearing1_3'], 'PHM')
+    Bearing1_4 = convert_to_image(test_dir  + 'Bearing1_4/', opt, type_data, FPT['Bearing1_4'], 'PHM')
+    Bearing1_5 = convert_to_image(test_dir  + 'Bearing1_5/', opt, type_data, FPT['Bearing1_5'], 'PHM')
+    Bearing1_6 = convert_to_image(test_dir  + 'Bearing1_6/', opt, type_data, FPT['Bearing1_6'], 'PHM')
+    Bearing1_7 = convert_to_image(test_dir  + 'Bearing1_7/', opt, type_data, FPT['Bearing1_7'], 'PHM')
     
     # Save data and labels in different types------------------------------------------------
     save_df(saved_dir + 'Bearing1_1_data' + type_data, Bearing1_1['x'])
