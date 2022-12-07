@@ -265,7 +265,7 @@ def convert_to_image(name_bearing, opt, type_data, time=None, type_=None):
         model = autoencoder_model(type_)
         model.load_weights(f'/content/drive/MyDrive/Khoa/autoencoder/{type_}.h5')
       for i in range(num_files):
-          name = f"/acc_{str(i+1).zfill(5)}.csv"
+          name = f"acc_{str(i+1).zfill(5)}.csv"
           file_ = join(name_bearing, name)
           if path.exists(file_):
               df = pd.read_csv(file_, header=None)
