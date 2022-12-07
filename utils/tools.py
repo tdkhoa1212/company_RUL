@@ -182,7 +182,7 @@ def process(base_dir, out_file):
 
 #----------------------Load_data.py------------------------------------------------
 def load_df(pkz_file):
-    with open(pkz_file, 'rb') as f:
+    with open(pkz_file + '.pkz', 'rb') as f:
         df=pkl.load(f)
     return df
 
