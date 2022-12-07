@@ -2,11 +2,12 @@ import os
 import numpy as np
 from train import parse_opt
 from utils.tools import save_df, convert_to_image, getting_data
+from os.path import join
 
 opt = parse_opt()
 
-main_dir_colab = opt.main_dir_colab + '/XJTU_data/XJTU-SY_Bearing_Datasets/'
-saved_dir = opt.main_dir_colab + '/XJTU_data/saved_data/'
+main_dir_colab = join(opt.main_dir_colab, '/XJTU_data/XJTU-SY_Bearing_Datasets/')
+saved_dir = join(opt.main_dir_colab, '/XJTU_data/saved_data/')
 
 # FPT points of bearing sets ==================================================================================
 FPT = {'Bearing1_1': 76,
@@ -27,23 +28,23 @@ FPT = {'Bearing1_1': 76,
 if os.path.exists(saved_dir + 'Bearing1_1_' + '1d') == False:
   for type_data in opt.data_type:
     # Train data-------------------------------------------------------------------------
-    Bearing1_1_path = main_dir_colab + '35Hz12kN/'   + 'Bearing1_1'
-    Bearing1_2_path = main_dir_colab + '35Hz12kN/'   + 'Bearing1_2'
-    Bearing1_3_path = main_dir_colab + '35Hz12kN/'   + 'Bearing1_3'
-    Bearing1_5_path = main_dir_colab + '35Hz12kN/'   + 'Bearing1_5'
+    Bearing1_1_path = join(main_dir_colab, '35Hz12kN/')   + 'Bearing1_1'
+    Bearing1_2_path = join(main_dir_colab, '35Hz12kN/')   + 'Bearing1_2'
+    Bearing1_3_path = join(main_dir_colab, '35Hz12kN/')   + 'Bearing1_3'
+    Bearing1_5_path = join(main_dir_colab, '35Hz12kN/')   + 'Bearing1_5'
 
-    Bearing2_1_path = main_dir_colab + '40Hz10kN/' + 'Bearing2_1'
-    Bearing2_2_path = main_dir_colab + '40Hz10kN/' + 'Bearing2_2'
-    Bearing2_3_path = main_dir_colab + '40Hz10kN/' + 'Bearing2_3'
-    Bearing2_4_path = main_dir_colab + '40Hz10kN/' + 'Bearing2_4'
-    Bearing2_5_path = main_dir_colab + '40Hz10kN/' + 'Bearing2_5'
+    Bearing2_1_path = join(main_dir_colab, '40Hz10kN/') + 'Bearing2_1'
+    Bearing2_2_path = join(main_dir_colab, '40Hz10kN/') + 'Bearing2_2'
+    Bearing2_3_path = join(main_dir_colab, '40Hz10kN/') + 'Bearing2_3'
+    Bearing2_4_path = join(main_dir_colab, '40Hz10kN/') + 'Bearing2_4'
+    Bearing2_5_path = join(main_dir_colab, '40Hz10kN/') + 'Bearing2_5'
 
-    Bearing3_1_path = main_dir_colab + '37.5Hz11kN/' + 'Bearing3_1'
-    Bearing3_3_path = main_dir_colab + '37.5Hz11kN/' + 'Bearing3_3'
-    Bearing3_4_path = main_dir_colab + '37.5Hz11kN/' + 'Bearing3_4'
-    Bearing3_5_path = main_dir_colab + '37.5Hz11kN/' + 'Bearing3_5'
+    Bearing3_1_path = join(main_dir_colab,  '37.5Hz11kN/') + 'Bearing3_1'
+    Bearing3_3_path = join(main_dir_colab,  '37.5Hz11kN/') + 'Bearing3_3'
+    Bearing3_4_path = join(main_dir_colab,  '37.5Hz11kN/') + 'Bearing3_4'
+    Bearing3_5_path = join(main_dir_colab,  '37.5Hz11kN/') + 'Bearing3_5'
 
-    print('\n Saving data in XJTU data set'+'-'*100)
+    print(f'\n Saving data in {opt.type} data set'+'-'*100)
 
     ############################################## Converting part #####################################################################################
 
@@ -84,55 +85,55 @@ if os.path.exists(saved_dir + 'Bearing1_1_' + '1d') == False:
     ############################################## Saving part #####################################################################################
     
     # Save data in different types------------------------------------------------
-    save_df(saved_dir + 'Bearing1_1_data' + type_data, Bearing1_1['x'])
-    save_df(saved_dir + 'Bearing1_2_data' + type_data, Bearing1_2['x'])
-    save_df(saved_dir + 'Bearing1_3_data' + type_data, Bearing1_3['x'])
-    save_df(saved_dir + 'Bearing1_5_data' + type_data, Bearing1_5['x'])
+    save_df(join(saved_dir, 'Bearing1_1_data_' + type_data), Bearing1_1['x'])
+    save_df(join(saved_dir, 'Bearing1_2_data_' + type_data), Bearing1_2['x'])
+    save_df(join(saved_dir, 'Bearing1_3_data_' + type_data), Bearing1_3['x'])
+    save_df(join(saved_dir, 'Bearing1_5_data_' + type_data), Bearing1_5['x'])
 
-    save_df(saved_dir + 'Bearing2_1_data' + type_data, Bearing2_1['x'])
-    save_df(saved_dir + 'Bearing2_2_data' + type_data, Bearing2_2['x'])
-    save_df(saved_dir + 'Bearing2_3_data' + type_data, Bearing2_3['x'])
-    save_df(saved_dir + 'Bearing2_4_data' + type_data, Bearing2_4['x'])
-    save_df(saved_dir + 'Bearing2_5_data' + type_data, Bearing2_5['x'])
+    save_df(join(saved_dir, 'Bearing2_1_data_' + type_data), Bearing2_1['x'])
+    save_df(join(saved_dir, 'Bearing2_2_data_' + type_data), Bearing2_2['x'])
+    save_df(join(saved_dir, 'Bearing2_3_data_' + type_data), Bearing2_3['x'])
+    save_df(join(saved_dir, 'Bearing2_4_data_' + type_data), Bearing2_4['x'])
+    save_df(join(saved_dir, 'Bearing2_5_data_' + type_data), Bearing2_5['x'])
 
-    save_df(saved_dir + 'Bearing3_1_data' + type_data, Bearing3_1['x'])
-    save_df(saved_dir + 'Bearing3_3_data' + type_data, Bearing3_3['x'])
-    save_df(saved_dir + 'Bearing3_4_data' + type_data, Bearing3_4['x'])
-    save_df(saved_dir + 'Bearing3_5_data' + type_data, Bearing3_5['x'])
+    save_df(join(saved_dir, 'Bearing3_1_data_' + type_data), Bearing3_1['x'])
+    save_df(join(saved_dir, 'Bearing3_3_data_' + type_data), Bearing3_3['x'])
+    save_df(join(saved_dir, 'Bearing3_4_data_' + type_data), Bearing3_4['x'])
+    save_df(join(saved_dir, 'Bearing3_5_data_' + type_data), Bearing3_5['x'])
 
     # Save RUL labels in different types------------------------------------------------
-    save_df(saved_dir + 'Bearing1_1_label_RUL' , Bearing1_1['y'])
-    save_df(saved_dir + 'Bearing1_2_label_RUL' , Bearing1_2['y'])
-    save_df(saved_dir + 'Bearing1_3_label_RUL' , Bearing1_3['y'])
-    save_df(saved_dir + 'Bearing1_5_label_RUL' , Bearing1_5['y'])
+    save_df(join(saved_dir, 'Bearing1_1_label_RUL') , Bearing1_1['y'])
+    save_df(join(saved_dir, 'Bearing1_2_label_RUL') , Bearing1_2['y'])
+    save_df(join(saved_dir, 'Bearing1_3_label_RUL') , Bearing1_3['y'])
+    save_df(join(saved_dir, 'Bearing1_5_label_RUL') , Bearing1_5['y'])
 
-    save_df(saved_dir + 'Bearing2_1_label_RUL' , Bearing2_1['y'])
-    save_df(saved_dir + 'Bearing2_2_label_RUL' , Bearing2_2['y'])
-    save_df(saved_dir + 'Bearing2_3_label_RUL' , Bearing2_3['y'])
-    save_df(saved_dir + 'Bearing2_4_label_RUL' , Bearing2_4['y'])
-    save_df(saved_dir + 'Bearing2_5_label_RUL' , Bearing2_5['y'])
+    save_df(join(saved_dir, 'Bearing2_1_label_RUL') , Bearing2_1['y'])
+    save_df(join(saved_dir, 'Bearing2_2_label_RUL') , Bearing2_2['y'])
+    save_df(join(saved_dir, 'Bearing2_3_label_RUL') , Bearing2_3['y'])
+    save_df(join(saved_dir, 'Bearing2_4_label_RUL') , Bearing2_4['y'])
+    save_df(join(saved_dir, 'Bearing2_5_label_RUL') , Bearing2_5['y'])
 
-    save_df(saved_dir + 'Bearing3_1_label_RUL' , Bearing3_1['y'])
-    save_df(saved_dir + 'Bearing3_3_label_RUL' , Bearing3_3['y'])
-    save_df(saved_dir + 'Bearing3_4_label_RUL' , Bearing3_4['y'])
-    save_df(saved_dir + 'Bearing3_5_label_RUL' , Bearing3_5['y'])
+    save_df(join(saved_dir, 'Bearing3_1_label_RUL') , Bearing3_1['y'])
+    save_df(join(saved_dir, 'Bearing3_3_label_RUL') , Bearing3_3['y'])
+    save_df(join(saved_dir, 'Bearing3_4_label_RUL') , Bearing3_4['y'])
+    save_df(join(saved_dir, 'Bearing3_5_label_RUL') , Bearing3_5['y'])
 
     # Save Con labels in different types------------------------------------------------
-    save_df(saved_dir + 'Bearing1_1_label_Con' , Bearing1_1_label_Con)
-    save_df(saved_dir + 'Bearing1_2_label_Con' , Bearing1_2_label_Con)
-    save_df(saved_dir + 'Bearing1_3_label_Con' , Bearing1_3_label_Con)
-    save_df(saved_dir + 'Bearing1_5_label_Con' , Bearing1_5_label_Con)
+    save_df(join(saved_dir, 'Bearing1_1_label_Con') , Bearing1_1_label_Con)
+    save_df(join(saved_dir, 'Bearing1_2_label_Con') , Bearing1_2_label_Con)
+    save_df(join(saved_dir, 'Bearing1_3_label_Con') , Bearing1_3_label_Con)
+    save_df(join(saved_dir, 'Bearing1_5_label_Con') , Bearing1_5_label_Con)
 
-    save_df(saved_dir + 'Bearing2_1_label_Con' , Bearing2_1_label_Con)
-    save_df(saved_dir + 'Bearing2_2_label_Con' , Bearing2_2_label_Con)
-    save_df(saved_dir + 'Bearing2_3_label_Con' , Bearing2_3_label_Con)
-    save_df(saved_dir + 'Bearing2_4_label_Con' , Bearing2_4_label_Con)
-    save_df(saved_dir + 'Bearing2_5_label_Con' , Bearing2_5_label_Con)
+    save_df(join(saved_dir, 'Bearing2_1_label_Con') , Bearing2_1_label_Con)
+    save_df(join(saved_dir, 'Bearing2_2_label_Con') , Bearing2_2_label_Con)
+    save_df(join(saved_dir, 'Bearing2_3_label_Con') , Bearing2_3_label_Con)
+    save_df(join(saved_dir, 'Bearing2_4_label_Con') , Bearing2_4_label_Con)
+    save_df(join(saved_dir, 'Bearing2_5_label_Con') , Bearing2_5_label_Con)
 
-    save_df(saved_dir + 'Bearing3_1_label_Con' , Bearing3_1_label_Con)
-    save_df(saved_dir + 'Bearing3_3_label_Con' , Bearing3_3_label_Con)
-    save_df(saved_dir + 'Bearing3_4_label_Con' , Bearing3_4_label_Con)
-    save_df(saved_dir + 'Bearing3_5_label_Con' , Bearing3_5_label_Con)
+    save_df(join(saved_dir, 'Bearing3_1_label_Con') , Bearing3_1_label_Con)
+    save_df(join(saved_dir, 'Bearing3_3_label_Con') , Bearing3_3_label_Con)
+    save_df(join(saved_dir, 'Bearing3_4_label_Con') , Bearing3_4_label_Con)
+    save_df(join(saved_dir, 'Bearing3_5_label_Con') , Bearing3_5_label_Con)
 
 
 test_1D, test_2D, test_extract, test_label_RUL, test_label_Con = getting_data(saved_dir, opt.test_bearing, opt)

@@ -24,7 +24,7 @@ FPT = {'Bearing1_1': 1314,
 if os.path.exists(saved_dir + 'Bearing1_1_' + '1d') == False:
   for type_data in opt.data_type:
     # Converting data-------------------------------------------------------------------------
-    print('\n Saving data in XJTU data set'+'-'*100)
+    print(f'\n Saving data in {opt.type} data set'+'-'*100)
     Bearing1_1 = convert_to_image(os.path.join(train_dir, 'Bearing1_1/'), opt, type_data, FPT['Bearing1_1'], 'PHM')
     Bearing1_2 = convert_to_image(os.path.join(train_dir, 'Bearing1_2/'), opt, type_data, FPT['Bearing1_2'], 'PHM')
     Bearing1_3 = convert_to_image(os.path.join(test_dir, 'Bearing1_3/'),  opt, type_data, FPT['Bearing1_3'], 'PHM')
