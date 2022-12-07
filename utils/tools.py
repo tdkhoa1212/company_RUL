@@ -14,6 +14,7 @@ from sklearn.preprocessing import PowerTransformer
 from utils.extract_features import extracted_feature_of_signal
 from sklearn.metrics import r2_score, accuracy_score
 from os import path
+from os.path import join, exists
 import scipy
 import statistics
 from sklearn.cluster import SpectralClustering
@@ -145,8 +146,8 @@ def load_file(path, save_path):
   all_file = []
   for i in range(len(a)):
     name = str(i)+'.csv'
-    root = os.path.join(path, name)
-    if os.path.exists(root):
+    root = join(path, name)
+    if exists(root):
       df=pd.read_csv(root, header=None, names=['Horizontal_vibration_signals', 'Vertical_vibration_signals'])
       df = np.expand_dims(np.array(df)[1:], axis=0).astype(np.float32)
       if all_file == []:
@@ -187,7 +188,7 @@ def load_df(pkz_file):
     return df
 
 def save_df(df, out_file):
-  with open(out_file, 'wb') as pfile:
+  with open(out_file + '.pkz', 'wb') as pfile:
     pkl.dump(df, pfile)
     print('{0} saved'.format(out_file))
 
@@ -258,14 +259,14 @@ def convert_to_image(name_bearing, opt, type_data, time=None, type_=None):
     else:
       print('-'*10, f'Maintain 1D data', '-'*10, '\n')
     
-    num_files = len([i for i in os.listdir(os.path.join(opt.main_dir_colab, name_bearing))])
+    num_files = len([i for i in os.listdir(name_bearing)])
     if type_ == 'PHM':
       if opt.encoder:
         model = autoencoder_model(type_)
         model.load_weights(f'/content/drive/MyDrive/Khoa/autoencoder/{type_}.h5')
       for i in range(num_files):
           name = f"/acc_{str(i+1).zfill(5)}.csv"
-          file_ = os.path.join(opt.main_dir_colab, name_bearing)+name
+          file_ = join(name_bearing, name)
           if path.exists(file_):
               df = pd.read_csv(file_, header=None)
               coef_h = extract_feature_image(df, opt, type_data, feature_name='horiz accel', type_=type_)
@@ -289,7 +290,7 @@ def convert_to_image(name_bearing, opt, type_data, time=None, type_=None):
         model.load_weights(f'/content/drive/MyDrive/Khoa/autoencoder/{type_}.h5')
       for i in range(num_files):
           name = f"{str(i+1)}.csv"
-          file_ = os.path.join(name_bearing, name)
+          file_ = join(name_bearing, name)
           if path.exists(file_):
               df = np.array(pd.read_csv(file_, header=None))[1:]
               coef_h = extract_feature_image(df, opt, type_data, feature_name='Horizontal_vibration_signals', type_=type_)
@@ -484,7 +485,7 @@ def getting_data(saved_dir, bearing_list, opt):
     for type_data in opt.data_type:
 
       # Loading data and labels-----------------------
-      data = load_df(saved_dir + name + '_data'  + type_data)
+      data = load_df(saved_dir + name + '_data_'  + type_data)
       label_RUL= load_df(saved_dir + name + '_label_RUL')
       if opt.type == 'XJTU':
         label_Con= load_df(saved_dir + name + '_label_Con')

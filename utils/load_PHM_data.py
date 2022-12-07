@@ -25,13 +25,13 @@ if os.path.exists(saved_dir + 'Bearing1_1_' + '1d') == False:
   for type_data in opt.data_type:
     # Converting data-------------------------------------------------------------------------
     print(f'\n Saving data in {opt.type} data set'+'-'*100)
-    Bearing1_1 = convert_to_image(os.path.join(train_dir, 'Bearing1_1/'), opt, type_data, FPT['Bearing1_1'], 'PHM')
-    Bearing1_2 = convert_to_image(os.path.join(train_dir, 'Bearing1_2/'), opt, type_data, FPT['Bearing1_2'], 'PHM')
-    Bearing1_3 = convert_to_image(os.path.join(test_dir, 'Bearing1_3/'),  opt, type_data, FPT['Bearing1_3'], 'PHM')
-    Bearing1_4 = convert_to_image(os.path.join(test_dir, 'Bearing1_4/'),  opt, type_data, FPT['Bearing1_4'], 'PHM')
-    Bearing1_5 = convert_to_image(os.path.join(test_dir, 'Bearing1_5/'),  opt, type_data, FPT['Bearing1_5'], 'PHM')
-    Bearing1_6 = convert_to_image(os.path.join(test_dir, 'Bearing1_6/'),  opt, type_data, FPT['Bearing1_6'], 'PHM')
-    Bearing1_7 = convert_to_image(os.path.join(test_dir, 'Bearing1_7/'),  opt, type_data, FPT['Bearing1_7'], 'PHM')
+    Bearing1_1 = convert_to_image(os.path.join(train_dir, 'Bearing1_1'), opt, type_data, FPT['Bearing1_1'], 'PHM')
+    Bearing1_2 = convert_to_image(os.path.join(train_dir, 'Bearing1_2'), opt, type_data, FPT['Bearing1_2'], 'PHM')
+    Bearing1_3 = convert_to_image(os.path.join(test_dir, 'Bearing1_3'),  opt, type_data, FPT['Bearing1_3'], 'PHM')
+    Bearing1_4 = convert_to_image(os.path.join(test_dir, 'Bearing1_4'),  opt, type_data, FPT['Bearing1_4'], 'PHM')
+    Bearing1_5 = convert_to_image(os.path.join(test_dir, 'Bearing1_5'),  opt, type_data, FPT['Bearing1_5'], 'PHM')
+    Bearing1_6 = convert_to_image(os.path.join(test_dir, 'Bearing1_6'),  opt, type_data, FPT['Bearing1_6'], 'PHM')
+    Bearing1_7 = convert_to_image(os.path.join(test_dir, 'Bearing1_7'),  opt, type_data, FPT['Bearing1_7'], 'PHM')
     
     # Save data and labels in different types------------------------------------------------
     save_df(os.path.join(saved_dir, 'Bearing1_1_data' + type_data), Bearing1_1['x'])
