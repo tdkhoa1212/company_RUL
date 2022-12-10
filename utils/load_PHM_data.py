@@ -27,30 +27,33 @@ if exists(saved_dir + 'Bearing1_1_' + '1d') == False:
     # Converting data-------------------------------------------------------------------------
     print(f'\n Saving data in {opt.type} data set'+'-'*100)
     Bearing1_1 = convert_to_image(join(train_dir, 'Bearing1_1'), opt, type_data, FPT['Bearing1_1'], 'PHM')
-    Bearing1_2 = convert_to_image(join(train_dir, 'Bearing1_2'), opt, type_data, FPT['Bearing1_2'], 'PHM')
-    Bearing1_3 = convert_to_image(join(test_dir,  'Bearing1_3'), opt, type_data, FPT['Bearing1_3'], 'PHM')
-    Bearing1_4 = convert_to_image(join(test_dir,  'Bearing1_4'), opt, type_data, FPT['Bearing1_4'], 'PHM')
-    Bearing1_5 = convert_to_image(join(test_dir,  'Bearing1_5'), opt, type_data, FPT['Bearing1_5'], 'PHM')
-    Bearing1_6 = convert_to_image(join(test_dir,  'Bearing1_6'), opt, type_data, FPT['Bearing1_6'], 'PHM')
-    Bearing1_7 = convert_to_image(join(test_dir,  'Bearing1_7'), opt, type_data, FPT['Bearing1_7'], 'PHM')
-    
-    # Save data and labels in different types------------------------------------------------
     save_df(join(saved_dir, 'Bearing1_1_data' + type_data), Bearing1_1['x'])
-    save_df(join(saved_dir, 'Bearing1_2_data' + type_data), Bearing1_2['x'])
-    save_df(join(saved_dir, 'Bearing1_3_data' + type_data), Bearing1_3['x'])
-    save_df(join(saved_dir, 'Bearing1_4_data' + type_data), Bearing1_4['x'])
-    save_df(join(saved_dir, 'Bearing1_5_data' + type_data), Bearing1_5['x'])
-    save_df(join(saved_dir, 'Bearing1_6_data' + type_data), Bearing1_6['x'])
-    save_df(join(saved_dir, 'Bearing1_7_data' + type_data), Bearing1_7['x'])
-
     save_df(join(saved_dir, 'Bearing1_1_label_RUL'), Bearing1_1['y'])
-    save_df(join(saved_dir, 'Bearing1_2_label_RUL'), Bearing1_2['y'])
-    save_df(join(saved_dir, 'Bearing1_3_label_RUL'), Bearing1_3['y'])
-    save_df(join(saved_dir, 'Bearing1_4_label_RUL'), Bearing1_4['y'])
-    save_df(join(saved_dir, 'Bearing1_5_label_RUL'), Bearing1_5['y'])
-    save_df(join(saved_dir, 'Bearing1_6_label_RUL'), Bearing1_6['y'])
-    save_df(join(saved_dir, 'Bearing1_7_label_RUL'), Bearing1_7['y'])
 
+    Bearing1_2 = convert_to_image(join(train_dir, 'Bearing1_2'), opt, type_data, FPT['Bearing1_2'], 'PHM')
+    save_df(join(saved_dir, 'Bearing1_2_data' + type_data), Bearing1_2['x'])
+    save_df(join(saved_dir, 'Bearing1_2_label_RUL'), Bearing1_2['y'])
+
+    Bearing1_3 = convert_to_image(join(test_dir,  'Bearing1_3'), opt, type_data, FPT['Bearing1_3'], 'PHM')
+    save_df(join(saved_dir, 'Bearing1_3_data' + type_data), Bearing1_3['x'])
+    save_df(join(saved_dir, 'Bearing1_3_label_RUL'), Bearing1_3['y'])
+
+    Bearing1_4 = convert_to_image(join(test_dir,  'Bearing1_4'), opt, type_data, FPT['Bearing1_4'], 'PHM')
+    save_df(join(saved_dir, 'Bearing1_4_data' + type_data), Bearing1_4['x'])
+    save_df(join(saved_dir, 'Bearing1_4_label_RUL'), Bearing1_4['y'])
+
+    Bearing1_5 = convert_to_image(join(test_dir,  'Bearing1_5'), opt, type_data, FPT['Bearing1_5'], 'PHM')
+    save_df(join(saved_dir, 'Bearing1_5_data' + type_data), Bearing1_5['x'])
+    save_df(join(saved_dir, 'Bearing1_5_label_RUL'), Bearing1_5['y'])
+
+    Bearing1_6 = convert_to_image(join(test_dir,  'Bearing1_6'), opt, type_data, FPT['Bearing1_6'], 'PHM')
+    save_df(join(saved_dir, 'Bearing1_6_data' + type_data), Bearing1_6['x'])
+    save_df(join(saved_dir, 'Bearing1_6_label_RUL'), Bearing1_6['y'])
+
+    Bearing1_7 = convert_to_image(join(test_dir,  'Bearing1_7'), opt, type_data, FPT['Bearing1_7'], 'PHM')
+    save_df(join(saved_dir, 'Bearing1_7_data' + type_data), Bearing1_7['x'])
+    save_df(join(saved_dir, 'Bearing1_7_label_RUL'), Bearing1_7['y'])
+    
 
 # Load saved bearing data ==================================================================================
 test_1D, test_2D, test_extract, test_label_RUL = getting_data(saved_dir, opt.test_bearing, opt)
