@@ -183,12 +183,14 @@ def process(base_dir, out_file):
 
 #----------------------Load_data.py------------------------------------------------
 def load_df(pkz_file):
-    with open(pkz_file + '.pkz', 'rb') as f:
+    name = pkz_file + '.pkz'
+    with open(name, 'rb') as f:
         df=pkl.load(f)
     return df
 
 def save_df(df, out_file):
-  with open(out_file + '.pkz', 'wb') as pfile:
+  name = out_file + '.pkz'
+  with open(name, 'wb') as pfile:
     pkl.dump(df, pfile)
     print('{0} saved'.format(out_file))
 
@@ -316,6 +318,8 @@ def convert_to_image(name_bearing, opt, type_data, time=None, type_=None):
    
     t_label = np.linspace(1, 0, len(data['y'][time: ]))
     data['y'] = t_label
+    Shape_o = data['x'].shape
+    print(f'Shape of original data: {Shape_o}')
     t_data = data['x'][time: ]
     data['x'] = t_data
         
