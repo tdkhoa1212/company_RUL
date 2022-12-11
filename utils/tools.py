@@ -183,14 +183,12 @@ def process(base_dir, out_file):
 
 #----------------------Load_data.py------------------------------------------------
 def load_df(pkz_file):
-    name = pkz_file + '.pkz'
-    with open(name, 'rb') as f:
+    with open(pkz_file, 'rb') as f:
         df=pkl.load(f)
     return df
 
 def save_df(df, out_file):
-  name = out_file + '.pkz'
-  with open(name, 'wb') as pfile:
+  with open(out_file, 'wb') as pfile:
     pkl.dump(df, pfile)
     print('{0} saved'.format(out_file))
 
