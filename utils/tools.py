@@ -3,6 +3,8 @@ import os
 from keras import backend as K
 import pandas as pd
 import pickle as pkl
+from numpy import save
+from numpy import load
 import pywt
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import MaxAbsScaler
@@ -183,14 +185,11 @@ def process(base_dir, out_file):
 
 #----------------------Load_data.py------------------------------------------------
 def load_df(pkz_file):
-    with open(pkz_file, 'rb') as f:
-        df=pkl.load(f)
+    df = load(pkz_file)
     return df
 
-def save_df(df, out_file):
-  with open(out_file, 'wb') as pfile:
-    pkl.dump(df, pfile)
-    print('{0} saved'.format(out_file))
+def save_df(out_file, df):
+  save(out_file, df)
 
 def scaler(signal, scale_method):
   scale = scale_method().fit(signal)
