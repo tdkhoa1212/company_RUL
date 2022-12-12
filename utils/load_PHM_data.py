@@ -1,4 +1,3 @@
-import os
 from os.path import join, exists
 import numpy as np
 from train import parse_opt
@@ -14,15 +13,15 @@ saved_dir = join(opt.main_dir_colab, 'PHM_data/saved_data')
 
 # FPT points of bearing sets ==================================================================================
 FPT = {'Bearing1_1': 1314,
-       'Bearing1_2': 826,
-       'Bearing1_3': 1726,
-       'Bearing1_4': 1082,
-       'Bearing1_5': 2412,
-       'Bearing1_6': 1631,
-       'Bearing1_7': 2210}
+      'Bearing1_2': 826,
+      'Bearing1_3': 1726,
+      'Bearing1_4': 1082,
+      'Bearing1_5': 2412,
+      'Bearing1_6': 1631,
+      'Bearing1_7': 2210}
 
 # Saving the converted data ==================================================================================
-if exists(saved_dir + 'Bearing1_1_' + '1d') == False:
+if exists(join(saved_dir, 'Bearing1_1_data_1d.npy')) == False:
   for type_data in opt.data_type:
     # Converting data-------------------------------------------------------------------------
     print(f'\n Saving data in {opt.type} data set'+'-'*100)
@@ -40,7 +39,7 @@ if exists(saved_dir + 'Bearing1_1_' + '1d') == False:
 
     Bearing1_4 = convert_to_image(join(test_dir,  'Bearing1_4'), opt, type_data, FPT['Bearing1_4'], 'PHM')
     save_df(join(saved_dir, 'Bearing1_4_data_' + type_data + '.npy'), Bearing1_4['x'])
-    save_df(join(saved_dir, 'Bearing1_4_label_RU.npy'), Bearing1_4['y'])
+    save_df(join(saved_dir, 'Bearing1_4_label_RUL.npy'), Bearing1_4['y'])
 
     Bearing1_5 = convert_to_image(join(test_dir,  'Bearing1_5'), opt, type_data, FPT['Bearing1_5'], 'PHM')
     save_df(join(saved_dir, 'Bearing1_5_data_' + type_data + '.npy'), Bearing1_5['x'])

@@ -6,6 +6,7 @@ from model.LSTM import lstm_extracted_model, lstm_model
 from utils.tools import to_onehot
 from tensorflow.keras.layers import Input
 from tensorflow.keras.models import Model
+import json
 import tensorflow_addons as tfa
 import argparse
 import os
@@ -29,9 +30,9 @@ def parse_opt(known=False):
     parser = argparse.ArgumentParser()
    
     parser.add_argument('--save_dir',       default='/content/drive/MyDrive/Khoa/vibration_project/RUL/results', type=str)
-    parser.add_argument('--data_type',      default=['2d', '1d', 'extract'], type=str, help='shape of data. They can be 1d, 2d, extract')
-    parser.add_argument('--train_bearing',  default=['Bearing1_2', 'Bearing1_3', 'Bearing1_4','Bearing1_5','Bearing1_6','Bearing1_7'], type=str)
-    parser.add_argument('--test_bearing',   default=['Bearing1_1'], type=str)
+    parser.add_argument('--data_type',      default=['2d', '1d', 'extract'], type=list, help='shape of data. They can be 1d, 2d, extract')
+    parser.add_argument('--train_bearing',  default=['Bearing1_2', 'Bearing1_3', 'Bearing1_4','Bearing1_5','Bearing1_6','Bearing1_7'], type=str, nargs='+')   
+    parser.add_argument('--test_bearing',   default=['Bearing1_1'], type=str, nargs='+')
     parser.add_argument('--condition',      default=None, type=str, help='c_1, c_2, c_3, c_all')
     parser.add_argument('--type',           default='PHM', type=str, help='PHM, XJTU')
     parser.add_argument('--scaler',         default=None, type=str)
@@ -51,7 +52,6 @@ def parse_opt(known=False):
 
 # Train and test for PHM data ############################################################################################
 def main_PHM(opt, train_1D, train_2D, train_extract, train_label_RUL, test_1D, test_2D, test_extract, test_label_RUL):  
-  train_label_Con = to_onehot(train_label_Con)
   val_2D, val_1D, val_extract, val_label_RUL = test_2D, test_1D, test_extract, test_label_RUL
   val_data = [val_1D, val_2D, val_extract]
   val_label = val_label_RUL
@@ -59,7 +59,7 @@ def main_PHM(opt, train_1D, train_2D, train_extract, train_label_RUL, test_1D, t
   input_extracted = Input((14, 2), name='Extracted_LSTM_input')
   input_1D = Input((opt.input_shape, 2), name='LSTM_CNN1D_input')
   input_2D = Input((128, 128, 2), name='CNN_input')
-  Condition, RUL = mix_model(opt, lstm_model, resnet_101, lstm_extracted_model, input_1D, input_2D, input_extracted, True)
+  Condition, RUL = mix_model_PHM(opt, lstm_model, resnet_101, lstm_extracted_model, input_1D, input_2D, input_extracted, True)
   network = Model(inputs=[input_1D, input_2D, input_extracted], outputs=[Condition, RUL])
 
   # get three types of different forms from original data-------------------------------
@@ -108,7 +108,7 @@ def main_XJTU(opt, train_1D, train_2D, train_extract, train_label_RUL, train_lab
   input_extracted = Input((14, 2), name='Extracted_LSTM_input')
   input_1D = Input((opt.input_shape, 2), name='LSTM_CNN1D_input')
   input_2D = Input((128, 128, 2), name='CNN_input')
-  Condition, RUL = mix_model(opt, lstm_model, resnet_101, lstm_extracted_model, input_1D, input_2D, input_extracted, True)
+  Condition, RUL = mix_model_XJTU(opt, lstm_model, resnet_101, lstm_extracted_model, input_1D, input_2D, input_extracted, True)
   network = Model(inputs=[input_1D, input_2D, input_extracted], outputs=[Condition, RUL])
 
   # get three types of different forms from original data-------------------------------

@@ -484,12 +484,12 @@ def getting_data(saved_dir, bearing_list, opt):
   # Arranging data and labels in scheme---------------
   for name in bearing_list:
     for type_data in opt.data_type:
-
       # Loading data and labels-----------------------
-      data = load_df(saved_dir + name + '_data_'  + type_data)
-      label_RUL= load_df(saved_dir + name + '_label_RUL')
+      data = load_df(join(saved_dir, name + '_data_'  + type_data + '.npy'))
+      print(join(saved_dir, name + '_data_'  + type_data + '.npy'))
+      label_RUL= load_df(join(saved_dir, name + '_label_RUL.npy'))
       if opt.type == 'XJTU':
-        label_Con= load_df(saved_dir + name + '_label_Con')
+        label_Con= load_df(join(saved_dir, name + '_label_Con.npy'))
 
       # Getting 1D data and labels-----------------------------------
       if type_data == '1d':
@@ -518,8 +518,8 @@ def getting_data(saved_dir, bearing_list, opt):
         else:
           extract = np.concatenate((extract, data))
 
-    if opt.type == 'PHM':
-      return _1D, _2D, extract, label_RUL
-    else:
-      return _1D, _2D, extract, label_RUL, label_Con
+  if opt.type == 'PHM':
+    return _1D, _2D, extract, label_RUL
+  else:
+    return _1D, _2D, extract, label_RUL, label_Con
 
