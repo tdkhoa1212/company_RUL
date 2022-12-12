@@ -315,6 +315,7 @@ def convert_to_image(name_bearing, opt, type_data, time=None, type_=None):
    
     t_label = np.linspace(1, 0, len(data['y'][time: ]))
     data['y'] = t_label
+
     Shape_o = data['x'].shape
     print(f'Shape of original data: {Shape_o}')
     t_data = data['x'][time: ]
@@ -485,11 +486,10 @@ def getting_data(saved_dir, bearing_list, opt):
   for name in bearing_list:
     for type_data in opt.data_type:
       # Loading data and labels-----------------------
-      data = load_df(join(saved_dir, name + '_data_'  + type_data + '.npy'))
-      print(join(saved_dir, name + '_data_'  + type_data + '.npy'))
+      data     = load_df(join(saved_dir, name + '_data_'  + type_data + '.npy'))
       label_RUL= load_df(join(saved_dir, name + '_label_RUL.npy'))
       if opt.type == 'XJTU':
-        label_Con= load_df(join(saved_dir, name + '_label_Con.npy'))
+        label_Con = load_df(join(saved_dir, name + '_label_Con.npy'))
 
       # Getting 1D data and labels-----------------------------------
       if type_data == '1d':
