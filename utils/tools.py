@@ -317,7 +317,8 @@ def convert_to_image(name_bearing, opt, type_data, time=None, type_=None):
     data['y'] = t_label
 
     Shape_o = data['x'].shape
-    print(f'Shape of original data: {Shape_o}')
+    name_b = name_bearing.split('/')[-1]
+    print(f'Original shape of {name_b} data: {Shape_o}')
     t_data = data['x'][time: ]
     data['x'] = t_data
         
