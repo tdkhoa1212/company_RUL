@@ -88,8 +88,8 @@ def accuracy_m(y_true, y_pred):
   accuracy = (correct/total)
   return accuracy
 
-def to_onehot(label):
-  new_label = np.zeros((len(label), int(np.max(label))))
+def to_onehot(label, m_po=3):
+  new_label = np.zeros((len(label), m_po))
   for idx, i in enumerate(label):
     new_label[idx][int(i-1.)] = 1.
   return new_label
@@ -520,7 +520,7 @@ def getting_data(saved_dir, bearing_list, opt):
           extract = np.concatenate((extract, data))
 
   if opt.type == 'PHM':
-    return _1D, _2D, extract, label_RUL
+    return _1D, _2D, extract, label_RUL_all
   else:
-    return _1D, _2D, extract, label_RUL, label_Con
+    return _1D, _2D, extract, label_RUL_all, label_Con_all
 

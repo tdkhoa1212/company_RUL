@@ -50,7 +50,7 @@ if os.path.exists(join(saved_dir, 'Bearing1_1_data_1d.npy')) == False:
     save_df(join(saved_dir, 'Bearing1_3_label_Con.npy') , Bearing1_3_label_Con)
 
     Bearing1_5_path = join(main_dir_colab, '35Hz12kN', 'Bearing1_5')
-    Bearing1_5 = convert_to_image(Bearing1_5_path, opt, type_data, FPT['Bearing1_3'], 'XJTU')
+    Bearing1_5 = convert_to_image(Bearing1_5_path, opt, type_data, FPT['Bearing1_5'], 'XJTU')
     Bearing1_5_label_Con = np.array([1.]*len(Bearing1_5['x']))
     save_df(join(saved_dir, 'Bearing1_5_data_' + type_data + '.npy'), Bearing1_5['x'])
     save_df(join(saved_dir, 'Bearing1_5_label_RUL.npy') , Bearing1_5['y'])
@@ -89,7 +89,7 @@ if os.path.exists(join(saved_dir, 'Bearing1_1_data_1d.npy')) == False:
     Bearing2_5_label_Con = np.array([2.]*len(Bearing2_5['x']))
     save_df(join(saved_dir, 'Bearing2_5_data_' + type_data + '.npy'), Bearing2_5['x'])
     save_df(join(saved_dir, 'Bearing2_5_label_RUL.npy') , Bearing2_5['y'])
-    save_df(join(saved_dir, 'Bearing2_5_label_Con.npy') , Bearing2_4_label_Con)
+    save_df(join(saved_dir, 'Bearing2_5_label_Con.npy') , Bearing2_5_label_Con)
 
     Bearing3_1_path = join(main_dir_colab,  '40Hz10kN', 'Bearing3_1')
     Bearing3_1 = convert_to_image(Bearing3_1_path, opt, type_data, FPT['Bearing3_1'], 'XJTU')
@@ -97,13 +97,6 @@ if os.path.exists(join(saved_dir, 'Bearing1_1_data_1d.npy')) == False:
     save_df(join(saved_dir, 'Bearing3_1_data_' + type_data + '.npy'), Bearing3_1['x'])
     save_df(join(saved_dir, 'Bearing3_1_label_RUL.npy') , Bearing3_1['y'])
     save_df(join(saved_dir, 'Bearing3_1_label_Con.npy') , Bearing3_1_label_Con)
-
-    Bearing3_2_path = join(main_dir_colab,  '40Hz10kN', 'Bearing3_3')
-    Bearing3_ = convert_to_image(Bearing3_3_path, opt, type_data, FPT['Bearing3_3'], 'XJTU')
-    Bearing3_3_label_Con = np.array([3.]*len(Bearing3_3['x']))
-    save_df(join(saved_dir, 'Bearing3_3_data_' + type_data + '.npy'), Bearing3_3['x'])
-    save_df(join(saved_dir, 'Bearing3_3_label_RUL.npy') , Bearing3_3['y'])
-    save_df(join(saved_dir, 'Bearing3_3_label_Con.npy') , Bearing3_3_label_Con)
 
     Bearing3_3_path = join(main_dir_colab,  '40Hz10kN', 'Bearing3_3')
     Bearing3_3 = convert_to_image(Bearing3_3_path, opt, type_data, FPT['Bearing3_3'], 'XJTU')

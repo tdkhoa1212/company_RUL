@@ -101,6 +101,7 @@ def main_PHM(opt, train_1D, train_2D, train_extract, train_label_RUL, test_1D, t
 def main_XJTU(opt, train_1D, train_2D, train_extract, train_label_RUL, train_label_Con, test_1D, test_2D, test_extract, test_label_RUL, test_label_Con):  
   train_label_Con = to_onehot(train_label_Con)
   test_label_Con  = to_onehot(test_label_Con)
+
   val_2D, val_1D, val_extract, val_label_Con, val_label_RUL = test_2D, test_1D, test_extract, test_label_Con, test_label_RUL
   val_data = [val_1D, val_2D, val_extract]
   val_label = [val_label_Con, val_label_RUL]
