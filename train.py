@@ -36,7 +36,7 @@ def parse_opt(known=False):
     parser.add_argument('--condition',      default=None, type=str, help='c_1, c_2, c_3, c_all')
     parser.add_argument('--type',           default='XJTU', type=str, help='PHM, XJTU')
     parser.add_argument('--scaler',         default=None, type=str)
-    parser.add_argument('--main_dir_colab', default=None, type=str)
+    parser.add_argument('--main_dir_colab', default='/content/drive/MyDrive/Khoa/data/', type=str)
 
     parser.add_argument('--epochs',         default=50, type=int)
     parser.add_argument('--batch_size',     default=20, type=int)
