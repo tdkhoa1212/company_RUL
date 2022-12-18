@@ -21,6 +21,7 @@ import scipy
 import statistics
 from sklearn.cluster import SpectralClustering
 from model.autoencoder import autoencoder_model
+from scipy.stats import kurtosis
 
     
 def hankel_svdvals(data, hankel_window_size, slice_window_size):
@@ -432,7 +433,7 @@ def convert_1_to_0(data):
       f_data = np.ones_like(data)
     return 1-f_data
 
-def predict_time(data, length_seg=None):
+def predict_time_2(data, length_seg=None):
   h = []
   for i in data[:, :, 0]:
     h.append(gen_rms(i))
@@ -524,3 +525,42 @@ def getting_data(saved_dir, bearing_list, opt):
   else:
     return _1D, _2D, extract, label_RUL_all, label_Con_all
 
+def predict_time(data_l, nor = 20):
+  '''
+  INPUT =========================================
+  data: - type: float32 (should be)
+        - shape: 1D (for example: (1802, ))
+  nor: length of normal data
+
+  OUTPUT =======================================
+  fpt: - type: int32 (should be)
+       - shape: a interger value in N 
+  '''
+  data = []
+  for i in data_l:
+    data.append(kurtosis(i))
+  # data, _ = fit_values(2.41e-5, 1.01, 1.08, 3.22e-86, 26.30, data)
+  # data = data/np.mean(data[:300])
+  # data = savgol_filter(data, 15, 2)
+  normal = data[:nor]
+  mean_normal = np.mean(normal)
+  std_normal = np.std(normal)
+
+  limit_up = mean_normal + 3*std_normal
+  limit_down = mean_normal - 3*std_normal
+
+  fpt = 0
+  i_n = 0
+  check_c = 1
+  for idx, i in enumerate(data):
+    if i > limit_up or i < limit_down:
+      if idx - check_c == 1:
+        i_n += 1
+      else:
+        i_n = 0
+      check_c = idx
+
+      if i_n == 2:
+        fpt = idx-2
+        break
+  return fpt
