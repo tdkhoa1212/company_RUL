@@ -9,6 +9,7 @@ if opt.type == 'PHM':
     test_dir = join(opt.main_dir_colab, 'PHM_data/Test_set')
 
     # Load 1d data ==================================================================================
+    print('Load PHM data')
     # Train data
     Bearing1_1 = convert_to_image(join(train_dir, 'Bearing1_1'), opt, '1d', None, 'PHM')
     Bearing1_2 = convert_to_image(join(train_dir, 'Bearing1_2'), opt, '1d', None, 'PHM')
@@ -39,8 +40,9 @@ if opt.type == 'PHM':
     for bearing in data:
         fpt = predict_time(data[bearing])
         print(f'---{bearing}---')
-        print(f'Shape: {data[bearing].shape} \t FPT: {fpt}')
+        print(f'Shape: {data[bearing].shape} \t FPT: {fpt}\n')
 else:
+    print('Load XJTU data')
     main_dir_colab = join(opt.main_dir_colab, 'XJTU_data/XJTU-SY_Bearing_Datasets')
     #---------------------------------------------------------------------------------
     Bearing1_1_path = join(main_dir_colab, '35Hz12kN', 'Bearing1_1')
@@ -98,4 +100,4 @@ else:
     for bearing in data:
         fpt = predict_time(data[bearing])
         print(f'---{bearing}---')
-        print(f'Shape: {data[bearing].shape} \t FPT: {fpt}')
+        print(f'Shape: {data[bearing].shape} \t FPT: {fpt}\n')
