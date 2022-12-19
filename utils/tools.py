@@ -525,7 +525,7 @@ def getting_data(saved_dir, bearing_list, opt):
   else:
     return _1D, _2D, extract, label_RUL_all, label_Con_all
 
-def predict_time(data_l, nor = 20):
+def predict_time(data_l, nor = 100):
   '''
   INPUT =========================================
   data: - type: float32 (should be)
@@ -538,7 +538,7 @@ def predict_time(data_l, nor = 20):
   '''
   data = []
   for i in data_l:
-    data.append(kurtosis(i))
+    data.append(kurtosis(i[:, 0]))
   # data, _ = fit_values(2.41e-5, 1.01, 1.08, 3.22e-86, 26.30, data)
   # data = data/np.mean(data[:300])
   # data = savgol_filter(data, 15, 2)
