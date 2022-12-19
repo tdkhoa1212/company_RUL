@@ -38,9 +38,10 @@ if opt.type == 'PHM':
             'Bearing2_2': Bearing2_2, 'Bearing2_3': Bearing2_3, 'Bearing2_4': Bearing2_4, 'Bearing2_5': Bearing2_5,
             'Bearing2_6': Bearing2_6, 'Bearing2_7': Bearing2_7, 'Bearing3_1': Bearing3_1, 'Bearing3_2': Bearing3_2, 'Bearing3_3': Bearing3_3}
     for bearing in data:
-        fpt = predict_time(data[bearing])
+        fpt = predict_time(data[bearing]['x'])
         print(f'---{bearing}---')
-        print(f'Shape: {data[bearing].shape} \t FPT: {fpt}\n')
+        d_shape = data[bearing]['x'].shape
+        print(f'Shape: {d_shape} \t FPT: {fpt}\n')
 else:
     print('Load XJTU data')
     main_dir_colab = join(opt.main_dir_colab, 'XJTU_data/XJTU-SY_Bearing_Datasets')
@@ -98,6 +99,7 @@ else:
             'Bearing3_3': Bearing3_3, 'Bearing3_4': Bearing3_4, 'Bearing3_5': Bearing3_5}
 
     for bearing in data:
-        fpt = predict_time(data[bearing])
+        fpt = predict_time(data[bearing]['x'])
         print(f'---{bearing}---')
-        print(f'Shape: {data[bearing].shape} \t FPT: {fpt}\n')
+        d_shape = data[bearing]['x'].shape
+        print(f'Shape: {d_shape} \t FPT: {fpt}\n')

@@ -525,7 +525,7 @@ def getting_data(saved_dir, bearing_list, opt):
   else:
     return _1D, _2D, extract, label_RUL_all, label_Con_all
 
-def predict_time(data_l, nor = 100):
+def predict_time(data_l, nor = 20):
   '''
   INPUT =========================================
   data: - type: float32 (should be)
