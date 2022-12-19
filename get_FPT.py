@@ -19,17 +19,17 @@ if opt.type == 'PHM':
     Bearing3_2 = convert_to_image(join(train_dir, 'Bearing3_2'), opt, '1d', None, 'PHM')
 
     # Test data
-    Bearing1_3 = convert_to_image(join(test_dir, 'Bearing1_1'), opt, '1d', None, 'PHM')
-    Bearing1_4 = convert_to_image(join(test_dir, 'Bearing1_2'), opt, '1d', None, 'PHM')
-    Bearing1_5 = convert_to_image(join(test_dir, 'Bearing2_1'), opt, '1d', None, 'PHM')
-    Bearing1_6 = convert_to_image(join(test_dir, 'Bearing2_2'), opt, '1d', None, 'PHM')
-    Bearing1_7 = convert_to_image(join(test_dir, 'Bearing3_1'), opt, '1d', None, 'PHM')
+    Bearing1_3 = convert_to_image(join(test_dir, 'Bearing1_3'), opt, '1d', None, 'PHM')
+    Bearing1_4 = convert_to_image(join(test_dir, 'Bearing1_4'), opt, '1d', None, 'PHM')
+    Bearing1_5 = convert_to_image(join(test_dir, 'Bearing1_5'), opt, '1d', None, 'PHM')
+    Bearing1_6 = convert_to_image(join(test_dir, 'Bearing1_6'), opt, '1d', None, 'PHM')
+    Bearing1_7 = convert_to_image(join(test_dir, 'Bearing1_7'), opt, '1d', None, 'PHM')
 
-    Bearing2_3 = convert_to_image(join(test_dir, 'Bearing1_1'), opt, '1d', None, 'PHM')
-    Bearing2_4 = convert_to_image(join(test_dir, 'Bearing1_2'), opt, '1d', None, 'PHM')
-    Bearing2_5 = convert_to_image(join(test_dir, 'Bearing2_1'), opt, '1d', None, 'PHM')
-    Bearing2_6 = convert_to_image(join(test_dir, 'Bearing2_2'), opt, '1d', None, 'PHM')
-    Bearing2_7 = convert_to_image(join(test_dir, 'Bearing3_1'), opt, '1d', None, 'PHM')
+    Bearing2_3 = convert_to_image(join(test_dir, 'Bearing2_3'), opt, '1d', None, 'PHM')
+    Bearing2_4 = convert_to_image(join(test_dir, 'Bearing2_4'), opt, '1d', None, 'PHM')
+    Bearing2_5 = convert_to_image(join(test_dir, 'Bearing2_5'), opt, '1d', None, 'PHM')
+    Bearing2_6 = convert_to_image(join(test_dir, 'Bearing2_6'), opt, '1d', None, 'PHM')
+    Bearing2_7 = convert_to_image(join(test_dir, 'Bearing2_7'), opt, '1d', None, 'PHM')
 
     Bearing3_3 = convert_to_image(join(test_dir, 'Bearing3_3'), opt, '1d', None, 'PHM')
 
