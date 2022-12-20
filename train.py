@@ -38,8 +38,8 @@ def parse_opt(known=False):
     parser.add_argument('--scaler',         default=None, type=str)
     parser.add_argument('--main_dir_colab', default='/content/drive/MyDrive/Khoa/data/', type=str)
 
-    parser.add_argument('--epochs',         default=200, type=int)
-    parser.add_argument('--batch_size',     default=32, type=int)
+    parser.add_argument('--epochs',         default=30, type=int)
+    parser.add_argument('--batch_size',     default=16, type=int)
     parser.add_argument('--input_shape',    default=None, type=int, help='1279 for using fft, 2560 for raw data in PHM, 32768 for raw data in XJTU')
     
     parser.add_argument('--predict_time', default=False, type=bool)
@@ -77,7 +77,7 @@ def main_PHM(opt, train_1D, train_2D, train_extract, train_label_RUL, test_1D, t
   network.compile(optimizer=tf.keras.optimizers.RMSprop(1e-4),
                   loss=['categorical_crossentropy', tf.keras.losses.MeanSquaredLogarithmicError()], 
                   metrics=['acc', 'mae', tfa.metrics.RSquare(), tf.keras.metrics.RootMeanSquaredError()], 
-                  loss_weights=[0.01, 1],
+                  loss_weights=[1, 1],
 #                   run_eagerly=True
                     ) # https://keras.io/api/losses/ 
   network.summary()
