@@ -77,7 +77,7 @@ def main_PHM(opt, train_1D, train_2D, train_extract, train_label_RUL, test_1D, t
   network.compile(optimizer=tf.keras.optimizers.RMSprop(1e-4),
                   loss=['categorical_crossentropy', tf.keras.losses.MeanSquaredLogarithmicError()], 
                   metrics=['acc', 'mae', tfa.metrics.RSquare(), tf.keras.metrics.RootMeanSquaredError()], 
-                  loss_weights=[1, 1],
+                  loss_weights=[1, 0.1],
 #                   run_eagerly=True
                     ) # https://keras.io/api/losses/ 
   network.summary()
