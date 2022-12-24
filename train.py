@@ -1,12 +1,9 @@
-from model.autoencoder import autoencoder_model
-from model.cnn import cnn_1d_model
 from model.MIX_1D_2D import mix_model_PHM, mix_model_XJTU
-from model.resnet import resnet_101, resnet_50
+from model.resnet import resnet_101
 from model.LSTM import lstm_extracted_model, lstm_model
 from utils.tools import to_onehot
 from tensorflow.keras.layers import Input
 from tensorflow.keras.models import Model
-import json
 import tensorflow_addons as tfa
 import argparse
 import os
@@ -39,6 +36,7 @@ def parse_opt(known=False):
     parser.add_argument('--main_dir_colab', default='/content/drive/MyDrive/Khoa/data/', type=str)
 
     parser.add_argument('--epochs',         default=30, type=int)
+    parser.add_argument('--EC_epochs',      default=100, type=int)
     parser.add_argument('--batch_size',     default=16, type=int)
     parser.add_argument('--input_shape',    default=None, type=int, help='1279 for using fft, 2560 for raw data in PHM, 32768 for raw data in XJTU')
     
@@ -54,7 +52,6 @@ def parse_opt(known=False):
 def main_PHM(opt, train_1D, train_2D, train_extract, train_label_RUL, test_1D, test_2D, test_extract, test_label_RUL):  
   val_2D, val_1D, val_extract, val_label_RUL = test_2D, test_1D, test_extract, test_label_RUL
   val_data = [val_1D, val_2D, val_extract]
-  val_label = val_label_RUL
 
   input_extracted = Input((14, 2), name='Extracted_LSTM_input')
   input_1D = Input((opt.input_shape, 2), name='LSTM_CNN1D_input')
@@ -64,9 +61,7 @@ def main_PHM(opt, train_1D, train_2D, train_extract, train_label_RUL, test_1D, t
 
   # get three types of different forms from original data-------------------------------
   train_data = [train_1D, train_2D, train_extract]
-  train_label = train_label_RUL
-  test_data = [test_1D, test_2D, test_extract]
-  test_label = test_label_RUL
+  test_data  = [test_1D, test_2D, test_extract]
   
   weight_path = os.path.join(opt.save_dir, f'model_{opt.condition}_{opt.type}')
   if opt.load_weight:

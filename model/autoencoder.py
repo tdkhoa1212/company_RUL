@@ -1,4 +1,4 @@
-from tensorflow.keras.layers import Input, Dropout, Dense, LSTM, TimeDistributed, RepeatVector
+from tensorflow.keras.layers import Input, Dense, LSTM, TimeDistributed, RepeatVector
 import tensorflow as  tf
 from keras.models import Model
 

@@ -263,7 +263,8 @@ def convert_to_image(name_bearing, opt, type_data, time=None, type_=None):
     if type_ == 'PHM':
       if opt.encoder:
         model = autoencoder_model(type_)
-        model.load_weights(f'/content/drive/MyDrive/Khoa/autoencoder/{type_}.h5')
+        EC_PHM_path = join(opt.save_dir, f'{type_}.h5')
+        model.load_weights(EC_PHM_path)
       for i in range(num_files):
           name = f"acc_{str(i+1).zfill(5)}.csv"
           file_ = join(name_bearing, name)
@@ -287,7 +288,8 @@ def convert_to_image(name_bearing, opt, type_data, time=None, type_=None):
     else:
       if opt.encoder:
         model = autoencoder_model(type_)
-        model.load_weights(f'/content/drive/MyDrive/Khoa/autoencoder/{type_}.h5')
+        EC_XJTU_path = join(opt.save_dir, f'{type_}.h5')
+        model.load_weights(EC_XJTU_path)
       for i in range(num_files):
           name = f"{str(i+1)}.csv"
           file_ = join(name_bearing, name)
