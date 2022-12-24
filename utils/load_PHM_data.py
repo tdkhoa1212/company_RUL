@@ -1,5 +1,6 @@
 from os.path import join, exists
 import numpy as np
+import os
 from train import parse_opt
 from utils.tools import  save_df, convert_to_image, getting_data
 
@@ -21,6 +22,12 @@ FPT = {'Bearing1_1': 1314,
       'Bearing1_7': 2210}
 
 # Saving the converted data ==================================================================================
+if opt.encoder and exists(join(saved_dir, 'Bearing1_1_data_1d.npy')):
+  for type_data in opt.data_type:
+    for i in range(1, 8):
+      os.remove(join(saved_dir, f'Bearing1_{i}_data_' + type_data + '.npy'))
+      os.remove(join(saved_dir, f'Bearing1_{i}_label_RUL.npy'))
+
 if exists(join(saved_dir, 'Bearing1_1_data_1d.npy')) == False:
   for type_data in opt.data_type:
     # Converting data-------------------------------------------------------------------------

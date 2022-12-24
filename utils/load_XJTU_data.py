@@ -25,6 +25,18 @@ FPT = {'Bearing1_1': 76,
        'Bearing3_5': 9}
 
 # Saving the converted data ==================================================================================
+if opt.encoder and exists(join(saved_dir, 'Bearing1_1_data_1d.npy')):
+  for type_data in opt.data_type:
+    for i in range(1, 8):
+      for j in range(1, 4):
+        data_path = join(saved_dir, f'Bearing{j}_{i}_data_' + type_data + '.npy')
+        label_path = join(saved_dir, f'Bearing1_{i}_label_RUL.npy')
+        if exists(data_path):
+          os.remove(data_path)
+        if exists(label_path):
+          os.remove(label_path)
+
+# Saving the converted data ==================================================================================
 if os.path.exists(join(saved_dir, 'Bearing1_1_data_1d.npy')) == False:
   for type_data in opt.data_type:
     # Train data-------------------------------------------------------------------------
