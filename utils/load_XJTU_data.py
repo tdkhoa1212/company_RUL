@@ -3,7 +3,7 @@ import numpy as np
 from train import parse_opt
 from utils.tools import save_df, convert_to_image, getting_data
 from utils.train_encoder import train_EC
-from os.path import join
+from os.path import join, exists
 
 opt = parse_opt()
 
@@ -29,7 +29,7 @@ test_1D, test_2D, test_extract, test_label_RUL, test_label_Con = getting_data(sa
 train_1D, train_2D, train_extract, train_label_RUL, train_label_Con = getting_data(saved_dir, opt.train_bearing, opt)
 
 EC_XJTU_path = join(opt.save_dir, 'XJTU.h5')
-if EC_XJTU_path:
+if exists(EC_XJTU_path) == False:
   s_0, s_1, s_2 = train_1D.shape
   train_1D = train_1D.reshape((s_0, s_2, s_1))
   train_EC(train_1D, 'XJTU', opt)
