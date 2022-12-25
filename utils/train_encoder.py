@@ -12,4 +12,4 @@ def train_EC(train_data, type_, opt):
                 epochs=opt.EC_epochs,
                 shuffle=True,
                 batch_size=opt.batch_size)
-    model.save(opt.join(opt.save_dir, f'{type_}.h5'))
+    model.save(join(opt.save_dir, f'{type_}.h5'))
