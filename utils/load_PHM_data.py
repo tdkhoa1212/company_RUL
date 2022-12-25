@@ -26,8 +26,10 @@ FPT = {'Bearing1_1': 1314,
 test_1D, test_2D, test_extract, test_label_RUL = getting_data(saved_dir, opt.test_bearing, opt)
 train_1D, train_2D, train_extract, train_label_RUL = getting_data(saved_dir, opt.train_bearing, opt)
 
-EC_PHM_path = join(opt.save_dir, f'{type_}.h5')
+EC_PHM_path = join(opt.save_dir, 'PHM.h5')
 if EC_PHM_path:
+  s_0, s_1, s_2 = train_1D.shape
+  train_1D = train_1D.reshape((s_0, s_2, s_1))
   train_EC(train_1D, 'PHM', opt)
 
 
