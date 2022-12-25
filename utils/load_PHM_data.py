@@ -63,7 +63,9 @@ if exists(join(saved_dir, 'Bearing1_1_data_1d.npy')) == False:
     save_df(join(saved_dir, 'Bearing1_7_data_' + type_data + '.npy'), Bearing1_7['x'])
     save_df(join(saved_dir, 'Bearing1_7_label_RUL.npy'), Bearing1_7['y'])
     
-
+# Load saved bearing data ==================================================================================
+test_1D, test_2D, test_extract, test_label_RUL = getting_data(saved_dir, opt.test_bearing, opt)
+train_1D, train_2D, train_extract, train_label_RUL = getting_data(saved_dir, opt.train_bearing, opt)
 
 
 print(f'Shape of 1D training data: {train_1D.shape}')  
