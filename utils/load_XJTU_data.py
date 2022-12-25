@@ -2,6 +2,7 @@ import os
 import numpy as np
 from train import parse_opt
 from utils.tools import save_df, convert_to_image, getting_data
+from utils.train_encoder import train_EC
 from os.path import join
 
 opt = parse_opt()
@@ -24,17 +25,12 @@ FPT = {'Bearing1_1': 76,
        'Bearing3_4': 1418,
        'Bearing3_5': 9}
 
-# Saving the converted data ==================================================================================
-if opt.encoder and exists(join(saved_dir, 'Bearing1_1_data_1d.npy')):
-  for type_data in opt.data_type:
-    for i in range(1, 8):
-      for j in range(1, 4):
-        data_path = join(saved_dir, f'Bearing{j}_{i}_data_' + type_data + '.npy')
-        label_path = join(saved_dir, f'Bearing1_{i}_label_RUL.npy')
-        if exists(data_path):
-          os.remove(data_path)
-        if exists(label_path):
-          os.remove(label_path)
+test_1D, test_2D, test_extract, test_label_RUL, test_label_Con = getting_data(saved_dir, opt.test_bearing, opt)
+train_1D, train_2D, train_extract, train_label_RUL, train_label_Con = getting_data(saved_dir, opt.train_bearing, opt)
+
+EC_XJTU_path = join(opt.save_dir, f'{type_}.h5')
+if EC_XJTU_path:
+  train_EC(train_1D, 'XJTU', opt)
 
 # Saving the converted data ==================================================================================
 if os.path.exists(join(saved_dir, 'Bearing1_1_data_1d.npy')) == False:

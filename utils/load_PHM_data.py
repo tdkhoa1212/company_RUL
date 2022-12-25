@@ -3,6 +3,7 @@ import numpy as np
 import os
 from train import parse_opt
 from utils.tools import  save_df, convert_to_image, getting_data
+from utils.EC_PHM_path import train_EC
 
 opt = parse_opt()
 np.random.seed(1234)
@@ -21,12 +22,14 @@ FPT = {'Bearing1_1': 1314,
       'Bearing1_6': 1631,
       'Bearing1_7': 2210}
 
-# Saving the converted data ==================================================================================
-if opt.encoder and exists(join(saved_dir, 'Bearing1_1_data_1d.npy')):
-  for type_data in opt.data_type:
-    for i in range(1, 8):
-      os.remove(join(saved_dir, f'Bearing1_{i}_data_' + type_data + '.npy'))
-      os.remove(join(saved_dir, f'Bearing1_{i}_label_RUL.npy'))
+# Load saved bearing data ==================================================================================
+test_1D, test_2D, test_extract, test_label_RUL = getting_data(saved_dir, opt.test_bearing, opt)
+train_1D, train_2D, train_extract, train_label_RUL = getting_data(saved_dir, opt.train_bearing, opt)
+
+EC_PHM_path = join(opt.save_dir, f'{type_}.h5')
+if EC_PHM_path:
+  train_EC(train_1D, 'PHM', opt)
+
 
 if exists(join(saved_dir, 'Bearing1_1_data_1d.npy')) == False:
   for type_data in opt.data_type:
@@ -61,9 +64,7 @@ if exists(join(saved_dir, 'Bearing1_1_data_1d.npy')) == False:
     save_df(join(saved_dir, 'Bearing1_7_label_RUL.npy'), Bearing1_7['y'])
     
 
-# Load saved bearing data ==================================================================================
-test_1D, test_2D, test_extract, test_label_RUL = getting_data(saved_dir, opt.test_bearing, opt)
-train_1D, train_2D, train_extract, train_label_RUL = getting_data(saved_dir, opt.train_bearing, opt)
+
 
 print(f'Shape of 1D training data: {train_1D.shape}')  
 print(f'Shape of 1D test data: {test_1D.shape}\n')
