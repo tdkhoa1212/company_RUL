@@ -287,6 +287,7 @@ def convert_to_image(name_bearing, opt, type_data, time=None, type_=None):
               data['y'].append(y_)
     else:
       if opt.encoder:
+        print('\n' + '#'*10 + 'USING ENCODE' + '\n' + '#'*10)
         model = autoencoder_model(type_)
         EC_XJTU_path = join(opt.save_dir, f'{type_}.h5')
         model.load_weights(EC_XJTU_path)
