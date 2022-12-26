@@ -13,61 +13,168 @@ train_dir = join(opt.main_dir_colab, 'PHM_data/Learning_set')
 test_dir = join(opt.main_dir_colab, 'PHM_data/Test_set')
 saved_dir = join(opt.main_dir_colab, 'PHM_data/saved_data')
 
-# FPT points of bearing sets ==================================================================================
-FPT = {'Bearing1_1': 1314,
-      'Bearing1_2': 826,
-      'Bearing1_3': 1726,
-      'Bearing1_4': 1082,
-      'Bearing1_5': 2412,
-      'Bearing1_6': 1631,
-      'Bearing1_7': 2210}
+if opt.case == 'case1':
+  # FPT points of bearing sets ==================================================================================
+  FPT = {'Bearing1_1': 1314,
+        'Bearing1_2': 826,
+        'Bearing1_3': 1726,
+        'Bearing1_4': 1082,
+        'Bearing1_5': 2412,
+        'Bearing1_6': 1631,
+        'Bearing1_7': 2210}
+
+  # Train for encoder model ==================================================================================
+  if opt.encoder:
+    EC_PHM_path = join(opt.save_dir, 'PHM.h5')
+    if exists(EC_PHM_path) == False:
+      # Load saved bearing data ==================================================================================
+      test_1D, test_2D, test_extract, test_label_RUL = getting_data(saved_dir, opt.test_bearing, opt)
+      train_1D, train_2D, train_extract, train_label_RUL = getting_data(saved_dir, opt.train_bearing, opt)
+      s_0, s_1, s_2 = train_1D.shape
+      train_1D = train_1D.reshape((s_0, s_2, s_1))
+      train_EC(train_1D, 'PHM', opt)
+
+
+  if exists(join(saved_dir, 'Bearing1_1_data_1d.npy')) == False:
+    for type_data in opt.data_type:
+      # Converting data-------------------------------------------------------------------------
+      print(f'\n Saving data in {opt.type} data set'+'-'*100)
+      Bearing1_1 = convert_to_image(join(train_dir, 'Bearing1_1'), opt, type_data, FPT['Bearing1_1'], 'PHM')
+      save_df(join(saved_dir, 'Bearing1_1_data_' + type_data + '.npy'), Bearing1_1['x'])
+      save_df(join(saved_dir, 'Bearing1_1_label_RUL.npy'), Bearing1_1['y'])
+
+      Bearing1_2 = convert_to_image(join(train_dir, 'Bearing1_2'), opt, type_data, FPT['Bearing1_2'], 'PHM')
+      save_df(join(saved_dir, 'Bearing1_2_data_' + type_data + '.npy'), Bearing1_2['x'])
+      save_df(join(saved_dir, 'Bearing1_2_label_RUL.npy'), Bearing1_2['y'])
+
+      Bearing1_3 = convert_to_image(join(test_dir,  'Bearing1_3'), opt, type_data, FPT['Bearing1_3'], 'PHM')
+      save_df(join(saved_dir, 'Bearing1_3_data_' + type_data + '.npy'), Bearing1_3['x'])
+      save_df(join(saved_dir, 'Bearing1_3_label_RUL.npy'), Bearing1_3['y'])
+
+      Bearing1_4 = convert_to_image(join(test_dir,  'Bearing1_4'), opt, type_data, FPT['Bearing1_4'], 'PHM')
+      save_df(join(saved_dir, 'Bearing1_4_data_' + type_data + '.npy'), Bearing1_4['x'])
+      save_df(join(saved_dir, 'Bearing1_4_label_RUL.npy'), Bearing1_4['y'])
+
+      Bearing1_5 = convert_to_image(join(test_dir,  'Bearing1_5'), opt, type_data, FPT['Bearing1_5'], 'PHM')
+      save_df(join(saved_dir, 'Bearing1_5_data_' + type_data + '.npy'), Bearing1_5['x'])
+      save_df(join(saved_dir, 'Bearing1_5_label_RUL.npy'), Bearing1_5['y'])
+
+      Bearing1_6 = convert_to_image(join(test_dir,  'Bearing1_6'), opt, type_data, FPT['Bearing1_6'], 'PHM')
+      save_df(join(saved_dir, 'Bearing1_6_data_' + type_data + '.npy'), Bearing1_6['x'])
+      save_df(join(saved_dir, 'Bearing1_6_label_RUL.npy'), Bearing1_6['y'])
+
+      Bearing1_7 = convert_to_image(join(test_dir,  'Bearing1_7'), opt, type_data, FPT['Bearing1_7'], 'PHM')
+      save_df(join(saved_dir, 'Bearing1_7_data_' + type_data + '.npy'), Bearing1_7['x'])
+      save_df(join(saved_dir, 'Bearing1_7_label_RUL.npy'), Bearing1_7['y'])
+  else:
+    # FPT points of bearing sets ==================================================================================
+    FPT = {'Bearing1_1': 5000,
+          'Bearing1_2': 660,
+          'Bearing1_3': 5730,
+          'Bearing1_4': 339,
+          'Bearing1_5': 1610,
+          'Bearing1_6': 1460,
+          'Bearing1_7': 7570,
+          'Bearing2_1': 320,
+          'Bearing2_2': 2490,
+          'Bearing2_3': 7530,
+          'Bearing2_4': 1390,
+          'Bearing2_5': 3090,
+          'Bearing2_6': 1290,
+          'Bearing2_7': 580,
+          'Bearing3_1': 670,
+          'Bearing3_2': 1330,
+          'Bearing3_3': 820}
+
+    # Train for encoder model ==================================================================================
+    if opt.encoder:
+      EC_PHM_path = join(opt.save_dir, 'PHM.h5')
+      if exists(EC_PHM_path) == False:
+        # Load saved bearing data ==================================================================================
+        test_1D, test_2D, test_extract, test_label_RUL = getting_data(saved_dir, opt.test_bearing, opt)
+        train_1D, train_2D, train_extract, train_label_RUL = getting_data(saved_dir, opt.train_bearing, opt)
+        s_0, s_1, s_2 = train_1D.shape
+        train_1D = train_1D.reshape((s_0, s_2, s_1))
+        train_EC(train_1D, 'PHM', opt)
+
+
+    if exists(join(saved_dir, 'Bearing1_1_data_1d.npy')) == False:
+      for type_data in opt.data_type:
+        # Converting data-------------------------------------------------------------------------
+        print(f'\n Saving data in {opt.type} data set'+'-'*100)
+        Bearing1_1 = convert_to_image(join(train_dir, 'Bearing1_1'), opt, type_data, FPT['Bearing1_1'], 'PHM')
+        save_df(join(saved_dir, 'Bearing1_1_data_' + type_data + '.npy'), Bearing1_1['x'])
+        save_df(join(saved_dir, 'Bearing1_1_label_RUL.npy'), Bearing1_1['y'])
+
+        Bearing1_2 = convert_to_image(join(train_dir, 'Bearing1_2'), opt, type_data, FPT['Bearing1_2'], 'PHM')
+        save_df(join(saved_dir, 'Bearing1_2_data_' + type_data + '.npy'), Bearing1_2['x'])
+        save_df(join(saved_dir, 'Bearing1_2_label_RUL.npy'), Bearing1_2['y'])
+
+        Bearing1_3 = convert_to_image(join(test_dir,  'Bearing1_3'), opt, type_data, FPT['Bearing1_3'], 'PHM')
+        save_df(join(saved_dir, 'Bearing1_3_data_' + type_data + '.npy'), Bearing1_3['x'])
+        save_df(join(saved_dir, 'Bearing1_3_label_RUL.npy'), Bearing1_3['y'])
+
+        Bearing1_4 = convert_to_image(join(test_dir,  'Bearing1_4'), opt, type_data, FPT['Bearing1_4'], 'PHM')
+        save_df(join(saved_dir, 'Bearing1_4_data_' + type_data + '.npy'), Bearing1_4['x'])
+        save_df(join(saved_dir, 'Bearing1_4_label_RUL.npy'), Bearing1_4['y'])
+
+        Bearing1_5 = convert_to_image(join(test_dir,  'Bearing1_5'), opt, type_data, FPT['Bearing1_5'], 'PHM')
+        save_df(join(saved_dir, 'Bearing1_5_data_' + type_data + '.npy'), Bearing1_5['x'])
+        save_df(join(saved_dir, 'Bearing1_5_label_RUL.npy'), Bearing1_5['y'])
+
+        Bearing1_6 = convert_to_image(join(test_dir,  'Bearing1_6'), opt, type_data, FPT['Bearing1_6'], 'PHM')
+        save_df(join(saved_dir, 'Bearing1_6_data_' + type_data + '.npy'), Bearing1_6['x'])
+        save_df(join(saved_dir, 'Bearing1_6_label_RUL.npy'), Bearing1_6['y'])
+
+        Bearing1_7 = convert_to_image(join(test_dir,  'Bearing1_7'), opt, type_data, FPT['Bearing1_7'], 'PHM')
+        save_df(join(saved_dir, 'Bearing1_7_data_' + type_data + '.npy'), Bearing1_7['x'])
+        save_df(join(saved_dir, 'Bearing1_7_label_RUL.npy'), Bearing1_7['y'])
+
+        Bearing2_1 = convert_to_image(join(train_dir, 'Bearing2_1'), opt, type_data, FPT['Bearing2_1'], 'PHM')
+        save_df(join(saved_dir, 'Bearing2_1_data_' + type_data + '.npy'), Bearing2_1['x'])
+        save_df(join(saved_dir, 'Bearing2_1_label_RUL.npy'), Bearing2_1['y'])
+
+        Bearing2_2 = convert_to_image(join(train_dir, 'Bearing2_2'), opt, type_data, FPT['Bearing2_2'], 'PHM')
+        save_df(join(saved_dir, 'Bearing2_2_data_' + type_data + '.npy'), Bearing2_2['x'])
+        save_df(join(saved_dir, 'Bearing2_2_label_RUL.npy'), Bearing2_2['y'])
+
+        Bearing2_3 = convert_to_image(join(test_dir,  'Bearing2_3'), opt, type_data, FPT['Bearing2_3'], 'PHM')
+        save_df(join(saved_dir, 'Bearing2_3_data_' + type_data + '.npy'), Bearing2_3['x'])
+        save_df(join(saved_dir, 'Bearing2_3_label_RUL.npy'), Bearing2_3['y'])
+
+        Bearing2_4 = convert_to_image(join(test_dir,  'Bearing2_4'), opt, type_data, FPT['Bearing2_4'], 'PHM')
+        save_df(join(saved_dir, 'Bearing2_4_data_' + type_data + '.npy'), Bearing2_4['x'])
+        save_df(join(saved_dir, 'Bearing2_4_label_RUL.npy'), Bearing2_4['y'])
+
+        Bearing2_5 = convert_to_image(join(test_dir,  'Bearing2_5'), opt, type_data, FPT['Bearing2_5'], 'PHM')
+        save_df(join(saved_dir, 'Bearing2_5_data_' + type_data + '.npy'), Bearing2_5['x'])
+        save_df(join(saved_dir, 'Bearing2_5_label_RUL.npy'), Bearing2_5['y'])
+
+        Bearing2_6 = convert_to_image(join(test_dir,  'Bearing2_6'), opt, type_data, FPT['Bearing2_6'], 'PHM')
+        save_df(join(saved_dir, 'Bearing2_6_data_' + type_data + '.npy'), Bearing2_6['x'])
+        save_df(join(saved_dir, 'Bearing2_6_label_RUL.npy'), Bearing2_6['y'])
+
+        Bearing2_7 = convert_to_image(join(test_dir,  'Bearing2_7'), opt, type_data, FPT['Bearing2_7'], 'PHM')
+        save_df(join(saved_dir, 'Bearing2_7_data_' + type_data + '.npy'), Bearing2_7['x'])
+        save_df(join(saved_dir, 'Bearing2_7_label_RUL.npy'), Bearing2_7['y'])
+
+        Bearing3_1 = convert_to_image(join(train_dir, 'Bearing3_1'), opt, type_data, FPT['Bearing3_1'], 'PHM')
+        save_df(join(saved_dir, 'Bearing3_1_data_' + type_data + '.npy'), Bearing3_1['x'])
+        save_df(join(saved_dir, 'Bearing3_1_label_RUL.npy'), Bearing3_1['y'])
+
+        Bearing3_2 = convert_to_image(join(train_dir, 'Bearing3_2'), opt, type_data, FPT['Bearing3_2'], 'PHM')
+        save_df(join(saved_dir, 'Bearing3_2_data_' + type_data + '.npy'), Bearing3_2['x'])
+        save_df(join(saved_dir, 'Bearing3_2_label_RUL.npy'), Bearing3_2['y']) 
+
+        Bearing3_3 = convert_to_image(join(test_dir,  'Bearing3_3'), opt, type_data, FPT['Bearing3_3'], 'PHM')
+        save_df(join(saved_dir, 'Bearing3_3_data_' + type_data + '.npy'), Bearing3_3['x'])
+        save_df(join(saved_dir, 'Bearing3_3_label_RUL.npy'), Bearing3_3['y'])
 
 # Load saved bearing data ==================================================================================
 test_1D, test_2D, test_extract, test_label_RUL = getting_data(saved_dir, opt.test_bearing, opt)
 train_1D, train_2D, train_extract, train_label_RUL = getting_data(saved_dir, opt.train_bearing, opt)
 
-EC_PHM_path = join(opt.save_dir, f'PHM.h5')
-if exists(EC_PHM_path) == False:
-  train_EC(train_1D, 'PHM', opt)
-
-
-if exists(join(saved_dir, 'Bearing1_1_data_1d.npy')) == False:
-  for type_data in opt.data_type:
-    # Converting data-------------------------------------------------------------------------
-    print(f'\n Saving data in {opt.type} data set'+'-'*100)
-    Bearing1_1 = convert_to_image(join(train_dir, 'Bearing1_1'), opt, type_data, FPT['Bearing1_1'], 'PHM')
-    save_df(join(saved_dir, 'Bearing1_1_data_' + type_data + '.npy'), Bearing1_1['x'])
-    save_df(join(saved_dir, 'Bearing1_1_label_RUL.npy'), Bearing1_1['y'])
-
-    Bearing1_2 = convert_to_image(join(train_dir, 'Bearing1_2'), opt, type_data, FPT['Bearing1_2'], 'PHM')
-    save_df(join(saved_dir, 'Bearing1_2_data_' + type_data + '.npy'), Bearing1_2['x'])
-    save_df(join(saved_dir, 'Bearing1_2_label_RUL.npy'), Bearing1_2['y'])
-
-    Bearing1_3 = convert_to_image(join(test_dir,  'Bearing1_3'), opt, type_data, FPT['Bearing1_3'], 'PHM')
-    save_df(join(saved_dir, 'Bearing1_3_data_' + type_data + '.npy'), Bearing1_3['x'])
-    save_df(join(saved_dir, 'Bearing1_3_label_RUL.npy'), Bearing1_3['y'])
-
-    Bearing1_4 = convert_to_image(join(test_dir,  'Bearing1_4'), opt, type_data, FPT['Bearing1_4'], 'PHM')
-    save_df(join(saved_dir, 'Bearing1_4_data_' + type_data + '.npy'), Bearing1_4['x'])
-    save_df(join(saved_dir, 'Bearing1_4_label_RUL.npy'), Bearing1_4['y'])
-
-    Bearing1_5 = convert_to_image(join(test_dir,  'Bearing1_5'), opt, type_data, FPT['Bearing1_5'], 'PHM')
-    save_df(join(saved_dir, 'Bearing1_5_data_' + type_data + '.npy'), Bearing1_5['x'])
-    save_df(join(saved_dir, 'Bearing1_5_label_RUL.npy'), Bearing1_5['y'])
-
-    Bearing1_6 = convert_to_image(join(test_dir,  'Bearing1_6'), opt, type_data, FPT['Bearing1_6'], 'PHM')
-    save_df(join(saved_dir, 'Bearing1_6_data_' + type_data + '.npy'), Bearing1_6['x'])
-    save_df(join(saved_dir, 'Bearing1_6_label_RUL.npy'), Bearing1_6['y'])
-
-    Bearing1_7 = convert_to_image(join(test_dir,  'Bearing1_7'), opt, type_data, FPT['Bearing1_7'], 'PHM')
-    save_df(join(saved_dir, 'Bearing1_7_data_' + type_data + '.npy'), Bearing1_7['x'])
-    save_df(join(saved_dir, 'Bearing1_7_label_RUL.npy'), Bearing1_7['y'])
-    
-# Load saved bearing data ==================================================================================
-test_1D, test_2D, test_extract, test_label_RUL = getting_data(saved_dir, opt.test_bearing, opt)
-train_1D, train_2D, train_extract, train_label_RUL = getting_data(saved_dir, opt.train_bearing, opt)
-
-
+print('\n' + '#'*10 + f'Experimental case: {case}'+ '#'*10 + '\n')
 print(f'Shape of 1D training data: {train_1D.shape}')  
 print(f'Shape of 1D test data: {test_1D.shape}\n')
 
