@@ -62,12 +62,12 @@ def main(opt):
     print(f'\nShape 1D of {name} data: {t_1D.shape}')
     print(f'Shape 2D of {name} data: {t_2D.shape}')
 
-    if opt.type == 'PHM':
+    if opt.type == 'PHM' and opt.case == 'case1':
       RUL = Predict([t_1D, t_2D, t_extract], opt)
     else:
       Condition, RUL = Predict([t_1D, t_2D, t_extract], opt)
 
-    if opt.type == 'PHM':
+    if opt.type == 'PHM' and opt.case == 'case1':
       t_label_RUL = test_label_RUL[num: num+test_idx[name]]
       num += test_idx[name]
       r2, mae_, mse_ = all_matric_PHM(t_label_RUL, RUL)
@@ -83,7 +83,7 @@ def main(opt):
     rmse_ = round(mse_, 4)
     r2 = round(r2, 4)
 
-    if opt.type == 'PHM':
+    if opt.type == 'PHM' and opt.case == 'case1':
       print(f'\n-----{name}:      R2: {r2}, MAE: {mae_}, RMSE: {rmse_}-----')
     else:
       print(f'\n-----{name}:      R2: {r2}, MAE: {mae_}, RMSE: {rmse_}, Acc: {acc}-----')
