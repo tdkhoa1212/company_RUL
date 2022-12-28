@@ -530,7 +530,7 @@ def getting_data(saved_dir, bearing_list, opt, get_index=False):
         else:
           extract = np.concatenate((extract, data))
 
-  if opt.type == 'PHM':
+  if opt.type == 'PHM' and opt.case == 'case1':
     if get_index:
       return _1D, _2D, extract, label_RUL_all, idx
     else:
