@@ -3,7 +3,7 @@ import numpy as np
 import os
 from train import parse_opt
 from utils.tools import  save_df, convert_to_image, getting_data
-from utils.EC_PHM_path import train_EC
+from utils.train_encoder import train_EC
 
 opt = parse_opt()
 np.random.seed(1234)

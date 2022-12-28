@@ -481,11 +481,13 @@ def getting_data(saved_dir, bearing_list, opt, get_index=False):
   extract = []
 
   # Creating empty folder to catch labels--------------
-  if opt.type == 'PHM':
+  if opt.type == 'PHM' and opt.case == 'case1':
     label_RUL_all = []
+    state = 0
   else:
     label_RUL_all = []
     label_Con_all = []
+    state = 1
 
   if get_index:
     idx = {}
@@ -498,7 +500,7 @@ def getting_data(saved_dir, bearing_list, opt, get_index=False):
       label_RUL= load_df(join(saved_dir, name + '_label_RUL.npy'))
       if get_index:
         idx[name] = label_RUL.shape[0]
-      if opt.type == 'XJTU':
+      if state == 1:
         label_Con = load_df(join(saved_dir, name + '_label_Con.npy'))
 
       # Getting 1D data and labels-----------------------------------
@@ -506,12 +508,12 @@ def getting_data(saved_dir, bearing_list, opt, get_index=False):
         if _1D == []:
           _1D = data 
           label_RUL_all = label_RUL
-          if opt.type == 'XJTU':
+          if state == 1:
             label_Con_all = label_Con
         else:
           _1D = np.concatenate((_1D, data))
           label_RUL_all = np.concatenate((label_RUL_all, label_RUL))
-          if opt.type == 'XJTU':
+          if state == 1:
             label_Con_all = np.concatenate((label_Con_all, label_Con))
 
       # Getting 2D data --------------------------------------------
