@@ -10,7 +10,7 @@ opt = parse_opt()
 main_dir_colab = join(opt.main_dir_colab, 'XJTU_data/XJTU-SY_Bearing_Datasets')
 saved_dir = join(opt.main_dir_colab, 'XJTU_data/saved_data')
 
-if opt.case = 'case1':
+if opt.case == 'case1':
   # FPT points of bearing sets ==================================================================================
   FPT = {'Bearing1_1': 76,
         'Bearing1_2': 44,
@@ -36,7 +36,7 @@ if opt.case = 'case1':
       train_EC(train_1D, 'XJTU', opt)
 
   # Saving the converted data ==================================================================================
-  if os.path.exists(join(saved_dir, 'Bearing1_1_data_1d.npy')) == False:
+  if os.path.exists(join(saved_dir, 'Bearing1_4_data_1d.npy')) == False:
     for type_data in opt.data_type:
       # Train data-------------------------------------------------------------------------
       Bearing1_1_path = join(main_dir_colab, '35Hz12kN', 'Bearing1_1')
@@ -159,7 +159,7 @@ else:
       train_EC(train_1D, 'XJTU', opt)
 
   # Saving the converted data ==================================================================================
-  if os.path.exists(join(saved_dir, 'Bearing1_1_data_1d.npy')) == False:
+  if os.path.exists(join(saved_dir, 'Bearing1_4_data_1d.npy')) == False:
     for type_data in opt.data_type:
       # Train data-------------------------------------------------------------------------
       Bearing1_1_path = join(main_dir_colab, '35Hz12kN', 'Bearing1_1')

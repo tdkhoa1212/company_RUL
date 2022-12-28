@@ -3,7 +3,7 @@ import numpy as np
 import os
 from train import parse_opt
 from utils.tools import  save_df, convert_to_image, getting_data
-from utils.EC_PHM_path import train_EC
+from utils.train_encoder import train_EC
 
 opt = parse_opt()
 np.random.seed(1234)
@@ -35,7 +35,7 @@ if opt.case == 'case1':
       train_EC(train_1D, 'PHM', opt)
 
 
-  if exists(join(saved_dir, 'Bearing1_1_data_1d.npy')) == False:
+  if exists(join(saved_dir, 'Bearing2_1_data_1d.npy')) == False:
     for type_data in opt.data_type:
       # Converting data-------------------------------------------------------------------------
       print(f'\n Saving data in {opt.type} data set'+'-'*100)
@@ -98,7 +98,7 @@ if opt.case == 'case1':
         train_EC(train_1D, 'PHM', opt)
 
 
-    if exists(join(saved_dir, 'Bearing1_1_data_1d.npy')) == False:
+    if exists(join(saved_dir, 'Bearing2_1_data_1d.npy')) == False:
       for type_data in opt.data_type:
         # Converting data-------------------------------------------------------------------------
         print(f'\n Saving data in {opt.type} data set'+'-'*100)
