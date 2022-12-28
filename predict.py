@@ -21,7 +21,7 @@ logging.getLogger('tensorflow').disabled = True
 opt = parse_opt()
 
 # Loading data ######################################################
-if opt.type == 'PHM':
+if opt.type == 'PHM' and opt.case == 'XJTU':
   from utils.load_PHM_data import test_1D, test_2D, test_extract, test_label_RUL, test_idx
 else:
   from utils.load_XJTU_data import test_1D, test_2D, test_extract, test_label_Con, test_label_RUL, test_idx
@@ -32,7 +32,7 @@ def Predict(data, opt):
   input_1D = Input((opt.input_shape, 2), name='LSTM_CNN1D_input')
   input_2D = Input((128, 128, 2), name='CNN_input')
 
-  if opt.type == 'PHM':
+  if opt.type == 'PHM' and opt.case == 'XJTU':
     RUL = mix_model_PHM(opt, lstm_model, resnet_101, lstm_extracted_model, input_1D, input_2D, input_extracted, False)
     network = Model(inputs=[input_1D, input_2D, input_extracted], outputs=RUL)
   else:
