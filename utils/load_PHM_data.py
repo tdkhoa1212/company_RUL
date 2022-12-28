@@ -68,23 +68,23 @@ if opt.case == 'case1':
       save_df(join(saved_dir, 'Bearing1_7_label_RUL.npy'), Bearing1_7['y'])
 else:
   # FPT points of bearing sets ==================================================================================
-  FPT = {'Bearing1_1': 5000,
-        'Bearing1_2': 660,
-        'Bearing1_3': 5730,
-        'Bearing1_4': 339,
-        'Bearing1_5': 1610,
-        'Bearing1_6': 1460,
-        'Bearing1_7': 7570,
-        'Bearing2_1': 320,
-        'Bearing2_2': 2490,
-        'Bearing2_3': 7530,
-        'Bearing2_4': 1390,
-        'Bearing2_5': 3090,
-        'Bearing2_6': 1290,
-        'Bearing2_7': 580,
-        'Bearing3_1': 670,
-        'Bearing3_2': 1330,
-        'Bearing3_3': 820}
+  FPT = {'Bearing1_1': 500,
+        'Bearing1_2': 66,
+        'Bearing1_3': 573,
+        'Bearing1_4': 40,
+        'Bearing1_5': 161,
+        'Bearing1_6': 146,
+        'Bearing1_7': 757,
+        'Bearing2_1': 32,
+        'Bearing2_2': 249,
+        'Bearing2_3': 753,
+        'Bearing2_4': 139,
+        'Bearing2_5': 309,
+        'Bearing2_6': 129,
+        'Bearing2_7': 58,
+        'Bearing3_1': 67,
+        'Bearing3_2': 133,
+        'Bearing3_3': 82}
 
   # Train for encoder model ==================================================================================
   if opt.encoder:
@@ -96,7 +96,6 @@ else:
       s_0, s_1, s_2 = train_1D.shape
       train_1D = train_1D.reshape((s_0, s_2, s_1))
       train_EC(train_1D, 'PHM', opt)
-
 
   if exists(join(saved_dir, 'Bearing2_1_data_1d.npy')) == False:
     for type_data in opt.data_type:

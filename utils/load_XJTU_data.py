@@ -273,7 +273,7 @@ else:
 test_1D, test_2D, test_extract, test_label_RUL, test_label_Con = getting_data(saved_dir, opt.test_bearing, opt)
 train_1D, train_2D, train_extract, train_label_RUL, train_label_Con = getting_data(saved_dir, opt.train_bearing, opt)
 
-print('\n' + '#'*10 + f'Experimental case: {case}'+ '#'*10 + '\n')
+print('\n' + '#'*10 + f'Experimental case: {opt.case}'+ '#'*10 + '\n')
 
 print(f'Shape of 1D training data: {train_1D.shape}')  
 print(f'Shape of 1D test data: {test_1D.shape}\n')
