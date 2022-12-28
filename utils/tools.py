@@ -475,7 +475,7 @@ def percent_error(y_true, y_pred):
             A.append(np.exp(np.log(0.5)*(i/20.)))
     return np.mean(A), SD
 
-def getting_data(saved_dir, bearing_list, opt):
+def getting_data(saved_dir, bearing_list, opt, get_index=False):
   _1D = []
   _2D = []
   extract = []
@@ -487,12 +487,17 @@ def getting_data(saved_dir, bearing_list, opt):
     label_RUL_all = []
     label_Con_all = []
 
+  if get_index:
+    idx = {}
+
   # Arranging data and labels in scheme---------------
   for name in bearing_list:
     for type_data in opt.data_type:
       # Loading data and labels-----------------------
       data     = load_df(join(saved_dir, name + '_data_'  + type_data + '.npy'))
       label_RUL= load_df(join(saved_dir, name + '_label_RUL.npy'))
+      if get_index:
+        idx[name] = label_RUL.shape[0]
       if opt.type == 'XJTU':
         label_Con = load_df(join(saved_dir, name + '_label_Con.npy'))
 
@@ -524,9 +529,15 @@ def getting_data(saved_dir, bearing_list, opt):
           extract = np.concatenate((extract, data))
 
   if opt.type == 'PHM':
-    return _1D, _2D, extract, label_RUL_all
+    if get_index:
+      return _1D, _2D, extract, label_RUL_all, idx
+    else:
+      return _1D, _2D, extract, label_RUL_all
   else:
-    return _1D, _2D, extract, label_RUL_all, label_Con_all
+    if get_index:
+      return _1D, _2D, extract, label_RUL_all, label_Con_all, idx
+    else:
+      return _1D, _2D, extract, label_RUL_all, label_Con_all
 
 def predict_time(data_l, nor = 20):
   '''

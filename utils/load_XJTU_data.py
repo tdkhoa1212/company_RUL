@@ -270,7 +270,7 @@ else:
       print(f'\n Saving data in {opt.type} data set'+'-'*100)
 
 
-test_1D, test_2D, test_extract, test_label_RUL, test_label_Con = getting_data(saved_dir, opt.test_bearing, opt)
+test_1D, test_2D, test_extract, test_label_RUL, test_label_Con, test_idx = getting_data(saved_dir, opt.test_bearing, opt, get_index=True)
 train_1D, train_2D, train_extract, train_label_RUL, train_label_Con = getting_data(saved_dir, opt.train_bearing, opt)
 
 print('\n' + '#'*10 + f'Experimental case: {opt.case}'+ '#'*10 + '\n')

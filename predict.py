@@ -5,11 +5,11 @@ from model.MIX_1D_2D import mix_model_PHM, mix_model_XJTU
 from utils.tools import all_matric_XJTU, all_matric_PHM, back_onehot
 from tensorflow.keras.layers import Input
 from tensorflow.keras.models import Model
+from os.path import join
 import os
 import tensorflow as tf
 import matplotlib.pyplot as plt
 import warnings
-import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 warnings.simplefilter("ignore")
 tf.get_logger().setLevel('INFO')
@@ -22,9 +22,9 @@ opt = parse_opt()
 
 # Loading data ######################################################
 if opt.type == 'PHM':
-  from utils.load_PHM_data import test_1D, test_2D, test_extract, test_label_RUL
+  from utils.load_PHM_data import test_1D, test_2D, test_extract, test_label_RUL, test_idx
 else:
-  from utils.load_XJTU_data import test_1D, test_2D, test_extract, test_label_Con, test_label_RUL
+  from utils.load_XJTU_data import test_1D, test_2D, test_extract, test_label_Con, test_label_RUL, test_idx
 
 def Predict(data, opt):
   # Loading model ############################################################
@@ -54,38 +54,46 @@ def Predict(data, opt):
 
 def main(opt):
   result = {}
-  name = opt.test_bearing[0]
-  print(f'\nShape 1D of {name} data: {test_1D.shape}')
-  print(f'Shape 2D of {name} data: {test_2D.shape}')
-  if opt.type == 'PHM':
-    RUL = Predict([test_1D, test_2D, test_extract])
-  else:
-    Condition, RUL = Predict([test_1D, test_2D, test_extract])
+  num = 0
+  for name in opt.test_bearing:
+    t_1D, t_2D, t_extract = test_1D[num: num+test_idx[name]], test_2D[num: num+test_idx[name]], test_extract[num: num+test_idx[name]]
+    print(f'\nShape 1D of {name} data: {t_1D.shape}')
+    print(f'Shape 2D of {name} data: {t_2D.shape}')
 
-  if opt.type == 'PHM':
-    r2, mae_, mse_ = all_matric_PHM(test_label_RUL, RUL)
-  else:
-    Condition = back_onehot(Condition)
-    r2, mae_, mse_, acc = all_matric_XJTU(test_label_RUL, RUL, test_label_Con, Condition)
-    acc = round(acc*100, 4)
+    if opt.type == 'PHM':
+      RUL = Predict([t_1D, t_2D, t_extract], opt)
+    else:
+      Condition, RUL = Predict([t_1D, t_2D, t_extract], opt)
 
-  mae_ = round(mae_, 4)
-  rmse_ = round(mse_, 4)
-  r2 = round(r2, 4)
+    if opt.type == 'PHM':
+      t_label_RUL = test_label_RUL[num: num+test_idx[name]]
+      num += test_idx[name]
+      r2, mae_, mse_ = all_matric_PHM(t_label_RUL, RUL)
+    else:
+      Condition = back_onehot(Condition)
+      t_label_Con = test_label_Con[num: num+test_idx[name]]
+      t_label_RUL = test_label_RUL[num: num+test_idx[name]]
+      num += test_idx[name]
+      r2, mae_, mse_, acc = all_matric_XJTU(t_label_RUL, RUL, t_label_Con, Condition)
+      acc = round(acc*100, 4)
 
-  if opt.type == 'PHM':
-    print(f'\n-----{name}:      R2: {r2}, MAE: {mae_}, RMSE: {rmse_}-----')
-  else:
-    print(f'\n-----{name}:      R2: {r2}, MAE: {mae_}, RMSE: {rmse_}, Acc: {acc}-----')
+    mae_ = round(mae_, 4)
+    rmse_ = round(mse_, 4)
+    r2 = round(r2, 4)
 
-  # Simulating the graphs --------------------------------------------------------
-  plt.plot(test_label_RUL, c='b')
-  plt.plot(RUL, c='r')
-  plt.title(opt.type + f' - {name}.')
-  plt.savefig(opt.save_dir + f'/{name}.png')
-  plt.close()
+    if opt.type == 'PHM':
+      print(f'\n-----{name}:      R2: {r2}, MAE: {mae_}, RMSE: {rmse_}-----')
+    else:
+      print(f'\n-----{name}:      R2: {r2}, MAE: {mae_}, RMSE: {rmse_}, Acc: {acc}-----')
+
+    # Simulating the graphs --------------------------------------------------------
+    plt.plot(test_label_RUL, c='b')
+    plt.plot(RUL, c='r')
+    plt.title(opt.type + f' - {name}.')
+    plt.savefig(join(opt.save_dir, opt.type, f'{name}.png'))
+    plt.close()
 
     
 if __name__ == '__main__':
   warnings.filterwarnings("ignore", category=FutureWarning)
-  main()
+  main(opt)
