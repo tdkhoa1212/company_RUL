@@ -55,7 +55,6 @@ def Predict(data, opt):
     return Condition, RUL 
 
 def main(opt):
-  result = {}
   num = 0
   for name in opt.test_bearing:
     t_1D, t_2D, t_extract = test_1D[num: num+test_idx[name]], test_2D[num: num+test_idx[name]], test_extract[num: num+test_idx[name]]
@@ -89,7 +88,7 @@ def main(opt):
       print(f'\n-----{name}:      R2: {r2}, MAE: {mae_}, RMSE: {rmse_}, Acc: {acc}-----')
 
     # Simulating the graphs --------------------------------------------------------
-    plt.plot(test_label_RUL, c='b')
+    plt.plot(t_label_RUL, c='b')
     plt.plot(RUL, c='r')
     plt.title(opt.type + f' - {name}.')
     plt.savefig(join(opt.save_dir, opt.type, f'{name}.png'))
