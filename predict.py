@@ -90,7 +90,7 @@ def main(opt):
     # Simulating the graphs --------------------------------------------------------
     plt.plot(t_label_RUL, c='b')
     plt.plot(RUL, c='r')
-    plt.title(opt.type + f' - {name}.')
+    plt.title(opt.type + f' - {name}')
     plt.savefig(join(opt.save_dir, opt.type, f'{name}.png'))
     plt.close()
 
