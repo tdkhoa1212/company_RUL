@@ -1,9 +1,7 @@
 import os
-import numpy as np
 from train import parse_opt
 from utils.tools import save_df, convert_to_image, getting_data
-from utils.train_encoder import train_EC
-from os.path import join, exists
+from os.path import join
 
 opt = parse_opt()
 

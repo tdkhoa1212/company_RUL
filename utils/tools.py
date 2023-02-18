@@ -3,8 +3,7 @@ import os
 from keras import backend as K
 import pandas as pd
 import pickle as pkl
-from numpy import save
-from numpy import load
+from numpy import save, load
 import pywt
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import MaxAbsScaler
@@ -17,78 +16,9 @@ from utils.extract_features import extracted_feature_of_signal
 from sklearn.metrics import r2_score, accuracy_score
 from os import path
 from os.path import join, exists
-import scipy
-import statistics
-from sklearn.cluster import SpectralClustering
-from model.autoencoder import autoencoder_model
-from scipy.stats import kurtosis
 
-    
-def hankel_svdvals(data, hankel_window_size, slice_window_size):
-    """ Slices data in 'slice_window_size' and compute hankel matrix singular values with 'hankel_window_size' """
 
-    n_slices = len(data)//slice_window_size
-    hankel_svd = []
-
-    for i in range(n_slices):
-        sample_data = data[slice_window_size*i : slice_window_size*(i+1)]
-        c = sample_data[0: hankel_window_size]
-        r = sample_data[hankel_window_size - 1: ]
-        h = scipy.linalg.hankel(c, r)
-
-        hankel_svd.append(scipy.linalg.svdvals(h))
-
-    return hankel_svd
-
-def correlation_coeffs(data, baseline, norm_interval, filter_window_size, filter_polyorder):
-    """ Normalizes data, select baseline data and compute the correlation coefficients """
-
-    a, b = norm_interval
-    diff = b - a
-
-    MIN = min([min(x) for x in data])
-    MAX = max([max(x) for x in data])
-    DIFF = MAX - MIN
-
-    data_norm = [diff*(x - MIN)/(DIFF) + a for x in data]
-    
-    x = data_norm[baseline]
-    
-    R = [sum(np.multiply(x, y))/(np.sqrt(sum(x**2)*sum(y**2))) for y in data_norm]
-
-    # Passing savgol filter
-    return scipy.signal.savgol_filter(R, filter_window_size, filter_polyorder)
-
-#----------------------#### General ####------------------------------------------------
-def recall_m(y_true, y_pred):
-    true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
-    possible_positives = K.sum(K.round(K.clip(y_true, 0, 1)))
-    recall = true_positives / (possible_positives + K.epsilon())
-    return recall
-
-def precision_m(y_true, y_pred):
-    true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
-    predicted_positives = K.sum(K.round(K.clip(y_pred, 0, 1)))
-    precision = true_positives / (predicted_positives + K.epsilon())
-    return precision
-
-def f1_m(y_true, y_pred):
-    precision = precision_m(y_true, y_pred)
-    recall = recall_m(y_true, y_pred)
-    return 2*((precision*recall)/(precision+recall+K.epsilon()))
-  
-def accuracy_m(y_true, y_pred):
-  correct = 0
-  total = 0
-  for i in range(len(y_true)):
-      act_label = np.argmax(y_true[i]) # act_label = 1 (index)
-      pred_label = np.argmax(y_pred[i]) # pred_label = 1 (index)
-      if(act_label == pred_label):
-          correct += 1
-      total += 1
-  accuracy = (correct/total)
-  return accuracy
-
+#---------------------- VALIDATION TOOLS------------------------------------------------
 def to_onehot(label, m_po=3):
   new_label = np.zeros((len(label), m_po))
   for idx, i in enumerate(label):
@@ -245,6 +175,15 @@ def denoise(signals):
         # all_signal.append(nr.reduce_noise(y=x, sr=2559, hop_length=20, time_constant_s=0.1, prop_decrease=0.5, freq_mask_smooth_hz=25600))
     return np.expand_dims(all_signal, axis=-1)
 
+def compute_PCA(x):
+  h = []
+  for i in x:
+    pca = PCA(n_components=1)
+    pca.fit(i)
+    g = pca.singular_values_[0]
+    h.append(g)
+  return np.array(h)
+
 def convert_to_image(name_bearing, opt, type_data, time=None, type_=None):
     '''
     This function is to get data and label from FPT points to later
@@ -260,71 +199,24 @@ def convert_to_image(name_bearing, opt, type_data, time=None, type_=None):
       print('-'*10, f'Maintain 1D data', '-'*10, '\n')
     
     num_files = len([i for i in os.listdir(name_bearing)])
-    if type_ == 'PHM':
-      if opt.encoder:
-        model = autoencoder_model(type_)
-        EC_PHM_path = join(opt.save_dir, f'{type_}.h5')
-        model.load_weights(EC_PHM_path)
-      for i in range(num_files):
-          name = f"acc_{str(i+1).zfill(5)}.csv"
-          file_ = join(name_bearing, name)
-          if path.exists(file_):
-              df = pd.read_csv(file_, header=None)
-              coef_h = extract_feature_image(df, opt, type_data, feature_name='horiz accel', type_=type_)
-              coef_v = extract_feature_image(df, opt, type_data, feature_name='vert accel', type_=type_)
-              x_ = np.concatenate((coef_h, coef_v), axis=-1)
-              if type_data=='1d' or type_data=='extract':
-                if opt.encoder:
-                    x_ = np.expand_dims(x_.reshape(x_.shape[1], x_.shape[0]), axis=0)
-                    x_ = model.predict(x_)
-                    x_ = np.squeeze(x_)
-                    x_ = x_.reshape(x_.shape[1], x_.shape[0])
-                x_ = x_.tolist()
-              else:
-                x_ = x_.tolist()
-              y_ = gen_rms(coef_h)
-              data['x'].append(x_)
-              data['y'].append(y_)
-    else:
-      if opt.encoder:
-        print('\n' + '#'*10 + 'USING ENCODE' + '\n' + '#'*10)
-        model = autoencoder_model(type_)
-        EC_XJTU_path = join(opt.save_dir, f'{type_}.h5')
-        model.load_weights(EC_XJTU_path)
-      for i in range(num_files):
-          name = f"{str(i+1)}.csv"
-          file_ = join(name_bearing, name)
-          if path.exists(file_):
-              df = np.array(pd.read_csv(file_, header=None))[1:]
-              coef_h = extract_feature_image(df, opt, type_data, feature_name='Horizontal_vibration_signals', type_=type_)
-              coef_v = extract_feature_image(df, opt, type_data, feature_name='Vertical_vibration_signals', type_=type_)
-              x_ = np.concatenate((coef_h, coef_v), axis=-1)
-              if type_data=='1d' or type_data=='extract':
-                if opt.encoder:
-                    x_ = np.expand_dims(x_.reshape(x_.shape[1], x_.shape[0]), axis=0)
-                    x_ = model.predict(x_)
-                    x_ = np.squeeze(x_)
-                    x_ = x_.reshape(x_.shape[1], x_.shape[0])
-                x_ = x_.tolist()
-              else:
-                x_ = x_.tolist()
-              y_ = gen_rms(coef_h)
-              data['x'].append(x_)
-              data['y'].append(y_)
+    for i in range(num_files):
+        name = f"{str(i+1)}.csv"
+        file_ = join(name_bearing, name)
+        if path.exists(file_):
+            df = np.array(pd.read_csv(file_, header=None))[1:]
+            coef_h = extract_feature_image(df, opt, type_data, feature_name='Horizontal_vibration_signals', type_=type_)
+            coef_v = extract_feature_image(df, opt, type_data, feature_name='Vertical_vibration_signals', type_=type_)
+            x_ = np.concatenate((coef_h, coef_v), axis=-1)
+            if type_data=='1d' or type_data=='extract':
+              x_ = x_.tolist()
+            else:
+              x_ = x_.tolist()
+            y_ = compute_PCA(x_)
+            data['x'].append(x_)
+            data['y'].append(y_)
     
     data['x'] = np.array(data['x'])
     data['y'] = np.array(data['y'])
-    
-    ################ Create linear label based on FPT points #########################
-   
-    t_label = np.linspace(1, 0, len(data['y'][time: ]))
-    data['y'] = t_label
-
-    Shape_o = data['x'].shape
-    name_b = name_bearing.split('/')[-1]
-    print(f'Original shape of {name_b} data: {Shape_o}')
-    t_data = data['x'][time: ]
-    data['x'] = t_data
         
     ############## 1D-data to extraction data #####################
     if type_data=='extract':
@@ -369,7 +261,6 @@ def convert_to_image(name_bearing, opt, type_data, time=None, type_=None):
         else:
           print('-'*10, 'Raw data', '-'*10, '\n')
           data['x'] = np.array(data['x'])
-    #     data['y'], _ = fit_values(2.31e-5, 0.99, 1.10, 1.68e-93, 28.58, np.array(data['y']))
 
     x_shape = data['x'].shape
     y_shape = data['y'].shape
@@ -398,82 +289,9 @@ def seg_data(data, length):
     num += length[name]
   return all_data
 
-def percent_error(y_true, y_pred):
-    y_pred = y_pred.reshape(-1, )
-    E = 100.*(y_true - y_pred)/y_true
-    E = E.astype(np.float32)
-    A = []
-    for i in E:
-        if i <= 0.:
-            A.append(np.exp(-np.log(0.5)*(i/5.)))
-        else:
-            A.append(np.exp(np.log(0.5)*(i/20.)))
-    score = []
-    for i in range(1, 12):
-        score.append(A[i])
-    return np.mean(score)
-
 # ----------------------Creating label----------------------
-
-def fit_values(k, b, Y, M, B, rrms):  # fit_values(2.31e-5, 0.99, 1.10, 1.68e-93, 28.58, rrms_1)
-    y_array = []
-    x = []
-    for i in range(len(rrms)):
-        x.append(i)
-        y = Y + M*pow(i,B)
-        if(y < 1.1):
-            y = k*x[i] + b
-        y_array.append(y)
-    return y_array, x
-
 def gen_rms(col):
     return np.squeeze(np.sqrt(np.mean(col**2)))
-
-def convert_1_to_0(data):
-    if np.min(data) != np.max(data):
-      f_data = (data - np.min(data))/(np.max(data) - np.min(data))
-    else:
-      f_data = np.ones_like(data)
-    return 1-f_data
-
-def predict_time_2(data, length_seg=None):
-  h = []
-  for i in data[:, :, 0]:
-    h.append(gen_rms(i))
-  h0 = convert_1_to_0(h)
-#   length_seg = 50
-  num_seg = len(h0)//length_seg
-  h_seg = []
-  for i in range(num_seg):
-    h_seg.append(h0[i: i+length_seg])
-  h_seg = np.array(h_seg)
-
-  # Apply clustering learning model ---------------------------------
-  kmeans_1 = SpectralClustering(3, n_init=100, assign_labels='discretize').fit(h_seg) # https://scikit-learn.org/stable/modules/clustering.html#affinity-propagation
-  time = 0
-  type_all = np.array(kmeans_1.labels_)
-  type_normal = type_all[0]
-  for idx, i in enumerate(type_all):
-    if i != type_normal:
-      break
-    time = idx
-
-  normal_time = (time+1)*length_seg
-  return normal_time
-
-def percent_error(y_true, y_pred):
-    y_pred = y_pred.reshape(-1, )
-    E = 100.*(y_true - y_pred)/y_true
-    E = E.astype(np.float32)
-    SD = statistics.stdev(E.tolist())
-    A = []
-    for i in E:
-        i = i/100.
-        if i <= 0.:
-            A.append(np.exp(-np.log(0.5)*(i/5.)))
-        else:
-            A.append(np.exp(np.log(0.5)*(i/20.)))
-    return np.mean(A), SD
 
 def getting_data(saved_dir, bearing_list, opt, get_index=False):
   _1D = []
@@ -481,13 +299,7 @@ def getting_data(saved_dir, bearing_list, opt, get_index=False):
   extract = []
 
   # Creating empty folder to catch labels--------------
-  if opt.type == 'PHM' and opt.case == 'case1':
-    label_RUL_all = []
-    state = 0
-  else:
-    label_RUL_all = []
-    label_Con_all = []
-    state = 1
+  label_RUL_all = []
 
   if get_index:
     idx = {}
@@ -500,21 +312,15 @@ def getting_data(saved_dir, bearing_list, opt, get_index=False):
       label_RUL= load_df(join(saved_dir, name + '_label_RUL.npy'))
       if get_index:
         idx[name] = label_RUL.shape[0]
-      if state == 1:
-        label_Con = load_df(join(saved_dir, name + '_label_Con.npy'))
 
       # Getting 1D data and labels-----------------------------------
       if type_data == '1d':
         if _1D == []:
           _1D = data 
           label_RUL_all = label_RUL
-          if state == 1:
-            label_Con_all = label_Con
         else:
           _1D = np.concatenate((_1D, data))
           label_RUL_all = np.concatenate((label_RUL_all, label_RUL))
-          if state == 1:
-            label_Con_all = np.concatenate((label_Con_all, label_Con))
 
       # Getting 2D data --------------------------------------------
       elif type_data == '2d':
@@ -540,43 +346,3 @@ def getting_data(saved_dir, bearing_list, opt, get_index=False):
       return _1D, _2D, extract, label_RUL_all, label_Con_all, idx
     else:
       return _1D, _2D, extract, label_RUL_all, label_Con_all
-
-def predict_time(data_l, nor = 20):
-  '''
-  INPUT =========================================
-  data: - type: float32 (should be)
-        - shape: 1D (for example: (1802, ))
-  nor: length of normal data
-
-  OUTPUT =======================================
-  fpt: - type: int32 (should be)
-       - shape: a interger value in N 
-  '''
-  data = []
-  for i in data_l:
-    data.append(kurtosis(i[:, 0]))
-  # data, _ = fit_values(2.41e-5, 1.01, 1.08, 3.22e-86, 26.30, data)
-  # data = data/np.mean(data[:300])
-  # data = savgol_filter(data, 15, 2)
-  normal = data[:nor]
-  mean_normal = np.mean(normal)
-  std_normal = np.std(normal)
-
-  limit_up = mean_normal + 3*std_normal
-  limit_down = mean_normal - 3*std_normal
-
-  fpt = 0
-  i_n = 0
-  check_c = 1
-  for idx, i in enumerate(data):
-    if i > limit_up or i < limit_down:
-      if idx - check_c == 1:
-        i_n += 1
-      else:
-        i_n = 0
-      check_c = idx
-
-      if i_n == 2:
-        fpt = idx-2
-        break
-  return fpt
