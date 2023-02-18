@@ -9,7 +9,7 @@ main_dir_colab = join(opt.main_dir_colab, 'XJTU_data/XJTU-SY_Bearing_Datasets')
 saved_dir = join(opt.main_dir_colab, 'XJTU_data/saved_data')
 
 # Saving the converted data ==================================================================================
-if os.path.exists(join(saved_dir, 'Bearing1_4_data_PCA_1d.npy')) == False:
+if os.path.exists(join(saved_dir, 'Bearing1_1_data_PCA_1d.npy')) == False:
   for type_data in opt.data_type:
     # Train data-------------------------------------------------------------------------
     Bearing1_1_path = join(main_dir_colab, '35Hz12kN', 'Bearing1_1')
@@ -82,10 +82,9 @@ if os.path.exists(join(saved_dir, 'Bearing1_4_data_PCA_1d.npy')) == False:
     print(f'\n Saving data in {type_data} data set'+'-'*100)
 
 
-test_1D, test_2D, test_extract, test_label_RUL, test_label_Con, test_idx = getting_data(saved_dir, opt.test_bearing, opt, get_index=True)
-train_1D, train_2D, train_extract, train_label_RUL, train_label_Con = getting_data(saved_dir, opt.train_bearing, opt)
+test_1D, test_2D, test_extract, test_label_RUL, test_idx = getting_data(saved_dir, opt.test_bearing, opt, get_index=True)
+train_1D, train_2D, train_extract, train_label_RUL = getting_data(saved_dir, opt.train_bearing, opt)
 
-print('\n' + '#'*10 + f'Experimental case: {opt.case}'+ '#'*10 + '\n')
 
 print(f'Shape of 1D training data: {train_1D.shape}')  
 print(f'Shape of 1D test data: {test_1D.shape}\n')
@@ -99,5 +98,3 @@ print(f'Shape of extract test data: {test_extract.shape}\n')
 print(f'Shape of training RUL label: {train_label_RUL.shape}')  
 print(f'Shape of test RUL label: {test_label_RUL.shape}\n')
 
-print(f'Shape of training Con label: {train_label_Con.shape}')  
-print(f'Shape of test Con label: {test_label_Con.shape}\n')

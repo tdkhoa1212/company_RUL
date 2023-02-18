@@ -3,4 +3,4 @@ sklearn
 numpy
 pandas
 argparse
-PyWavelets
+PyWavelets  

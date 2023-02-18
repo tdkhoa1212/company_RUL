@@ -65,8 +65,6 @@ def identity_block(input_tensor, kernel_size, filters, stage, block, training):
     return x
 
 def lstm_model(opt, training=None, inputs=None):
-  if opt.mix_model==False:
-    inputs = Input(shape=[opt.input_shape, 2])
   x = Conv1D(64,
                kernel_size=80,
                strides=4,
@@ -95,11 +93,7 @@ def lstm_model(opt, training=None, inputs=None):
   for i in range(3):
     x = identity_block(x, kernel_size=3, filters=512, stage=4, block=i, training=training)
     
-  if opt.mix_model:
-      return x
-  x = Dense(units=opt.num_classes, activation='sigmoid')(x)
-  m = Model(inputs, x)
-  return m
+  return x
 
 def lstm_extracted_model(opt, training=None, inputs=None):
   x = Conv1D(28,
