@@ -136,20 +136,13 @@ def scaler_transform(signals, scale_method):
     data.append(scale.fit_transform(signal))
   return np.array(data)
 
-def extract_feature_image(df, opt, type_data, feature_name='horiz accel', type_=None):
+def extract_feature_image(df, opt, type_data, feature_name='horiz accel'):
     WAVELET_TYPE = 'morl'
-    if type_ == 'PHM':
-      DATA_POINTS_PER_FILE=2560
-      if feature_name == 'horiz accel':
-          data = df[4]
-      else:
-          data = df[5]
+    DATA_POINTS_PER_FILE=32768
+    if feature_name == 'Horizontal_vibration_signals':
+        data = df[:, 0].astype(np.float32)
     else:
-      DATA_POINTS_PER_FILE=32768
-      if feature_name == 'Horizontal_vibration_signals':
-          data = df[:, 0].astype(np.float32)
-      else:
-          data = df[:, 1].astype(np.float32)
+        data = df[:, 1].astype(np.float32)
 
     WIN_SIZE = DATA_POINTS_PER_FILE//128
     
@@ -177,15 +170,12 @@ def denoise(signals):
     return np.expand_dims(all_signal, axis=-1)
 
 def compute_PCA(x):
-  h = []
-  for i in x:
-    pca = PCA(n_components=1)
-    pca.fit(i)
-    g = pca.singular_values_[0]
-    h.append(g)
-  return np.array(h)
+  pca = PCA(n_components=1)
+  pca.fit(x)
+  g = pca.singular_values_[0]
+  return g
 
-def convert_to_image(name_bearing, opt, type_data, time=None, type_=None):
+def convert_to_image(name_bearing, opt, type_data):
     '''
     This function is to get data and label from FPT points to later
     name_bearing: bearing name
@@ -205,19 +195,19 @@ def convert_to_image(name_bearing, opt, type_data, time=None, type_=None):
         file_ = join(name_bearing, name)
         if path.exists(file_):
             df = np.array(pd.read_csv(file_, header=None))[1:]
-            coef_h = extract_feature_image(df, opt, type_data, feature_name='Horizontal_vibration_signals', type_=type_)
-            coef_v = extract_feature_image(df, opt, type_data, feature_name='Vertical_vibration_signals', type_=type_)
+            coef_h = extract_feature_image(df, opt, type_data, feature_name='Horizontal_vibration_signals')
+            coef_v = extract_feature_image(df, opt, type_data, feature_name='Vertical_vibration_signals')
             x_ = np.concatenate((coef_h, coef_v), axis=-1)
             if type_data=='1d' or type_data=='extract':
               x_ = x_.tolist()
             else:
               x_ = x_.tolist()
-            if type_ == '1d':
+            if type_data == '1d':
               data['y'].append(compute_PCA(x_))
             data['x'].append(x_)
     
     data['x'] = np.array(data['x'])
-    if type_ == '1d':
+    if type_data == '1d':
       data['y'] = np.array(data['y'])
         
     ############## 1D-data to extraction data #####################
@@ -263,8 +253,7 @@ def convert_to_image(name_bearing, opt, type_data, time=None, type_=None):
         else:
           print('-'*10, 'Raw data', '-'*10, '\n')
           data['x'] = np.array(data['x'])
-
-    if type_ == '1d':
+    if type_data == '1d':
       x_shape = data['x'].shape
       y_shape = data['y'].shape
       print(f'Train data shape: {x_shape}   Train label shape: {y_shape}\n')
