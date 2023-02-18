@@ -1,9 +1,6 @@
 tensorflow_addons
-noisereduce
 sklearn
 numpy
-os
 pandas
-pywt
 argparse
-tensorflow_addons
+PyWavelets

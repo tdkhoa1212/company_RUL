@@ -1,4 +1,4 @@
-from model.MIX_1D_2D import mix_model_PHM, mix_model_XJTU
+from model.MIX_1D_2D import mix_model
 from model.resnet import resnet_101
 from model.LSTM import lstm_extracted_model, lstm_model
 from utils.tools import to_onehot

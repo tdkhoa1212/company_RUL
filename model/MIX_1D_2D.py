@@ -43,7 +43,7 @@ def reshape(x):
     out = Reshape((x.shape[-2]*x.shape[-3], x.shape[-1]))(x)
     return out
 
-def mix_model_PHM(opt, cnn_1d_model, resnet_50, lstm_extracted_model, input_1D, input_2D, input_extracted, training=False):
+def mix_model(opt, cnn_1d_model, resnet_50, lstm_extracted_model, input_1D, input_2D, input_extracted, training=False):
   out_1D = cnn_1d_model(opt, training, input_1D)
   out_2D = resnet_50(opt)(input_2D, training=training)
 

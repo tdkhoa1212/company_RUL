@@ -212,12 +212,13 @@ def convert_to_image(name_bearing, opt, type_data, time=None, type_=None):
               x_ = x_.tolist()
             else:
               x_ = x_.tolist()
-            y_ = compute_PCA(x_)
+            if type_ == '1d':
+              data['y'].append(compute_PCA(x_))
             data['x'].append(x_)
-            data['y'].append(y_)
     
     data['x'] = np.array(data['x'])
-    data['y'] = np.array(data['y'])
+    if type_ == '1d':
+      data['y'] = np.array(data['y'])
         
     ############## 1D-data to extraction data #####################
     if type_data=='extract':
@@ -263,9 +264,13 @@ def convert_to_image(name_bearing, opt, type_data, time=None, type_=None):
           print('-'*10, 'Raw data', '-'*10, '\n')
           data['x'] = np.array(data['x'])
 
-    x_shape = data['x'].shape
-    y_shape = data['y'].shape
-    print(f'Train data shape: {x_shape}   Train label shape: {y_shape}\n')
+    if type_ == '1d':
+      x_shape = data['x'].shape
+      y_shape = data['y'].shape
+      print(f'Train data shape: {x_shape}   Train label shape: {y_shape}\n')
+    else:
+      x_shape = data['x'].shape
+      print(f'Train data shape: {x_shape}')
     return data
 
 def FFT(signals):
