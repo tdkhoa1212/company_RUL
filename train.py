@@ -35,10 +35,8 @@ def parse_opt(known=False):
 
     parser.add_argument('--epochs',         default=30, type=int)
     parser.add_argument('--batch_size',     default=16, type=int)
-    parser.add_argument('--input_shape',    default=None, type=int, help='1279 for using fft, 2560 for raw data in PHM, 32768 for raw data in XJTU')
+    parser.add_argument('--input_shape',    default=32768, type=int, help='1279 for using fft, 2560 for raw data in PHM, 32768 for raw data in XJTU')
     
-    parser.add_argument('--predict_time', default=False, type=bool)
-    parser.add_argument('--mix_model',    default=True,  type=bool)
     parser.add_argument('--load_weight',  default=False, type=bool)  
     
     opt = parser.parse_known_args()[0] if known else parser.parse_args()

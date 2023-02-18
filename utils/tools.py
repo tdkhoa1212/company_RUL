@@ -5,6 +5,7 @@ import pandas as pd
 import pickle as pkl
 from numpy import save, load
 import pywt
+from sklearn.decomposition import PCA
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import MaxAbsScaler
 from sklearn.preprocessing import StandardScaler
@@ -308,8 +309,8 @@ def getting_data(saved_dir, bearing_list, opt, get_index=False):
   for name in bearing_list:
     for type_data in opt.data_type:
       # Loading data and labels-----------------------
-      data     = load_df(join(saved_dir, name + '_data_'  + type_data + '.npy'))
-      label_RUL= load_df(join(saved_dir, name + '_label_RUL.npy'))
+      data     = load_df(join(saved_dir, name + '_data_PCA_'  + type_data + '.npy'))
+      label_RUL= load_df(join(saved_dir, name + '_label_PCA.npy'))
       if get_index:
         idx[name] = label_RUL.shape[0]
 
@@ -336,13 +337,7 @@ def getting_data(saved_dir, bearing_list, opt, get_index=False):
         else:
           extract = np.concatenate((extract, data))
 
-  if opt.type == 'PHM' and opt.case == 'case1':
     if get_index:
       return _1D, _2D, extract, label_RUL_all, idx
     else:
       return _1D, _2D, extract, label_RUL_all
-  else:
-    if get_index:
-      return _1D, _2D, extract, label_RUL_all, label_Con_all, idx
-    else:
-      return _1D, _2D, extract, label_RUL_all, label_Con_all
