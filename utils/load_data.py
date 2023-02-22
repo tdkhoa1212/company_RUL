@@ -9,7 +9,7 @@ main_dir_colab = join(opt.main_dir_colab, 'XJTU_data/XJTU-SY_Bearing_Datasets')
 saved_dir = join(opt.main_dir_colab, 'XJTU_data/saved_data')
 
 # Saving the converted data ==================================================================================
-if os.path.exists(join(saved_dir, 'Bearing1_1_data_PCA_1d.npy')) == False:
+if os.path.exists(join(saved_dir, 'Bearing1_4_data_PCA_1d.npy')) == False:
   for type_data in opt.data_type:
     # Train data-------------------------------------------------------------------------
     Bearing1_1_path = join(main_dir_colab, '35Hz12kN', 'Bearing1_1')
@@ -23,6 +23,10 @@ if os.path.exists(join(saved_dir, 'Bearing1_1_data_PCA_1d.npy')) == False:
     Bearing1_3_path = join(main_dir_colab, '35Hz12kN', 'Bearing1_3')
     Bearing1_3 = convert_to_image(Bearing1_3_path, opt, type_data)
     save_df(join(saved_dir, 'Bearing1_3_data_PCA_' + type_data + '.npy'), Bearing1_3['x'])
+
+    Bearing1_4_path = join(main_dir_colab, '35Hz12kN', 'Bearing1_4')
+    Bearing1_4 = convert_to_image(Bearing1_4_path, opt, type_data)
+    save_df(join(saved_dir, 'Bearing1_4_data_PCA_' + type_data + '.npy'), Bearing1_4['x'])
 
     Bearing1_5_path = join(main_dir_colab, '35Hz12kN', 'Bearing1_5')
     Bearing1_5 = convert_to_image(Bearing1_5_path, opt, type_data)
@@ -52,6 +56,10 @@ if os.path.exists(join(saved_dir, 'Bearing1_1_data_PCA_1d.npy')) == False:
     Bearing3_1 = convert_to_image(Bearing3_1_path, opt, type_data)
     save_df(join(saved_dir, 'Bearing3_1_data_PCA_' + type_data + '.npy'), Bearing3_1['x'])
 
+    Bearing3_2_path = join(main_dir_colab,  '40Hz10kN', 'Bearing3_2')
+    Bearing3_2 = convert_to_image(Bearing3_2_path, opt, type_data)
+    save_df(join(saved_dir, 'Bearing3_2_data_PCA_' + type_data + '.npy'), Bearing3_2['x'])
+
     Bearing3_3_path = join(main_dir_colab,  '40Hz10kN', 'Bearing3_3')
     Bearing3_3 = convert_to_image(Bearing3_3_path, opt, type_data)
     save_df(join(saved_dir, 'Bearing3_3_data_PCA_' + type_data + '.npy'), Bearing3_3['x'])
@@ -68,6 +76,7 @@ if os.path.exists(join(saved_dir, 'Bearing1_1_data_PCA_1d.npy')) == False:
       save_df(join(saved_dir, 'Bearing1_1_label_PCA.npy') , Bearing1_1['y'])
       save_df(join(saved_dir, 'Bearing1_2_label_PCA.npy') , Bearing1_2['y'])
       save_df(join(saved_dir, 'Bearing1_3_label_PCA.npy') , Bearing1_3['y'])
+      save_df(join(saved_dir, 'Bearing1_4_label_PCA.npy') , Bearing1_4['y'])
       save_df(join(saved_dir, 'Bearing1_5_label_PCA.npy') , Bearing1_5['y'])
       save_df(join(saved_dir, 'Bearing2_1_label_PCA.npy') , Bearing2_1['y'])
       save_df(join(saved_dir, 'Bearing2_2_label_PCA.npy') , Bearing2_2['y'])
@@ -75,6 +84,7 @@ if os.path.exists(join(saved_dir, 'Bearing1_1_data_PCA_1d.npy')) == False:
       save_df(join(saved_dir, 'Bearing2_4_label_PCA.npy') , Bearing2_4['y'])
       save_df(join(saved_dir, 'Bearing2_5_label_PCA.npy') , Bearing2_5['y'])
       save_df(join(saved_dir, 'Bearing3_1_label_PCA.npy') , Bearing3_1['y'])
+      save_df(join(saved_dir, 'Bearing3_2_label_PCA.npy') , Bearing3_2['y'])
       save_df(join(saved_dir, 'Bearing3_3_label_PCA.npy') , Bearing3_3['y'])
       save_df(join(saved_dir, 'Bearing3_4_label_PCA.npy') , Bearing3_4['y'])
       save_df(join(saved_dir, 'Bearing3_5_label_PCA.npy') , Bearing3_5['y'])
