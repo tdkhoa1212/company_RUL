@@ -1,7 +1,6 @@
 from model.MIX_1D_2D import mix_model
 from model.resnet import resnet_101
 from model.LSTM import lstm_extracted_model, lstm_model
-from utils.tools import to_onehot
 from tensorflow.keras.layers import Input
 from tensorflow.keras.models import Model
 import tensorflow_addons as tfa
@@ -83,6 +82,6 @@ def main(opt, train_1D, train_2D, train_extract, train_label_RUL, test_1D, test_
 
 if __name__ == '__main__':
   opt = parse_opt()
-  from utils.load_XJTU_data import train_1D, train_2D, train_extract, train_label_RUL,\
+  from utils.load_data import train_1D, train_2D, train_extract, train_label_RUL,\
                                     test_1D, test_2D, test_extract, test_label_RUL
   main(opt, train_1D, train_2D, train_extract, train_label_RUL, test_1D, test_2D, test_extract, test_label_RUL)

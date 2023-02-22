@@ -1,8 +1,9 @@
 from train import parse_opt
 from model.resnet import resnet_101
+from model.MIX_1D_2D import mix_model
+
 from model.LSTM import lstm_extracted_model, lstm_model
-from model.MIX_1D_2D import mix_model_PHM, mix_model_XJTU
-from utils.tools import all_matric_XJTU, all_matric_PHM, back_onehot
+from utils.tools import all_matric
 from tensorflow.keras.layers import Input
 from tensorflow.keras.models import Model
 from os.path import join
@@ -21,12 +22,7 @@ logging.getLogger('tensorflow').disabled = True
 opt = parse_opt()
 
 # Loading data ######################################################
-if opt.type == 'PHM' and opt.case == 'case1':
-  from utils.load_PHM_data import test_1D, test_2D, test_extract, test_label_RUL, test_idx
-elif opt.type == 'PHM' and opt.case == 'case2':
-  from utils.load_PHM_data import test_1D, test_2D, test_extract, test_label_Con, test_label_RUL, test_idx
-else:
-  from utils.load_XJTU_data import test_1D, test_2D, test_extract, test_label_Con, test_label_RUL, test_idx
+from utils.load_data import test_1D, test_2D, test_extract, test_label_RUL, test_idx
 
 def Predict(data, opt):
   # Loading model ############################################################
@@ -34,25 +30,18 @@ def Predict(data, opt):
   input_1D = Input((opt.input_shape, 2), name='LSTM_CNN1D_input')
   input_2D = Input((128, 128, 2), name='CNN_input')
 
-  if opt.type == 'PHM' and opt.case == 'case1':
-    RUL = mix_model_PHM(opt, lstm_model, resnet_101, lstm_extracted_model, input_1D, input_2D, input_extracted, False)
-    network = Model(inputs=[input_1D, input_2D, input_extracted], outputs=RUL)
-  else:
-    Condition, RUL = mix_model_XJTU(opt, lstm_model, resnet_101, lstm_extracted_model, input_1D, input_2D, input_extracted, False)
-    network = Model(inputs=[input_1D, input_2D, input_extracted], outputs=[Condition, RUL])
+  RUL = mix_model(opt, lstm_model, resnet_101, lstm_extracted_model, input_1D, input_2D, input_extracted, False)
+  network = Model(inputs=[input_1D, input_2D, input_extracted], outputs=RUL)
 
   # Loading weights ############################################################
-  weight_path = os.path.join(opt.save_dir, f'model_{opt.condition}_{opt.type}')
+  weight_path = os.path.join(opt.save_dir, f'model_PCA')
   print(f'\nLoad weight: {weight_path}\n')
   network.load_weights(weight_path)
   
   # Prediction #####################################
-  if opt.type == 'PHM' and opt.case == 'case1':
-    RUL = network.predict(data)
-    return RUL 
-  else:
-    Condition, RUL = network.predict(data)
-    return Condition, RUL 
+  RUL = network.predict(data)
+  return RUL 
+
 
 def main(opt):
   num = 0
@@ -61,37 +50,24 @@ def main(opt):
     print(f'\nShape 1D of {name} data: {t_1D.shape}')
     print(f'Shape 2D of {name} data: {t_2D.shape}')
 
-    if opt.type == 'PHM' and opt.case == 'case1':
-      RUL = Predict([t_1D, t_2D, t_extract], opt)
-    else:
-      Condition, RUL = Predict([t_1D, t_2D, t_extract], opt)
+    RUL = Predict([t_1D, t_2D, t_extract], opt)
 
-    if opt.type == 'PHM' and opt.case == 'case1':
-      t_label_RUL = test_label_RUL[num: num+test_idx[name]]
-      num += test_idx[name]
-      r2, mae_, mse_ = all_matric_PHM(t_label_RUL, RUL)
-    else:
-      Condition = back_onehot(Condition)
-      t_label_Con = test_label_Con[num: num+test_idx[name]]
-      t_label_RUL = test_label_RUL[num: num+test_idx[name]]
-      num += test_idx[name]
-      r2, mae_, mse_, acc = all_matric_XJTU(t_label_RUL, RUL, t_label_Con, Condition)
-      acc = round(acc*100, 4)
 
+    t_label_RUL = test_label_RUL[num: num+test_idx[name]]
+    num += test_idx[name]
+    r2, mae_, mse_ = all_matric(t_label_RUL, RUL)
+   
     mae_ = round(mae_, 4)
     rmse_ = round(mse_, 4)
     r2 = round(r2, 4)
 
-    if opt.type == 'PHM' and opt.case == 'case1':
-      print(f'\n-----{name}:      R2: {r2}, MAE: {mae_}, RMSE: {rmse_}-----')
-    else:
-      print(f'\n-----{name}:      R2: {r2}, MAE: {mae_}, RMSE: {rmse_}, Acc: {acc}-----')
+    print(f'\n-----{name}:      R2: {r2}, MAE: {mae_}, RMSE: {rmse_}-----')
 
     # Simulating the graphs --------------------------------------------------------
     plt.plot(t_label_RUL, c='b')
     plt.plot(RUL, c='r')
     plt.title(opt.type + f' - {name}')
-    plt.savefig(join(opt.save_dir, opt.type, f'{name}.png'))
+    plt.savefig(join(opt.save_dir, 'XJTU_PCA', f'{name}.png'))
     plt.close()
 
     

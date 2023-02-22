@@ -53,7 +53,7 @@ def mae(y_true, predictions):
 def rmse(y_true, y_pred):
     return np.sqrt(np.square(np.subtract(y_true, y_pred)).mean())
 
-def all_matric_PHM(y_true_rul, y_pred_rul):
+def all_matric(y_true_rul, y_pred_rul):
     y_true_rul = np.squeeze(y_true_rul)
     y_pred_rul = np.squeeze(y_pred_rul)
     
@@ -62,17 +62,6 @@ def all_matric_PHM(y_true_rul, y_pred_rul):
     rmse_ = rmse(y_true_rul, y_pred_rul)
     return r2, mae_, rmse_
 
-def all_matric_XJTU(y_true_rul, y_pred_rul, y_true_con, y_pred_con):
-    y_true_rul = np.squeeze(y_true_rul)
-    y_pred_rul = np.squeeze(y_pred_rul)
-    y_true_con = np.squeeze(y_true_con)
-    y_pred_con = np.squeeze(y_pred_con)
-    
-    acc = accuracy_score(y_true_con, y_pred_con)
-    r2 = r2_score(y_true_rul, y_pred_rul)
-    mae_ = mae(y_true_rul, y_pred_rul)
-    rmse_ = rmse(y_true_rul, y_pred_rul)
-    return r2, mae_, rmse_, acc
     
 #----------------------save_data.py------------------------------------------------
 def load_file(path, save_path):
@@ -175,6 +164,13 @@ def compute_PCA(x):
   g = pca.singular_values_[0]
   return g
 
+def convert_1_to_0(data):
+    if np.min(data) != np.max(data):
+      f_data = (data - np.min(data))/(np.max(data) - np.min(data))
+    else:
+      f_data = np.ones_like(data)
+    return f_data
+
 def convert_to_image(name_bearing, opt, type_data):
     '''
     This function is to get data and label from FPT points to later
@@ -209,6 +205,7 @@ def convert_to_image(name_bearing, opt, type_data):
     data['x'] = np.array(data['x'])
     if type_data == '1d':
       data['y'] = np.array(data['y'])
+      data['y'] = convert_1_to_0(data['y'])
         
     ############## 1D-data to extraction data #####################
     if type_data=='extract':
