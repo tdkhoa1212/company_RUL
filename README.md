@@ -1,7 +1,8 @@
 # RUL_predictor
 
 ## 1. Instroduction
-## 2. Dataset and result
+## 2. Result
+![plot](./result/result.png)
 ## 3. Guide to run code
 ### 3.1. Install prerequisite
 > Download git repository
