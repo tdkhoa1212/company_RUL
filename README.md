@@ -3,24 +3,18 @@
 ## 1. Architecture
 ![plot](./images/architecture.png)
 ## 2. Data Construction
-- machine001 
-    - Fan_NDE 
-        - Short_interval_data
-            - 1.csv
-            - 2.csv
-            - ...
-    - Motor_DE
-        - Short_interval_data
-            - 1.csv
-            - 2.csv
-            - ...
-- machine002
-- machine003
-- machine004
-- bearing_fault_data1
-    - long_int_data
-        -
-
+- data001(machine001/Fan_NDE)
+    - long_interval_data(machine001/Fan_NDE/long_interval_data)
+        - 1.csv
+        - 2.csv
+        - ...
+    - short.csv(machine001/Fan_NDE/short_interval_data/short_int....csv)
+- data002(machine001/Motor_DE/long_interval_data)
+- data003(machine002/Motor_DE/long_interval_data)
+- data004(machine003/Fan_NDE/long_interval_data)
+- data005(machine004/Fan_NDE/long_interval_data)
+- data006(bearing_fault_data1/long_int_data)
+- data007(bearing_fault_data2/long_int_data)
 ## 3. Guide to run code
 ### 3.1. Install prerequisite
 > Download git repository
