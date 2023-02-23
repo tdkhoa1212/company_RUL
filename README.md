@@ -27,7 +27,7 @@
 **--input_shape**,  &emsp;  default=32768, help='the length of a typical segment of vibration signal'<br/>
 **--load_weight**,  &emsp;  default=False, help='set true if you want to use the exist weight file'<br/>
 
-***Note***: there are some parameters needing to be changed including save_dir, train_bearing, test_bearing, main_dir_colab, input_shape, load_weight
+***__Note__:*** there are some parameters needing to be changed including ***save_dir, train_bearing, test_bearing, main_dir_colab, input_shape, load_weight***
 #### Run:
     python train.py --save_dir 'the path leads to the saved result folder' 
 ### 3.3. Testing process
