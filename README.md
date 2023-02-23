@@ -3,8 +3,10 @@
 ## 1. Architecture
 ![plot](./images/architecture.png)
 ## 2. Data Construction
-- machine001 |- Fan_NDE 
-             |- Motor_DE
+- machine001 
+    - Fan_NDE 
+    - Motor_DE
+    
 ## 3. Guide to run code
 ### 3.1. Install prerequisite
 > Download git repository
