@@ -14,7 +14,11 @@
 - data004(machine003/Fan_NDE/long_interval_data)
 - data005(machine004/Fan_NDE/long_interval_data)
 - data006(bearing_fault_data1/long_int_data)
-- data007(bearing_fault_data2/long_int_data)
+- data007(bearing_fault_data2/long_int_data) </br>
+
+***NOTE: *** 
+- label of data in long interval data folder is made based on short interval data
+- data is training and test according to 5 folds strategy with 5 for training and 2 for testing
 ## 3. Guide to run code
 ### 3.1. Install prerequisite
 > Download git repository
