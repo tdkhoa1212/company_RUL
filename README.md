@@ -14,6 +14,13 @@
             - 1.csv
             - 2.csv
             - ...
+- machine002
+- machine003
+- machine004
+- bearing_fault_data1
+    - long_int_data
+        -
+
 ## 3. Guide to run code
 ### 3.1. Install prerequisite
 > Download git repository
