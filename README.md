@@ -1,8 +1,8 @@
 # RUL_predictor
 
-## 1. Instroduction
-## 2. Result
-![plot](./result/result.png)
+## 1. Architecture
+![plot](./images/architecture.png)
+## 2. Data spliting
 ## 3. Guide to run code
 ### 3.1. Install prerequisite
 > Download git repository
@@ -32,4 +32,6 @@
 #### Run:
     python train.py --save_dir 'the path leads to the saved result folder' 
 ### 3.3. Testing process
+## 5. Result
+![plot](./images/result.png)
 ## 4. Citation: TODO
