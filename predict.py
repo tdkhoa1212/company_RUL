@@ -67,7 +67,7 @@ def main(opt):
     plt.plot(t_label_RUL, c='b', label="True")
     plt.plot(RUL, c='r', label="Prediction")
     plt.legend()
-    plt.title(f' - {name}')
+    plt.title(f'{name}')
     plt.savefig(join(opt.save_dir, 'XJTU_PCA', f'{name}.png'))
     plt.close()
 
