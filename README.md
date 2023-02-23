@@ -4,10 +4,10 @@
 ## 2. Dataset and result
 ## 3. Guide to run code
 ### 3.1. Install prerequisite
-<sub>Download git repository</sub>
+> Download git repository
     git clone https://github.com/tdkhoa1212/company_RUL.git
 
-<sub>Enter the git folder</sub>
+>Enter the git folder
     cd company_RUL
 
 ### 3.2. Training process
