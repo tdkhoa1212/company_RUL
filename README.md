@@ -2,4 +2,6 @@
 
 ## Instroduction
 ## Dataset and result
-## guide to run code
+## Guide to run code
+### Training process
+## Citation: TODO

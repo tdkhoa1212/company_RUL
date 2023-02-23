@@ -328,7 +328,7 @@ def getting_data(saved_dir, bearing_list, opt, get_index=False):
         else:
           extract = np.concatenate((extract, data))
 
-    if get_index:
-      return _1D, _2D, extract, label_RUL_all, idx
-    else:
-      return _1D, _2D, extract, label_RUL_all
+  if get_index:
+    return _1D, _2D, extract, label_RUL_all, idx
+  else:
+    return _1D, _2D, extract, label_RUL_all
