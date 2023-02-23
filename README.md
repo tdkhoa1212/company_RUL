@@ -5,8 +5,15 @@
 ## 2. Data Construction
 - machine001 
     - Fan_NDE 
+        - Short_interval_data
+            - 1.csv
+            - 2.csv
+            - ...
     - Motor_DE
-    
+        - Short_interval_data
+            - 1.csv
+            - 2.csv
+            - ...
 ## 3. Guide to run code
 ### 3.1. Install prerequisite
 > Download git repository
