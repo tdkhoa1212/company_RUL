@@ -15,15 +15,15 @@
 >Install libraries
     pip install -r requirements.txt
 ### 3.2. Training process
---save_dir,       default='/content/drive/MyDrive/Khoa/vibration_project/RUL/results'<br/>
---data_type,      default=['2d', '1d', 'extract']<br/>
---train_bearing,  default=['Bearing1_1', 'Bearing1_2', 'Bearing2_1','Bearing2_2','Bearing3_1','Bearing3_2']<br/>
---test_bearing,   default=['Bearing1_3', 'Bearing1_4', 'Bearing1_5', 'Bearing2_3', 'Bearing2_4', 'Bearing2_5', 'Bearing3_3', 'Bearing3_4', 'Bearing3_5']<br/>
---scaler,         default='Normalizer'<br/>
---main_dir_colab, default='/content/drive/MyDrive/Khoa/data/'<br/>
---epochs,         default=30<br/>
---batch_size,     default=16<br/>
---input_shape,    default=32768<br/>
---load_weight,    default=False<br/>
+**--save_dir**,       default='/content/drive/MyDrive/Khoa/vibration_project/RUL/results'<br/>
+**--data_type**,      default=['2d', '1d', 'extract']<br/>
+**--train_bearing**,  default=['Bearing1_1', 'Bearing1_2', 'Bearing2_1','Bearing2_2','Bearing3_1','Bearing3_2']<br/>
+**--test_bearing**,   default=['Bearing1_3', 'Bearing1_4', 'Bearing1_5', 'Bearing2_3', 'Bearing2_4', 'Bearing2_5', 'Bearing3_3', 'Bearing3_4', 'Bearing3_5']<br/>
+**--scaler**,         default='Normalizer'<br/>
+**--main_dir_colab**, default='/content/drive/MyDrive/Khoa/data/'<br/>
+**--epochs**,         default=30<br/>
+**--batch_size**,     default=16<br/>
+**--input_shape**,    default=32768<br/>
+**--load_weight**,    default=False<br/>
 ### 3.3. Testing process
 ## 4. Citation: TODO
