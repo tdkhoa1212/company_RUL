@@ -64,8 +64,9 @@ def main(opt):
     print(f'\n-----{name}:      R2: {r2}, MAE: {mae_}, RMSE: {rmse_}-----')
 
     # Simulating the graphs --------------------------------------------------------
-    plt.plot(t_label_RUL, c='b')
-    plt.plot(RUL, c='r')
+    plt.plot(t_label_RUL, c='b', label="True")
+    plt.plot(RUL, c='r', label="Prediction")
+    plt.legend()
     plt.title(f' - {name}')
     plt.savefig(join(opt.save_dir, 'XJTU_PCA', f'{name}.png'))
     plt.close()
