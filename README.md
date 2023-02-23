@@ -15,7 +15,6 @@
 >Install libraries
     pip install -r requirements.txt
 ### 3.2. Training process
->Parameters:
 '--save_dir',       default='/content/drive/MyDrive/Khoa/vibration_project/RUL/results'
 '--data_type',      default=['2d', '1d', 'extract']
 '--train_bearing',  default=['Bearing1_1', 'Bearing1_2', 'Bearing2_1','Bearing2_2','Bearing3_1','Bearing3_2']
