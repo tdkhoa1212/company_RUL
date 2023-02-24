@@ -18,7 +18,7 @@
 
 ***NOTE: *** 
 - label of data in long interval data folder is made based on short interval data
-- data is training and test according to 5 folds strategy with 5 for training and 2 for testing
+- data is used for training and testing according to 5 folds strategy with 5 for training and 2 for testing
 ## 3. Guide to run code
 ### 3.1. Install prerequisite
 > Download git repository
