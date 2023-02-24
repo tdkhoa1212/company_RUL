@@ -5,7 +5,7 @@ from os.path import join
 
 opt = parse_opt()
 
-saved_dir = join(opt.main_dir_colab, '/saved_data')
+saved_dir = join(opt.main_dir_colab, 'saved_data')
 
 # Saving the converted data ==================================================================================
 if os.path.exists(join(saved_dir, 'Bearing1_4_data_PCA_1d.npy')) == False:

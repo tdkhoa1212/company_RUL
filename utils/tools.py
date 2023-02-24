@@ -152,7 +152,6 @@ def convert_1_to_0(data):
       f_data = np.ones_like(data)
     return f_data
 
-
 def FFT(signals):
   fft_data = []
   for signal in signals:
@@ -227,8 +226,8 @@ def getting_data(saved_dir, bearing_list, opt, get_index=False):
   else:
     return _1D, _2D, extract, label_RUL_all
 
-def load_RUL_data(name, opt):
-  short_data = pd.read_csv(join(opt.main_dir_colab, f'{name}/short.csv'))
+def load_RUL_data(name_file, opt):
+  short_data = pd.read_csv(join(opt.main_dir_colab, f'{name_file}/short.csv'))
   ##################### Stick time's colum and label's column #####################
   datetime = np.array(short_data['datetime'])
   label = np.array(short_data['label'])
@@ -241,7 +240,7 @@ def load_RUL_data(name, opt):
     time_label[name] = label[i]
 
   ################# data and label creation ##############################
-  path = join(opt.main_dir_colab, f'{name}/long')
+  path = join(opt.main_dir_colab, f'{name_file}/long')
   data = []
   label = []
 
@@ -301,7 +300,7 @@ def convert_to_image(name_bearing, opt, type_data):
       print('-'*10, f'Maintain 1D data', '-'*10, '\n')
     
     data_all, _ = load_RUL_data(name_bearing, opt)
-    for data_2c in range(data_all):
+    for data_2c in data_all:
         coef_h = extract_feature_image(data_2c, type_data, 'Horizontal_vibration_signals')
         coef_v = extract_feature_image(data_2c, type_data, 'Vertical_vibration_signals')
         x_ = np.concatenate((coef_h, coef_v), axis=-1)
