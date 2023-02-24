@@ -12,9 +12,7 @@
 - data002(machine001/Motor_DE/long_interval_data)
 - data003(machine002/Motor_DE/long_interval_data)
 - data004(machine003/Fan_NDE/long_interval_data)
-- data005(machine004/Fan_NDE/long_interval_data)
-- data006(bearing_fault_data1/long_int_data)
-- data007(bearing_fault_data2/long_int_data) </br>
+- data005(machine004/Fan_NDE/long_interval_data)</br>
 
 ***NOTE: *** 
 - label of data in long interval data folder is made based on short interval data

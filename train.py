@@ -30,7 +30,7 @@ def parse_opt(known=False):
     parser.add_argument('--train_bearing',  default=['Bearing1_1', 'Bearing1_2', 'Bearing2_1','Bearing2_2','Bearing3_1','Bearing3_2'], type=str, nargs='+')   
     parser.add_argument('--test_bearing',   default=['Bearing1_3', 'Bearing1_4', 'Bearing1_5', 'Bearing2_3', 'Bearing2_4', 'Bearing2_5', 'Bearing3_3', 'Bearing3_4', 'Bearing3_5'], type=str, nargs='+')
     parser.add_argument('--scaler',         default='Normalizer', type=str)
-    parser.add_argument('--main_dir_colab', default='/content/drive/MyDrive/Khoa/data/', type=str)
+    parser.add_argument('--main_dir_colab', default='/content/drive/MyDrive/Sensoteq Project/dataset', type=str, help="path to dataset")
 
     parser.add_argument('--epochs',         default=30, type=int)
     parser.add_argument('--batch_size',     default=16, type=int)
