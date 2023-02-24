@@ -4,7 +4,7 @@
 ![plot](./images/architecture.png)
 ## 2. Data Construction
 - data001(machine001/Fan_NDE)
-    - long_interval_data(machine001/Fan_NDE/long_interval_data)
+    - long(machine001/Fan_NDE/long_interval_data)
         - 1.csv
         - 2.csv
         - ...
