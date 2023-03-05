@@ -304,12 +304,9 @@ def convert_to_image(name_bearing, opt, type_data):
         coef_h = extract_feature_image(data_2c, type_data, 'Horizontal_vibration_signals')
         coef_v = extract_feature_image(data_2c, type_data, 'Vertical_vibration_signals')
         x_ = np.concatenate((coef_h, coef_v), axis=-1)
-        if type_data=='1d' or type_data=='extract':
-          x_ = x_.tolist()
-        else:
-          x_ = x_.tolist()
         if type_data == '1d':
           data['y'].append(compute_PCA(x_))
+        x_ = x_.tolist()
         data['x'].append(x_)
 
     if type_data == '1d':
