@@ -54,7 +54,7 @@ def main(opt, train_1D, train_2D, train_extract, train_label_RUL, test_1D, test_
   train_data = [train_1D, train_2D, train_extract]
   test_data  = [test_1D, test_2D, test_extract]
   
-  weight_path = os.path.join(opt.save_dir, f'model_PCA')
+  weight_path = os.getcwd() + os.path.join(opt.save_dir, f'model_PCA')
   if opt.load_weight:
     if os.path.exists(weight_path):
       print(f'\nLoad weight: {weight_path}\n')

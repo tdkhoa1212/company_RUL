@@ -287,8 +287,6 @@ def extract_feature_image(data_2c, type_data, feature_name):
     return coef
 
 def convert_to_image(name_bearing, opt, type_data):
-    '''
-    '''
     data = {'x': [], 'y': []}
     #------------------------------------------------------ 2D -------------------------------------------
     if type_data == '2d':
@@ -362,3 +360,70 @@ def convert_to_image(name_bearing, opt, type_data):
       x_shape = data['x'].shape
       print(f'Train data shape: {x_shape}')
     return data
+
+def get_pre_data(file, opt, type_data):
+    data = {'x': [], 'y': []}
+
+    ################# read file of data ################
+    data_all = pd.read_csv(file)
+    data_all = np.array(data_all)[:, 1:]
+
+    ############### process data #############
+    coef_h = extract_feature_image(data_all, type_data, 'Horizontal_vibration_signals')
+    coef_v = extract_feature_image(data_all, type_data, 'Vertical_vibration_signals')
+    x_ = np.concatenate((coef_h, coef_v), axis=-1)
+    data['x'] = x_
+    
+    #------------------------------------------------------ 1D -------------------------------------------
+    ############## 1D-data to extraction data #####################
+    if type_data=='extract':
+      print('-'*10, 'Convert to Extracted data', '-'*10, '\n')
+      hor_data = extracted_feature_of_signal(np.array(data['x'])[:, :, 0])
+      ver_data = extracted_feature_of_signal(np.array(data['x'])[:, :, 1])
+      data_x = np.concatenate((hor_data, ver_data), axis=-1)
+      data['x'] = data_x
+    
+    ############### scale data ##############################
+    if type_data=='1d' or type_data=='extract':
+        if opt.scaler == 'MinMaxScaler':
+          scaler = MinMaxScaler
+        if opt.scaler == 'MaxAbsScaler':
+          scaler = MaxAbsScaler
+        if opt.scaler == 'StandardScaler':
+          scaler = StandardScaler
+        if opt.scaler == 'RobustScaler':
+          scaler = RobustScaler
+        if opt.scaler == 'Normalizer':
+          scaler = Normalizer
+        if opt.scaler == 'QuantileTransformer':
+          scaler = QuantileTransformer
+        if opt.scaler == 'PowerTransformer':
+          scaler = PowerTransformer
+
+        if opt.scaler != None:
+          hor_data = np.array(data['x'])[:, :, 0]
+          ver_data = np.array(data['x'])[:, :, 1]
+          print('-'*10, f'Use scaler: {opt.scaler}', '-'*10, '\n')
+          if opt.scaler == 'FFT':
+            hor_data = np.expand_dims(FFT(hor_data), axis=-1)
+            ver_data = np.expand_dims(FFT(ver_data), axis=-1)
+          elif opt.scaler == 'denoise':
+            hor_data = denoise(hor_data)
+            ver_data = denoise(ver_data)
+          else:
+            hor_data = scaler_transform(hor_data, scaler)
+            ver_data = scaler_transform(ver_data, scaler)
+          data_x = np.concatenate((hor_data, ver_data), axis=-1)
+          data['x'] = data_x
+        else:
+          print('-'*10, 'Raw data', '-'*10, '\n')
+          data['x'] = np.array(data['x'])
+    if type_data == '1d':
+      x_shape = data['x'].shape
+      y_shape = data['y'].shape
+      print(f'Train data shape: {x_shape}   Train label shape: {y_shape}\n')
+    else:
+      x_shape = data['x'].shape
+      print(f'Train data shape: {x_shape}')
+    return data
+

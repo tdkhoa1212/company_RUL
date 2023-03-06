@@ -17,7 +17,7 @@
 
 ***NOTE: *** 
 - label of data in long interval data folder is made based on short interval data
-- data is used for training and testing according to 5 folds strategy with 5 for training and 2 for testing
+- data is used for training and testing according to 5 folds strategy with 4 for training and 1 for testing
 ## 3. Guide to run code
 ### 3.1. Install prerequisite
 > Download git repository
@@ -29,7 +29,8 @@
     cd company_RUL
 
 >Install libraries
-    pip install -r requirements.txt
+    pip install -r requirements.txt 
+</br>
 ### 3.2. Training process
 #### Parameters in the train.py file: 
 **--save_dir**,     &emsp;  default='./results', help='the directory to save results'<br/>
