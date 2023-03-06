@@ -3,16 +3,17 @@
 ## 1. Architecture
 ![plot](./images/architecture.png)
 ## 2. Data Construction
-- data001(machine001/Fan_NDE)
-    - long(machine001/Fan_NDE/long_interval_data)
-        - 1.csv
-        - 2.csv
-        - ...
-    - short.csv(machine001/Fan_NDE/short_interval_data/short_int....csv)
-- data002(machine001/Motor_DE/long_interval_data)
-- data003(machine002/Motor_DE/long_interval_data)
-- data004(machine003/Fan_NDE/long_interval_data)
-- data005(machine004/Fan_NDE/long_interval_data)</br>
+- data
+    - data001(machine001/Fan_NDE)
+        - long(machine001/Fan_NDE/long_interval_data)
+            - 1.csv
+            - 2.csv
+            - ...
+        - short.csv(machine001/Fan_NDE/short_interval_data/short_int....csv)
+    - data002(machine001/Motor_DE/long_interval_data)
+    - data003(machine002/Motor_DE/long_interval_data)
+    - data004(machine003/Fan_NDE/long_interval_data)
+    - data005(machine004/Fan_NDE/long_interval_data)</br>
 
 ***NOTE: *** 
 - label of data in long interval data folder is made based on short interval data
