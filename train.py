@@ -25,16 +25,16 @@ callbacks = tf.keras.callbacks.EarlyStopping(monitor='val_loss', mode='min', ver
 def parse_opt(known=False):
     parser = argparse.ArgumentParser()
     # https://drive.google.com/drive/folders/1AKsUdcg-52oT0YfdiR29TDpK-pQ_I-LT?usp=share_link
-    parser.add_argument('--save_dir',       default='./results', type=str, help="/content/drive/MyDrive/Khoa/vibration_project/RUL/results")
+    parser.add_argument('--save_dir',       default='/results', type=str, help="/content/drive/MyDrive/Khoa/vibration_project/RUL/results")
     parser.add_argument('--data_type',      default=['2d', '1d', 'extract'], type=list, help='shape of data. They can be 1d, 2d, extract')
-    parser.add_argument('--train_bearing',  default=['data002', 'data003','data004','data005'], type=str, nargs='+')   
-    parser.add_argument('--test_bearing',   default=['data001'], type=str, nargs='+')
+    parser.add_argument('--train_bearing',  default=['Data002', 'Data003','Data004','Data005'], type=str, nargs='+')   
+    parser.add_argument('--test_bearing',   default=['Data001'], type=str, nargs='+')
     parser.add_argument('--scaler',         default='Normalizer', type=str)
-    parser.add_argument('--main_dir_colab', default='./data', type=str, help="/content/drive/MyDrive/Sensoteq Project/data")
+    parser.add_argument('--main_dir_colab', default='/data', type=str, help="/content/drive/MyDrive/Sensoteq Project/data")
 
     parser.add_argument('--epochs',         default=30, type=int)
     parser.add_argument('--batch_size',     default=16, type=int)
-    parser.add_argument('--input_shape',    default=32768, type=int, help='1279 for using fft, 2560 for raw data in PHM, 32768 for raw data in XJTU')
+    parser.add_argument('--input_shape',    default=4096, type=int, help='1279 for using fft, 2560 for raw data in PHM, 32768 for raw data in XJTU')
     parser.add_argument('--load_weight',    default=False, type=bool)  
     
     opt = parser.parse_known_args()[0] if known else parser.parse_args()

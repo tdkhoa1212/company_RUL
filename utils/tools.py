@@ -137,13 +137,10 @@ def denoise(signals):
         # all_signal.append(nr.reduce_noise(y=x, sr=2559, hop_length=20, time_constant_s=0.1, prop_decrease=0.5, freq_mask_smooth_hz=25600))
     return np.expand_dims(all_signal, axis=-1)
 
-def compute_PCA(x_all):
-  label = []
-  for x in x_all:
-    pca = PCA(n_components=1)
-    pca.fit(x)
-    label.append(pca.singular_values_[0])
-  return np.array(label)
+def compute_PCA(x):
+  pca = PCA(n_components=1)
+  pca.fit(x)
+  return pca.singular_values_[0]
 
 def convert_1_to_0(data):
     if np.min(data) != np.max(data):
@@ -193,8 +190,8 @@ def getting_data(saved_dir, bearing_list, opt, get_index=False):
   for name in bearing_list:
     for type_data in opt.data_type:
       # Loading data and labels-----------------------
-      data     = load_df(join(saved_dir, name + '_data_PCA_'  + type_data + '.npy'))
-      label_RUL= load_df(join(saved_dir, name + '_label_PCA.npy'))
+      data     = load_df(os.getcwd() + join(saved_dir, name + '_data_'  + type_data + '.npy'))
+      label_RUL= load_df(os.getcwd() + join(saved_dir, name + '_label.npy'))
       if get_index:
         idx[name] = label_RUL.shape[0]
 
@@ -227,7 +224,7 @@ def getting_data(saved_dir, bearing_list, opt, get_index=False):
     return _1D, _2D, extract, label_RUL_all
 
 def load_RUL_data(name_file, opt):
-  short_data = pd.read_csv(join(opt.main_dir_colab, f'{name_file}/short.csv'))
+  short_data = pd.read_csv(os.getcwd() + join(opt.main_dir_colab, f'/{name_file}/short.csv'))
   ##################### Stick time's colum and label's column #####################
   datetime = np.array(short_data['datetime'])
   label = np.array(short_data['label'])
@@ -240,7 +237,7 @@ def load_RUL_data(name_file, opt):
     time_label[name] = label[i]
 
   ################# data and label creation ##############################
-  path = join(opt.main_dir_colab, f'{name_file}/long')
+  path = os.getcwd() + join(opt.main_dir_colab, f'{name_file}/long')
   data = []
   label = []
 
