@@ -29,8 +29,9 @@
     cd company_RUL
 
 >Install libraries
-    pip install -r requirements.txt 
+    pip install -r requirements.txt
 </br>
+
 ### 3.2. Training process
 #### Parameters in the train.py file: 
 **--save_dir**,     &emsp;  default='./results', help='the directory to save results'<br/>
@@ -48,6 +49,11 @@
 #### Run:
     python train.py --save_dir 'the path leads to the saved result folder' 
 ### 3.3. Testing process
+#### 3.3.1. Data
+put .csv file in the test data folder
+#### 3.3.2. Run data
+    python predict.py
+    
 ## 4. Result
 ![plot](./images/result.png)
 ## 5. Citation: TODO
