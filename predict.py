@@ -49,7 +49,6 @@ def main(opt):
     RUL = Predict([t_1D, t_2D, t_extract], opt)
     print(f"\nRUL of {name}: {RUL}")
   
-    
 if __name__ == '__main__':
   warnings.filterwarnings("ignore", category=FutureWarning)
   main(opt)
