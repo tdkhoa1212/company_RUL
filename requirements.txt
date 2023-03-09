@@ -1,0 +1,6 @@
+tensorflow_addons
+sklearn
+numpy
+pandas
+argparse
+PyWavelets  
