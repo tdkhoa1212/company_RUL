@@ -1,13 +1,14 @@
 from train import parse_opt
 from model.resnet import resnet_101
 from model.MIX_1D_2D import mix_model
-from utils.tools import get_pre_data
+from utils.tools import get_pre_data, load_df
 from model.LSTM import lstm_extracted_model, lstm_model
 from tensorflow.keras.layers import Input
 from tensorflow.keras.models import Model
 import os
 import tensorflow as tf
 import warnings
+import matplotlib.pyplot as plt
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 warnings.simplefilter("ignore")
 tf.get_logger().setLevel('INFO')
@@ -17,9 +18,6 @@ logging.getLogger('tensorflow').disabled = True
 
 
 opt = parse_opt()
-
-# Loading data ######################################################
-from utils.load_data import test_1D, test_2D, test_extract, test_label_RUL, test_idx
 
 def Predict(data, opt):
   # Loading model ############################################################
@@ -31,7 +29,7 @@ def Predict(data, opt):
   network = Model(inputs=[input_1D, input_2D, input_extracted], outputs=RUL)
 
   # Loading weights ############################################################
-  weight_path = os.getcwd() + os.path.join(opt.save_dir, f'model_PCA')
+  weight_path = 'results/model_PCA'
   network.load_weights(weight_path)
   
   # Prediction #####################################
@@ -40,15 +38,27 @@ def Predict(data, opt):
 
 
 def main(opt):
-  path = os.getcwd() + "/test_data"
+  path = "/test_data"
   for name in os.listdir(path):
     file = os.path.join(path, name)
     t_1D = get_pre_data(file, opt, "1d")
     t_2D = get_pre_data(file, opt, "2d")
     t_extract = get_pre_data(file, opt, "extract")
-    RUL = Predict([t_1D, t_2D, t_extract], opt)
-    print(f"\nRUL of {name}: {RUL}")
-  
+    RUL = Predict([t_1D, t_2D, t_extract], opt)[0][0]
+    print(f"\nRUL of the {name}: {RUL}")
+
+def folder_main(opt):
+  t_1D = load_df("data/saved_data/Data001_data_1d.npy")
+  t_2D = load_df("data/saved_data/Data001_data_2d.npy")
+  t_extract = load_df("data/saved_data/Data001_data_extract.npy")
+  RUL = Predict([t_1D, t_2D, t_extract], opt)
+  labels = load_df("data/saved_data/Data001_label.npy")
+  plt.plot(RUL, c='r', label='pre_RUL')
+  plt.plot(labels, c='b', label='label')
+  plt.savefig('results/image.png')
+  plt.show()
+    
 if __name__ == '__main__':
   warnings.filterwarnings("ignore", category=FutureWarning)
-  main(opt)
+  # main(opt)
+  folder_main(opt)
