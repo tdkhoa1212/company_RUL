@@ -8,6 +8,7 @@ import tensorflow as tf
 import argparse
 import os
 
+
 gpus = tf.config.list_physical_devices('GPU')
 if gpus:
   try:
