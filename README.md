@@ -3,8 +3,6 @@
 1. Doing 3.1
 2. Doing 3.3
 
-</br>
-
 ## 1. Architecture
 ![plot](./images/architecture.png)
 ## 2. Data Construction
