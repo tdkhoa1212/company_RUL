@@ -1,4 +1,9 @@
 # RUL_predictor
+## Main steps to intergrate this tool to the system:
+1. Doing 3.1
+2. Doing 3.3
+
+</br>
 
 ## 1. Architecture
 ![plot](./images/architecture.png)
@@ -30,6 +35,7 @@
 
 >Install libraries
     pip install -r requirements.txt
+
 </br>
 
 ### 3.2. Training process

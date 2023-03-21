@@ -38,7 +38,7 @@ def Predict(data, opt):
 
 
 def main(opt):
-  path = "/test_data"
+  path = "test_data/"
   for name in os.listdir(path):
     file = os.path.join(path, name)
     t_1D = get_pre_data(file, opt, "1d")
@@ -60,5 +60,5 @@ def folder_main(opt):
     
 if __name__ == '__main__':
   warnings.filterwarnings("ignore", category=FutureWarning)
-  # main(opt)
-  folder_main(opt)
+  main(opt)
+  # folder_main(opt)

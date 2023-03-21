@@ -31,7 +31,7 @@ def parse_opt(known=False):
     parser.add_argument('--train_bearing',  default=['Data002', 'Data003','Data004','Data005'], type=str, nargs='+')   
     parser.add_argument('--test_bearing',   default=['Data001'], type=str, nargs='+')
     parser.add_argument('--scaler',         default='Normalizer', type=str)
-    parser.add_argument('--main_dir_colab', default='/data', type=str, help="/content/drive/MyDrive/Sensoteq Project/data")
+    parser.add_argument('--main_dir_colab', default='data', type=str, help="/content/drive/MyDrive/Sensoteq Project/data")
 
     parser.add_argument('--epochs',         default=30, type=int)
     parser.add_argument('--batch_size',     default=16, type=int)
