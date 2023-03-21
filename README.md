@@ -1,5 +1,5 @@
 # RUL_predictor
-## Main steps to intergrate this tool to the system:
+## Main steps to integrate this tool to the system:
 1. Doing 3.1 section
 2. Doing 3.3 section
 
