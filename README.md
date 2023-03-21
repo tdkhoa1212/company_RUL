@@ -1,7 +1,7 @@
 # RUL_predictor
 ## Main steps to intergrate this tool to the system:
-1. Doing 3.1
-2. Doing 3.3
+1. Doing 3.1 section
+2. Doing 3.3 section
 
 ## 1. Architecture
 ![plot](./images/architecture.png)
